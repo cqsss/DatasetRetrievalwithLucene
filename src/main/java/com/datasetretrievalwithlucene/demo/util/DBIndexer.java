@@ -6,20 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
 
 @Repository
-@Service
 public class DBIndexer {
 
     @Resource
     private JdbcTemplate jdbcTemplate;
-
-    @Resource
-    private LabelMap labelMap;
 
     private Map<Integer, List<TripleID>> id2triplelist = new HashMap<>();
     private Map<Integer, String> id2text = new HashMap<>();
@@ -54,7 +49,7 @@ public class DBIndexer {
         StringBuilder sb = new StringBuilder();
 
         for (Integer i = 0; i < countList.size() && i < limit; i++) {
-            sb.append(labelMap.query(local_id, countList.get(i).getValue()));
+            sb.append(LabelMap.query(local_id, countList.get(i).getValue(), jdbcTemplate));
             sb.append(" ");
         }
         return sb.toString();
@@ -91,7 +86,6 @@ public class DBIndexer {
      */
     private void MapID2TripleText() {
         List<Map<String, Object>> queryList = jdbcTemplate.queryForList("SELECT * FROM triple ORDER BY dataset_local_id;");
-        System.out.println(queryList);
         List<TripleID> tripleIDS = new ArrayList<>(); tripleIDS.clear();
         Integer currentid = 1;
         for (Map<String, Object> qi : queryList) {

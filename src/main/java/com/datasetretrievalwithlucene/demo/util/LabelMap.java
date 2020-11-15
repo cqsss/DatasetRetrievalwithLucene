@@ -13,14 +13,13 @@ import java.util.Map;
 
 @Service
 public class LabelMap {
-    @Resource
-    private static JdbcTemplate jdbcTemplate;
+
     private static Map<Integer, Map<Integer, String>> id2label = null;
 
     /**
      * 从数据库中获取数据集id与实体id和label的映射
      */
-    public static void LoadFromDataBase() {
+    public static void LoadFromDataBase(JdbcTemplate jdbcTemplate) {
         List<Map<String, Object>> queryList = jdbcTemplate.queryForList("SELECT * FROM uri_label_id;");
         for (Map<String, Object> qi : queryList) {
             Integer local_id = Integer.parseInt(qi.get("dataset_local_id").toString());
@@ -42,9 +41,12 @@ public class LabelMap {
      * @param id
      * @return
      */
-    public static String query(Integer local_id, Integer id) {
-        if (id2label == null)
-            LoadFromDataBase();
+    public static String query(Integer local_id, Integer id, JdbcTemplate jdbcTemplate) {
+        if (id2label == null) {
+            id2label = new HashMap<>();
+            LoadFromDataBase(jdbcTemplate);
+        }
+
         if (!id2label.containsKey(local_id)) {
             System.out.println(String.format("error! Cannot find dataset for local_id : %d!", local_id));
             return "";
