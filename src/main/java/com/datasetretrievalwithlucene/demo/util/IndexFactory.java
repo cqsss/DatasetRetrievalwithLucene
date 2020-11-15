@@ -1,6 +1,7 @@
 package com.datasetretrievalwithlucene.demo.util;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -15,7 +16,30 @@ public class IndexFactory {
     public Integer commit_cnt = 0;
     public Integer commit_limit = 0;
 
+    /**
+     * 提交文档
+     * @param document
+     */
+    public void CommitDocument(Document document) {
+        try {
+            iwriter.addDocument(document);
+            commit_cnt ++;
+            iwriter.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    /**
+     * 关闭IndexWriter
+     */
+    public void CloseIndexWriter() {
+        try {
+            iwriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 初始化IndexWriter

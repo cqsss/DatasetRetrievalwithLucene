@@ -11,7 +11,7 @@ import java.util.Map;
 @SpringBootTest
 public class DataBaseTest {
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
     @Test
     public void queryDataBaseTest(){
         List<Map<String, Object>> res = jdbcTemplate.queryForList("SELECT * FROM triple ORDER BY dataset_local_id;");

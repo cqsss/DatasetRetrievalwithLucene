@@ -3,15 +3,19 @@ package com.datasetretrievalwithlucene.demo.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class LabelMap {
-    @Autowired
+    @Resource
     private static JdbcTemplate jdbcTemplate;
-    private static Map<Integer, Map<Integer, String>> id2label = new HashMap<>();
+    private static Map<Integer, Map<Integer, String>> id2label = null;
 
     /**
      * 从数据库中获取数据集id与实体id和label的映射
