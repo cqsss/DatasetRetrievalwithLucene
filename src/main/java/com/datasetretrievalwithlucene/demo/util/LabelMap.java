@@ -24,7 +24,10 @@ public class LabelMap {
         for (Map<String, Object> qi : queryList) {
             Integer local_id = Integer.parseInt(qi.get("dataset_local_id").toString());
             Integer id = Integer.parseInt(qi.get("id").toString());
-            String label = qi.get("dataset_local_id").toString();
+            Object labelObject = qi.get("label");
+            String label = "";
+            if(labelObject != null)
+                label = labelObject.toString();
             if (!id2label.containsKey(local_id)) {
                 Map<Integer, String> tmp = new HashMap<>(); tmp.clear();
                 id2label.put(local_id, tmp);

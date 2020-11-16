@@ -49,7 +49,7 @@ public class DBIndexer {
         StringBuilder sb = new StringBuilder();
 
         for (Integer i = 0; i < countList.size() && i < limit; i++) {
-            sb.append(LabelMap.query(local_id, countList.get(i).getValue(), jdbcTemplate));
+            sb.append(LabelMap.query(local_id, countList.get(i).getKey(), jdbcTemplate));
             sb.append(" ");
         }
         return sb.toString();
@@ -57,27 +57,27 @@ public class DBIndexer {
 
     /**
      * 根据实体生成文本
-     * @param datasettriple
+     * @param datasetTriples
      * @param local_id
      * @return
      */
-    private String GenerateText(List<TripleID> datasettriple, Integer local_id) {
-        Map<Integer, Integer> submap = new HashMap<>(); submap.clear();
-        Map<Integer, Integer> premap = new HashMap<>(); premap.clear();
-        Map<Integer, Integer> objmap = new HashMap<>(); objmap.clear();
-        Map<Integer, Integer> summap = new HashMap<>(); summap.clear();
-        for (TripleID tri : datasettriple) {
-            AddCount(submap, tri.getSubject());
-            AddCount(premap, tri.getPredicate());
-            AddCount(objmap, tri.getObject());
-            AddCount(submap, tri.getSubject());
-            AddCount(summap, tri.getObject());
+    private String GenerateText(List<TripleID> datasetTriples, Integer local_id) {
+        Map<Integer, Integer> subMap = new HashMap<>(); subMap.clear();
+        Map<Integer, Integer> preMap = new HashMap<>(); preMap.clear();
+        Map<Integer, Integer> objMap = new HashMap<>(); objMap.clear();
+        Map<Integer, Integer> sumMap = new HashMap<>(); sumMap.clear();
+        for (TripleID tri : datasetTriples) {
+            AddCount(subMap, tri.getSubject());
+            AddCount(preMap, tri.getPredicate());
+            AddCount(objMap, tri.getObject());
+            AddCount(sumMap, tri.getSubject());
+            AddCount(sumMap, tri.getObject());
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(GetTopUnitText(submap, GlobalVariances.maxEntityNumber, local_id)); sb.append(";");
-        sb.append(GetTopUnitText(objmap, GlobalVariances.maxEntityNumber, local_id)); sb.append(";");
-        sb.append(GetTopUnitText(submap, GlobalVariances.maxEntityNumber, local_id)); sb.append(";");
-        sb.append(GetTopUnitText(premap, GlobalVariances.maxRelationNumber, local_id)); sb.append(";");
+        sb.append(GetTopUnitText(subMap, GlobalVariances.maxEntityNumber, local_id)); sb.append(";");
+        sb.append(GetTopUnitText(objMap, GlobalVariances.maxEntityNumber, local_id)); sb.append(";");
+        sb.append(GetTopUnitText(subMap, GlobalVariances.maxEntityNumber, local_id)); sb.append(";");
+        sb.append(GetTopUnitText(preMap, GlobalVariances.maxRelationNumber, local_id)); sb.append(";");
         return sb.toString();
     }
 
@@ -101,7 +101,7 @@ public class DBIndexer {
                 tripleIDS.add(new TripleID(sub, pre, obj));
             }
         }
-
+        System.out.println(id2text);
     }
 
     /**
@@ -127,16 +127,16 @@ public class DBIndexer {
             all ++;
             // local ID
             Integer local_id = Integer.parseInt(qi.get("local_id").toString());
-            document.add(new StringField("local_id", local_id.toString(), Field.Store.YES));
+            document.add(new StoredField("local_id", local_id.toString()));
             if (local_id > 0) cnt ++;
+
+            // Dataset ID
+            String id = qi.get("id").toString();
+            document.add(new StoredField("id", id));
 
             // Content
             String content =GetTextFromLocalID(local_id);
             document.add(new TextField("content", content, Field.Store.YES));
-
-            // Dataset ID
-            String id = qi.get("id").toString();
-            document.add(new StringField("id", id, Field.Store.YES));
 
             // Normal Fields
             for (Map.Entry<String, Object> entry : qi.entrySet()) {
@@ -155,7 +155,7 @@ public class DBIndexer {
             if (all > datasetCountLimit) break;
 
         }
-        System.out.println("All: " + all + "dataset number: " + cnt);
+        System.out.println("All: " + all + " dataset number: " + cnt);
 
     }
 
