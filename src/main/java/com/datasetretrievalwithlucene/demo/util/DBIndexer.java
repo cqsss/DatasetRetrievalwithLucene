@@ -101,7 +101,6 @@ public class DBIndexer {
                 tripleIDS.add(new TripleID(sub, pre, obj));
             }
         }
-        System.out.println(id2text);
     }
 
     /**
