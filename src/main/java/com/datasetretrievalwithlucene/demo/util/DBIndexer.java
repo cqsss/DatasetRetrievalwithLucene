@@ -16,7 +16,6 @@ public class DBIndexer {
     @Resource
     private JdbcTemplate jdbcTemplate;
 
-    private Map<Integer, List<TripleID>> id2triplelist = new HashMap<>();
     private Map<Integer, String> id2text = new HashMap<>();
     private IndexFactory indexF;
     private Integer datasetCountLimit = 1000000;
@@ -35,10 +34,9 @@ public class DBIndexer {
      * 获取数量前几的实体label文本
      * @param count
      * @param limit
-     * @param local_id
      * @return
      */
-    private String GetTopUnitText(Map<Integer, Integer> count, Integer limit, Integer local_id) {
+    private String GetTopUnitText(Map<Integer, Integer> count, Integer limit) {
         List<Map.Entry<Integer, Integer>> countList = new ArrayList<>(count.entrySet());
         Collections.sort(countList, new Comparator<Map.Entry<Integer, Integer>>() {
             @Override
@@ -49,7 +47,7 @@ public class DBIndexer {
         StringBuilder sb = new StringBuilder();
 
         for (Integer i = 0; i < countList.size() && i < limit; i++) {
-            sb.append(LabelMap.query(local_id, countList.get(i).getKey(), jdbcTemplate));
+            sb.append(LabelMap.query(countList.get(i).getKey(), jdbcTemplate));
             sb.append(" ");
         }
         return sb.toString();
@@ -58,10 +56,9 @@ public class DBIndexer {
     /**
      * 根据实体生成文本
      * @param datasetTriples
-     * @param local_id
      * @return
      */
-    private String GenerateText(List<TripleID> datasetTriples, Integer local_id) {
+    private String GenerateText(List<TripleID> datasetTriples) {
         Map<Integer, Integer> subMap = new HashMap<>(); subMap.clear();
         Map<Integer, Integer> preMap = new HashMap<>(); preMap.clear();
         Map<Integer, Integer> objMap = new HashMap<>(); objMap.clear();
@@ -74,10 +71,10 @@ public class DBIndexer {
             AddCount(sumMap, tri.getObject());
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(GetTopUnitText(subMap, GlobalVariances.maxEntityNumber, local_id)); sb.append(";");
-        sb.append(GetTopUnitText(objMap, GlobalVariances.maxEntityNumber, local_id)); sb.append(";");
-        sb.append(GetTopUnitText(subMap, GlobalVariances.maxEntityNumber, local_id)); sb.append(";");
-        sb.append(GetTopUnitText(preMap, GlobalVariances.maxRelationNumber, local_id)); sb.append(";");
+        sb.append(GetTopUnitText(subMap, GlobalVariances.maxEntityNumber)); sb.append(";");
+        sb.append(GetTopUnitText(objMap, GlobalVariances.maxEntityNumber)); sb.append(";");
+        sb.append(GetTopUnitText(sumMap, GlobalVariances.maxEntityNumber)); sb.append(";");
+        sb.append(GetTopUnitText(preMap, GlobalVariances.maxRelationNumber)); sb.append(";");
         return sb.toString();
     }
 
@@ -85,16 +82,16 @@ public class DBIndexer {
      * 得到数据集id到triple文本的映射
      */
     private void MapID2TripleText() {
-        List<Map<String, Object>> queryList = jdbcTemplate.queryForList("SELECT * FROM triple ORDER BY dataset_local_id;");
+        List<Map<String, Object>> queryList = jdbcTemplate.queryForList("SELECT * FROM triple ORDER BY dataset_id;");
         List<TripleID> tripleIDS = new ArrayList<>(); tripleIDS.clear();
         Integer currentid = 1;
         for (Map<String, Object> qi : queryList) {
-            Integer local_id = Integer.parseInt(qi.get("dataset_local_id").toString());
+            Integer local_id = Integer.parseInt(qi.get("dataset_id").toString());
             Integer sub = Integer.parseInt(qi.get("subject").toString());
             Integer pre = Integer.parseInt(qi.get("predicate").toString());
             Integer obj = Integer.parseInt(qi.get("object").toString());
             if (local_id > currentid) {
-                id2text.put(currentid, GenerateText(tripleIDS, currentid));
+                id2text.put(currentid, GenerateText(tripleIDS));
                 tripleIDS = new ArrayList<>(); tripleIDS.clear();
                 currentid = local_id;
             } else {
@@ -119,14 +116,14 @@ public class DBIndexer {
     private void GenerateDocument() {
         Integer all = 0;
         Integer cnt = 0;
-        List<Map<String, Object>> queryList = jdbcTemplate.queryForList("SELECT * FROM dataset");
+        List<Map<String, Object>> queryList = jdbcTemplate.queryForList("SELECT * FROM metadata");
         for (Map<String, Object> qi : queryList) {
             Document document = new Document();
 
             all ++;
             // local ID
-            Integer local_id = Integer.parseInt(qi.get("local_id").toString());
-            document.add(new StoredField("local_id", local_id.toString()));
+            Integer local_id = Integer.parseInt(qi.get("dataset_id").toString());
+            document.add(new StoredField("dataset_id", local_id.toString()));
             if (local_id > 0) cnt ++;
 
             // Dataset ID
@@ -140,7 +137,7 @@ public class DBIndexer {
             // Normal Fields
             for (Map.Entry<String, Object> entry : qi.entrySet()) {
                 String name = entry.getKey();
-                if (name == "local_id" || name == "content" || name == "id")
+                if (name == "dataset_id" || name == "content" || name == "id")
                     continue;
                 String value = "";
                 if (entry.getValue() != null)
@@ -159,7 +156,6 @@ public class DBIndexer {
     }
 
     public void main() {
-        id2triplelist.clear();
         id2text.clear();
         indexF = new IndexFactory();
         indexF.Init(GlobalVariances.store_Dir, GlobalVariances.commit_limit, GlobalVariances.globeAnalyzer);
