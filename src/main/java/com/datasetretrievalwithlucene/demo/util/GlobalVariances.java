@@ -2,6 +2,7 @@ package com.datasetretrievalwithlucene.demo.util;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
+import org.omg.PortableInterceptor.INACTIVE;
 
 /**
  * 存放全局变量
@@ -18,4 +19,7 @@ public class GlobalVariances {
 
     // 分析器
     public static Analyzer globeAnalyzer = new EnglishAnalyzer();
+
+    //SQL常数
+    public static Integer maxListNumber = 100000;
 }

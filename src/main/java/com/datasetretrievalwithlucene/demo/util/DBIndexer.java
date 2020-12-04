@@ -82,21 +82,22 @@ public class DBIndexer {
      * 得到数据集id到triple文本的映射
      */
     private void MapID2TripleText() {
-        List<Map<String, Object>> queryList = jdbcTemplate.queryForList("SELECT * FROM triple ORDER BY dataset_id;");
-        List<TripleID> tripleIDS = new ArrayList<>(); tripleIDS.clear();
-        Integer currentid = 1;
-        for (Map<String, Object> qi : queryList) {
-            Integer local_id = Integer.parseInt(qi.get("dataset_id").toString());
-            Integer sub = Integer.parseInt(qi.get("subject").toString());
-            Integer pre = Integer.parseInt(qi.get("predicate").toString());
-            Integer obj = Integer.parseInt(qi.get("object").toString());
-            if (local_id > currentid) {
-                id2text.put(currentid, GenerateText(tripleIDS));
-                tripleIDS = new ArrayList<>(); tripleIDS.clear();
-                currentid = local_id;
-            } else {
+        Integer maxID = jdbcTemplate.queryForObject("SELECT MAX(dataset_id) FROM triple;",Integer.class);
+        for (Integer i = 1; i <= maxID; i++) {
+            List<Map<String, Object>> queryList = jdbcTemplate.queryForList(String.format("SELECT * FROM triple WHERE dataset_id = %d;", i));
+            List<TripleID> tripleIDS = new ArrayList<>();
+            tripleIDS.clear();
+            for (Map<String, Object> qi : queryList) {
+                Integer local_id = Integer.parseInt(qi.get("dataset_id").toString());
+                Integer sub = Integer.parseInt(qi.get("subject").toString());
+                Integer pre = Integer.parseInt(qi.get("predicate").toString());
+                Integer obj = Integer.parseInt(qi.get("object").toString());
                 tripleIDS.add(new TripleID(sub, pre, obj));
             }
+            id2text.put(i, GenerateText(tripleIDS));
+            System.out.println("Completed mapping dataset " + i);
+            tripleIDS = new ArrayList<>();
+            tripleIDS.clear();
         }
     }
 
