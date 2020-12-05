@@ -22,7 +22,7 @@ public class LabelMap {
     public static void LoadFromDataBase(JdbcTemplate jdbcTemplate) {
         Integer entityCount = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM entity;", Integer.class);
         System.out.println(entityCount);
-        for (Integer i = 0; i <= entityCount/GlobalVariances.maxListNumber; i++) {
+        for (Integer i = 0; i <= entityCount / GlobalVariances.maxListNumber; i++) {
             List<Map<String, Object>> queryList = jdbcTemplate.queryForList(String.format("SELECT global_id,label FROM entity LIMIT %d,%d;", i * GlobalVariances.maxListNumber, GlobalVariances.maxListNumber));
             for (Map<String, Object> qi : queryList) {
                 Integer id = Integer.parseInt(qi.get("global_id").toString());
@@ -32,9 +32,10 @@ public class LabelMap {
                     label = labelObject.toString();
                 id2label.put(id, label);
             }
-            System.out.println("entity id " + (i * GlobalVariances.maxListNumber) + "~" + (i * GlobalVariances.maxListNumber + GlobalVariances.maxListNumber));
+            System.out.println("entity id " + (i * GlobalVariances.maxListNumber + GlobalVariances.maxListNumber));
+            System.out.println("LoadFromDataBase process " + ((i.doubleValue() * GlobalVariances.maxListNumber.doubleValue() + GlobalVariances.maxListNumber.doubleValue()) / entityCount.doubleValue()));
         }
-        System.out.println("Completed loading entity from database!");
+        System.out.println("Completed LoadFromDataBase!");
     }
 
     /**

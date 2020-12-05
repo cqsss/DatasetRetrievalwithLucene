@@ -82,23 +82,31 @@ public class DBIndexer {
      * 得到数据集id到triple文本的映射
      */
     private void MapID2TripleText() {
-        Integer maxID = jdbcTemplate.queryForObject("SELECT MAX(dataset_id) FROM triple;",Integer.class);
-        for (Integer i = 1; i <= maxID; i++) {
-            List<Map<String, Object>> queryList = jdbcTemplate.queryForList(String.format("SELECT * FROM triple WHERE dataset_id = %d;", i));
-            List<TripleID> tripleIDS = new ArrayList<>();
-            tripleIDS.clear();
+        Integer tripleCount = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM triple;",Integer.class);
+        Integer currentID = 1;
+        List<TripleID> tripleIDS = new ArrayList<>();
+        tripleIDS.clear();
+        for (Integer i = 0; i <= tripleCount / GlobalVariances.maxListNumber; i++) {
+            List<Map<String, Object>> queryList = jdbcTemplate.queryForList(String.format("SELECT dataset_id,subject,predicate,object FROM triple LIMIT %d,%d;", i * GlobalVariances.maxListNumber, GlobalVariances.maxListNumber));
             for (Map<String, Object> qi : queryList) {
-                Integer local_id = Integer.parseInt(qi.get("dataset_id").toString());
+                Integer dataset_id = Integer.parseInt(qi.get("dataset_id").toString());
                 Integer sub = Integer.parseInt(qi.get("subject").toString());
                 Integer pre = Integer.parseInt(qi.get("predicate").toString());
                 Integer obj = Integer.parseInt(qi.get("object").toString());
+                if (dataset_id > currentID) {
+                    id2text.put(currentID, GenerateText(tripleIDS));
+                    System.out.println("Completed mapping dataset " + currentID);
+                    currentID = dataset_id;
+                    tripleIDS = new ArrayList<>();
+                    tripleIDS.clear();
+                }
                 tripleIDS.add(new TripleID(sub, pre, obj));
             }
-            id2text.put(i, GenerateText(tripleIDS));
-            System.out.println("Completed mapping dataset " + i);
-            tripleIDS = new ArrayList<>();
-            tripleIDS.clear();
+            System.out.println("MapID2TripleText process " + ((i.doubleValue() * GlobalVariances.maxListNumber.doubleValue() + GlobalVariances.maxListNumber.doubleValue()) / tripleCount.doubleValue()));
         }
+        if(tripleIDS.size() > 0)
+            id2text.put(currentID, GenerateText(tripleIDS));
+        System.out.println("Completed MapID2TripleText!");
     }
 
     /**
