@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class LoggerTest {
     private static Logger logger = Logger.getLogger(LoggerTest.class);
     @Test
-    public void queryDataBaseTest(){
+    public void testLogger(){
         logger.info("Logger Test");
     }
 }

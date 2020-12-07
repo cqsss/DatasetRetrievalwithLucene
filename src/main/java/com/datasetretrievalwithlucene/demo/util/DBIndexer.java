@@ -125,17 +125,15 @@ public class DBIndexer {
      */
     private void GenerateDocument() {
         Integer all = 0;
-        Integer cnt = 0;
         List<Map<String, Object>> queryList = jdbcTemplate.queryForList("SELECT * FROM metadata");
         for (Map<String, Object> qi : queryList) {
             Document document = new Document();
 
             all ++;
-            logger.info("Start GenerateDocument " + all);
+            logger.info("Start generating document: " + all);
             // local ID
             Integer local_id = Integer.parseInt(qi.get("dataset_id").toString());
             document.add(new StoredField("dataset_id", local_id.toString()));
-            if (local_id > 0) cnt ++;
 
             // Dataset ID
             String id = qi.get("id").toString();
@@ -148,7 +146,7 @@ public class DBIndexer {
             // Normal Fields
             for (Map.Entry<String, Object> entry : qi.entrySet()) {
                 String name = entry.getKey();
-                if (name == "dataset_id" || name == "content" || name == "id")
+                if (name == "dataset_id" || name == "id")
                     continue;
                 String value = "";
                 if (entry.getValue() != null)
@@ -158,11 +156,11 @@ public class DBIndexer {
 
             // commit document
             indexF.CommitDocument(document);
-            logger.info("Completed GenerateDocument " + all);
+            logger.info("Completed generating document: " + all);
             if (all > datasetCountLimit) break;
 
         }
-        logger.info("All: " + all + " dataset number: " + cnt);
+        logger.info("Completed GenerateDocument All: " + all);
     }
 
     public void main() {

@@ -13,7 +13,7 @@ public class DataBaseTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Test
-    public void queryDataBaseTest(){
+    public void testQueryDataBase(){
         List<Map<String, Object>> res = jdbcTemplate.queryForList("SELECT * FROM triple ORDER BY dataset_local_id;");
         System.out.println(res);
     }
