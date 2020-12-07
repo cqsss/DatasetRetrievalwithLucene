@@ -1,5 +1,6 @@
 package com.datasetretrievalwithlucene.demo.util;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,6 +15,7 @@ import java.util.Map;
 @Service
 public class LabelMap {
 
+    private static Logger logger = Logger.getLogger(LabelMap.class);
     private static Map<Integer, String> id2label = null;
 
     /**
@@ -21,7 +23,7 @@ public class LabelMap {
      */
     public static void LoadFromDataBase(JdbcTemplate jdbcTemplate) {
         Integer entityCount = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM entity;", Integer.class);
-        System.out.println(entityCount);
+        logger.info("total entity number: " + entityCount);
         for (Integer i = 0; i <= entityCount / GlobalVariances.maxListNumber; i++) {
             List<Map<String, Object>> queryList = jdbcTemplate.queryForList(String.format("SELECT global_id,label FROM entity LIMIT %d,%d;", i * GlobalVariances.maxListNumber, GlobalVariances.maxListNumber));
             for (Map<String, Object> qi : queryList) {
@@ -32,10 +34,10 @@ public class LabelMap {
                     label = labelObject.toString();
                 id2label.put(id, label);
             }
-            System.out.println("entity id " + (i * GlobalVariances.maxListNumber + GlobalVariances.maxListNumber));
-            System.out.println("LoadFromDataBase process " + ((i.doubleValue() * GlobalVariances.maxListNumber.doubleValue() + GlobalVariances.maxListNumber.doubleValue()) / entityCount.doubleValue()));
+            logger.info("entity id: " + (i * GlobalVariances.maxListNumber + GlobalVariances.maxListNumber));
+            logger.info("LoadFromDataBase process: " + ((i.doubleValue() * GlobalVariances.maxListNumber.doubleValue() + GlobalVariances.maxListNumber.doubleValue()) / entityCount.doubleValue()));
         }
-        System.out.println("Completed LoadFromDataBase!");
+        logger.info("Completed LoadFromDataBase!");
     }
 
     /**
@@ -50,7 +52,7 @@ public class LabelMap {
             LoadFromDataBase(jdbcTemplate);
         }
         if (!id2label.containsKey(id)) {
-            System.out.println(String.format("error! Cannot find entity for id : %d!", id));
+            logger.error(String.format("error! Cannot find entity for id : %d!", id));
             return "";
         }
         return id2label.get(id);

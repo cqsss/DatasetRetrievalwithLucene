@@ -32,18 +32,18 @@ public class SearchTest {
         QueryParser queryParser = new QueryParser("content", analyzer);
         Similarity tfidfSimilarity = new ClassicSimilarity();
         try {
-            Query query = queryParser.parse("city");
+            Query query = queryParser.parse("dog");
             Directory directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
             IndexReader indexReader = DirectoryReader.open(directory);
             IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-            indexSearcher.setSimilarity(tfidfSimilarity);
+            //indexSearcher.setSimilarity(tfidfSimilarity);
             /**
              * maxDoc(): number of documents.
              * docCount(): number of documents that contain this field.
              * sumDocFreq(): number of postings-list entries.
              * sumTotalTermFreq(): number of tokens.
              */
-            System.out.println(indexSearcher.collectionStatistics("content"));
+            System.out.println(indexSearcher.collectionStatistics("dataset_id"));
 
             Expression expr = JavascriptCompiler.compile("sqrt(_score) + ln(popularity)");
 
@@ -57,7 +57,7 @@ public class SearchTest {
             for (ScoreDoc si : scoreDocs) {
                 Integer docID = si.doc;
                 Document document = indexReader.document(docID);
-                System.out.println("dataset_local_id: " + document.get("local_id") + ", score: " + si.score);
+                System.out.println("dataset_id: " + document.get("dataset_id") + ", score: " + si.score);
                 Explanation e = indexSearcher.explain(query, si.doc);
                 System.out.println("Explanation： \n"+e);
                 System.out.println("********************************************************************");

@@ -1,6 +1,7 @@
 package com.datasetretrievalwithlucene.demo.util;
 
 import com.datasetretrievalwithlucene.demo.Bean.TripleID;
+import org.apache.log4j.Logger;
 import org.apache.lucene.document.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,10 +17,10 @@ public class DBIndexer {
     @Resource
     private JdbcTemplate jdbcTemplate;
 
+    private static Logger logger = Logger.getLogger(DBIndexer.class);
     private Map<Integer, String> id2text = new HashMap<>();
     private IndexFactory indexF;
     private Integer datasetCountLimit = 1000000;
-
     /**
      * 统计实体出现次数
      * @param count
@@ -95,18 +96,18 @@ public class DBIndexer {
                 Integer obj = Integer.parseInt(qi.get("object").toString());
                 if (dataset_id > currentID) {
                     id2text.put(currentID, GenerateText(tripleIDS));
-                    System.out.println("Completed mapping dataset " + currentID);
+                    logger.info("Completed mapping dataset " + currentID);
                     currentID = dataset_id;
                     tripleIDS = new ArrayList<>();
                     tripleIDS.clear();
                 }
                 tripleIDS.add(new TripleID(sub, pre, obj));
             }
-            System.out.println("MapID2TripleText process " + ((i.doubleValue() * GlobalVariances.maxListNumber.doubleValue() + GlobalVariances.maxListNumber.doubleValue()) / tripleCount.doubleValue()));
+            logger.info("MapID2TripleText process: " + ((i.doubleValue() * GlobalVariances.maxListNumber.doubleValue() + GlobalVariances.maxListNumber.doubleValue()) / tripleCount.doubleValue()));
         }
         if(tripleIDS.size() > 0)
             id2text.put(currentID, GenerateText(tripleIDS));
-        System.out.println("Completed MapID2TripleText!");
+        logger.info("Completed MapID2TripleText!");
     }
 
     /**
@@ -130,6 +131,7 @@ public class DBIndexer {
             Document document = new Document();
 
             all ++;
+            logger.info("Start GenerateDocument " + all);
             // local ID
             Integer local_id = Integer.parseInt(qi.get("dataset_id").toString());
             document.add(new StoredField("dataset_id", local_id.toString()));
@@ -140,7 +142,7 @@ public class DBIndexer {
             document.add(new StoredField("id", id));
 
             // Content
-            String content =GetTextFromLocalID(local_id);
+            String content = GetTextFromLocalID(local_id);
             document.add(new TextField("content", content, Field.Store.YES));
 
             // Normal Fields
@@ -156,12 +158,11 @@ public class DBIndexer {
 
             // commit document
             indexF.CommitDocument(document);
-
+            logger.info("Completed GenerateDocument " + all);
             if (all > datasetCountLimit) break;
 
         }
-        System.out.println("All: " + all + " dataset number: " + cnt);
-
+        logger.info("All: " + all + " dataset number: " + cnt);
     }
 
     public void main() {
