@@ -1,10 +1,10 @@
 package com.datasetretrievalwithlucene.demo;
 
 import com.datasetretrievalwithlucene.demo.util.GlobalVariances;
+import com.datasetretrievalwithlucene.demo.util.Statistics;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.hunspell.Dictionary;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.expressions.Expression;
@@ -13,13 +13,10 @@ import org.apache.lucene.expressions.js.JavascriptCompiler;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queries.function.FunctionScoreQuery;
-import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.search.similarities.ClassicSimilarity;
 import org.apache.lucene.search.similarities.Similarity;
-import org.apache.lucene.search.similarities.TFIDFSimilarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.BytesRef;
@@ -34,6 +31,7 @@ import java.util.List;
 
 @SpringBootTest
 public class SearchTest {
+    private Statistics statistics = new Statistics();
     private Directory directory;
     private IndexReader indexReader;
     private IndexSearcher indexSearcher;
@@ -43,7 +41,7 @@ public class SearchTest {
         QueryParser queryParser = new QueryParser("content", analyzer);
         Similarity tfidfSimilarity = new ClassicSimilarity();
         try {
-            Query query = queryParser.parse("dog");
+            Query query = queryParser.parse("dog cat");
             directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
             indexReader = DirectoryReader.open(directory);
             indexSearcher = new IndexSearcher(indexReader);
@@ -54,7 +52,7 @@ public class SearchTest {
              * sumDocFreq(): number of postings-list entries.
              * sumTotalTermFreq(): number of tokens.
              */
-            System.out.println(indexSearcher.collectionStatistics("dataset_id"));
+            System.out.println(indexSearcher.collectionStatistics("content"));
 
             Expression expr = JavascriptCompiler.compile("sqrt(_score) + ln(popularity)");
 
@@ -71,6 +69,7 @@ public class SearchTest {
                 Document document = indexReader.document(docID);
                 System.out.println("dataset_id: " + document.get("dataset_id") + ", score: " + si.score);
                 Explanation e = indexSearcher.explain(query, si.doc);
+
                 System.out.println("Explanation： \n"+e);
                 System.out.println("********************************************************************");
             }
@@ -78,25 +77,9 @@ public class SearchTest {
             e.printStackTrace();
         }
     }
-    public List<String> getTokens() throws IOException {
-        List<String> res = new ArrayList<>();
-        res.clear();
-        Analyzer analyzer = GlobalVariances.globeAnalyzer;
-        //第一个参数没有实际用处
-        TokenStream tokenStream = analyzer.tokenStream("content", new StringReader("lucene dataset search"));
-        tokenStream.reset();
-        CharTermAttribute charTerm = tokenStream.addAttribute(CharTermAttribute.class);
-        while (tokenStream.incrementToken()) {
-            System.out.println(charTerm);
-            res.add(charTerm.toString());
-        }
-        tokenStream.close();
-        return res;
-    }
     public void getFreq(List<String> tokens) throws IOException {
         directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
         indexReader = DirectoryReader.open(directory);
-        indexSearcher = new IndexSearcher(indexReader);
         for (String token : tokens) {
             System.out.println(indexReader.totalTermFreq(new Term("content", new BytesRef(token))));
         }
@@ -104,6 +87,6 @@ public class SearchTest {
     }
     @Test
     public void testFreq() throws IOException {
-        getFreq(getTokens());
+        getFreq(statistics.getTokens("cats and dogs"));
     }
 }
