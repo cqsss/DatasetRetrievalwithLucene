@@ -3,6 +3,7 @@ package com.datasetretrievalwithlucene.demo.util;
 import com.datasetretrievalwithlucene.demo.Bean.TripleID;
 import org.apache.log4j.Logger;
 import org.apache.lucene.document.*;
+import org.apache.lucene.index.IndexOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -141,7 +142,15 @@ public class DBIndexer {
 
             // Content
             String content = GetTextFromLocalID(local_id);
-            document.add(new TextField("content", content, Field.Store.YES));
+            FieldType fieldType = new FieldType();
+            fieldType.setStored(true);
+            fieldType.setTokenized(true);
+            fieldType.setStoreTermVectorPositions(true);
+            fieldType.setStoreTermVectorOffsets(true);
+            fieldType.setStoreTermVectorPayloads(true);
+            fieldType.setStoreTermVectors(true);
+            fieldType.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
+            document.add(new Field("content", content, fieldType));
 
             // Normal Fields
             for (Map.Entry<String, Object> entry : qi.entrySet()) {
