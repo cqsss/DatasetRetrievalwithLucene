@@ -160,7 +160,7 @@ public class DBIndexer {
                 String value = "";
                 if (entry.getValue() != null)
                     value = entry.getValue().toString();
-                document.add(new TextField(name, value, Field.Store.YES));
+                document.add(new Field(name, value, fieldType));
             }
 
             // commit document
