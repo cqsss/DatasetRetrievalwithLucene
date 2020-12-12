@@ -13,8 +13,8 @@ public class GlobalVariances {
     public static Integer maxRelationNumber = 1000;
 
     // 数据存放常数
-    public static String store_Dir = "D:/db_index/";
-    public static String index_Dir = "D:/db_index/";
+    public static String store_Dir = "D:/db_index_new/";
+    public static String index_Dir = "D:/db_index_new/";
     public static Integer commit_limit = 10;
 
     // 分析器

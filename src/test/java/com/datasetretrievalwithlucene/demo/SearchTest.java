@@ -13,9 +13,11 @@ import org.apache.lucene.expressions.js.JavascriptCompiler;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.index.Terms;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.search.similarities.ClassicSimilarity;
+import org.apache.lucene.search.similarities.LMDirichletSimilarity;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
@@ -39,13 +41,13 @@ public class SearchTest {
     public void testQueryIndex() {
         Analyzer analyzer = new EnglishAnalyzer();
         QueryParser queryParser = new QueryParser("content", analyzer);
-        Similarity tfidfSimilarity = new ClassicSimilarity();
+        Similarity similarity= new LMDirichletSimilarity();
         try {
             Query query = queryParser.parse("dog cat");
             directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
             indexReader = DirectoryReader.open(directory);
             indexSearcher = new IndexSearcher(indexReader);
-            //indexSearcher.setSimilarity(tfidfSimilarity);
+            indexSearcher.setSimilarity(similarity);
             /**
              * maxDoc(): number of documents.
              * docCount(): number of documents that contain this field.

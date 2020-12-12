@@ -131,7 +131,8 @@ public class DBIndexer {
             Document document = new Document();
 
             all ++;
-            logger.info("Start generating document: " + all);
+            if (all % 1000 == 0)
+                logger.info("Start generating document: " + all);
             // local ID
             Integer local_id = Integer.parseInt(qi.get("dataset_id").toString());
             document.add(new StoredField("dataset_id", local_id.toString()));
@@ -165,7 +166,8 @@ public class DBIndexer {
 
             // commit document
             indexF.CommitDocument(document);
-            logger.info("Completed generating document: " + all);
+            if (all % 1000 == 0)
+                logger.info("Completed generating document: " + all);
             if (all > datasetCountLimit) break;
 
         }
@@ -173,6 +175,7 @@ public class DBIndexer {
     }
 
     public void main() {
+        logger.info("Start");
         id2text.clear();
         indexF = new IndexFactory();
         indexF.Init(GlobalVariances.store_Dir, GlobalVariances.commit_limit, GlobalVariances.globeAnalyzer);

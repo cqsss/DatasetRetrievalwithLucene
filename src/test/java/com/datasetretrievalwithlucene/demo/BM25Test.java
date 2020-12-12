@@ -14,6 +14,7 @@ import org.apache.lucene.util.BytesRef;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -39,9 +40,9 @@ public class BM25Test {
         Double b = 0.75;
         try {
             Double N = (double) indexReader.getDocCount(field);
-            //Terms terms = indexReader.getTermVector(doc_id, field);
-            //Double D = (double) terms.size();
-            Double D = 1.0;
+            Terms terms = indexReader.getTermVector(doc_id, field);
+            Double D = (double) terms.size();
+            //Double D = 1.0;
             Double avgdl = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
             System.out.println("doc_id: " + doc_id);
             for (String token : tokens) {
@@ -49,18 +50,21 @@ public class BM25Test {
                 Double n = (double) indexReader.docFreq(new Term(field, bytesRef));
                 Double idf = Math.log((N - n + 0.5) / (n + 0.5) + 1);
                 Double f = 1.0;
-//                if(terms != null)
-//                {
-//                    TermsEnum termsIterator = terms.iterator();
-//                    if(termsIterator.seekExact(bytesRef)) f = (double)termsIterator.totalTermFreq();
-//                }
-                score += idf * (f * (k1 + 1.0) / (f + k1 * (1.0 - b + b * D /avgdl)));
+                if(terms != null)
+                {
+                    TermsEnum termsIterator = terms.iterator();
+                    if(termsIterator.seekExact(bytesRef)) f = (double)termsIterator.totalTermFreq();
+                }
+                Double tmp = idf * (f * (k1 + 1.0) / (f + k1 * (1.0 - b + b * D /avgdl)));
+                score += tmp;
                 System.out.println("token: " + token);
-                System.out.println("N:" + N);
-                System.out.println("n:" + n);
-                System.out.println("D:" + D);
-                System.out.println("avgdl:" + avgdl);
-                System.out.println("f:" + f);
+                System.out.println("N: " + N);
+                System.out.println("n: " + n);
+                System.out.println("D: " + D);
+                System.out.println("avgdl: " + avgdl);
+                System.out.println("f: " + f);
+                System.out.println("idf: " + idf);
+                System.out.println("score: " + tmp);
             }
 
         } catch (Exception e) {
@@ -85,7 +89,8 @@ public class BM25Test {
                 Explanation e = indexSearcher.explain(query, si.doc);
                 System.out.println("Explanation： \n" + e);
                 System.out.println("********************************************************************");
-                System.out.println("custom BM25 \n" + BM25(docID, "content", statistics.getTokens("dog cat")));
+                System.out.println("custom BM25: ");
+                System.out.println(BM25(docID, "content", statistics.getTokens("dog cat")));
                 System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             }
         } catch (Exception e) {
