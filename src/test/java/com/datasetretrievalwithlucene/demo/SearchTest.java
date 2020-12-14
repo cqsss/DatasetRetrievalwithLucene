@@ -41,7 +41,7 @@ public class SearchTest {
     public void testQueryIndex() {
         Analyzer analyzer = new EnglishAnalyzer();
         QueryParser queryParser = new QueryParser("content", analyzer);
-        Similarity similarity= new LMDirichletSimilarity();
+        Similarity similarity= new ClassicSimilarity();
         try {
             Query query = queryParser.parse("dog cat");
             directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
