@@ -565,3 +565,43 @@ java.lang.NullPointerException: null
 2020-12-15 16:10:47.091 [main] INFO  com.datasetretrievalwithlucene.demo.util.PageRank - [0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.011875000000000002, 0.008333333333333335, 0.008333333333333335, 0.011875000000000002, 0.01589732142857143, 0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.008477085707953396, 0.01616326332161854, 0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.012355654761904766, 0.008333333333333335]
 2020-12-15 16:10:47.111 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
 2020-12-15 16:10:47.118 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2020-12-15 17:21:59.643 [restartedMain] INFO  com.datasetretrievalwithlucene.demo.DemoApplication - Starting DemoApplication on DESKTOP-M68RJ6T with PID 13600 (G:\DatasetRetrievalwithLucene\target\classes started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
+2020-12-15 17:21:59.666 [restartedMain] INFO  com.datasetretrievalwithlucene.demo.DemoApplication - No active profile set, falling back to default profiles: default
+2020-12-15 17:22:00.654 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2020-12-15 17:22:00.654 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2020-12-15 17:22:00.654 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.39]
+2020-12-15 17:22:00.720 [restartedMain] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2020-12-15 17:22:01.129 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2020-12-15 17:22:01.202 [restartedMain] INFO  com.datasetretrievalwithlucene.demo.DemoApplication - Started DemoApplication in 1.927 seconds (JVM running for 2.822)
+2020-12-15 17:24:14.245 [restartedMain] INFO  com.datasetretrievalwithlucene.demo.DemoApplication - Starting DemoApplication on DESKTOP-M68RJ6T with PID 6544 (G:\DatasetRetrievalwithLucene\target\classes started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
+2020-12-15 17:24:14.252 [restartedMain] INFO  com.datasetretrievalwithlucene.demo.DemoApplication - No active profile set, falling back to default profiles: default
+2020-12-15 17:24:15.233 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2020-12-15 17:24:15.234 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2020-12-15 17:24:15.234 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.39]
+2020-12-15 17:24:15.301 [restartedMain] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2020-12-15 17:24:15.693 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2020-12-15 17:24:15.762 [restartedMain] INFO  com.datasetretrievalwithlucene.demo.DemoApplication - Started DemoApplication in 1.867 seconds (JVM running for 2.727)
+2020-12-15 17:43:18.025 [main] INFO  com.datasetretrievalwithlucene.demo.PageRankTest - Starting PageRankTest on DESKTOP-M68RJ6T with PID 1536 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
+2020-12-15 17:43:18.034 [main] INFO  com.datasetretrievalwithlucene.demo.PageRankTest - No active profile set, falling back to default profiles: default
+2020-12-15 17:43:20.037 [main] INFO  com.datasetretrievalwithlucene.demo.PageRankTest - Started PageRankTest in 2.35 seconds (JVM running for 3.981)
+2020-12-15 17:43:20.237 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2020-12-15 17:43:20.628 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2020-12-15 17:43:20.660 [main] INFO  com.datasetretrievalwithlucene.demo.util.PageRank - [0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.011875000000000002, 0.008333333333333335, 0.008333333333333335, 0.011875000000000002, 0.01589732142857143, 0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.008477085707953396, 0.01616326332161854, 0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.012355654761904766, 0.008333333333333335]
+2020-12-15 17:43:20.689 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2020-12-15 17:43:20.699 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2020-12-15 17:43:46.731 [main] INFO  com.datasetretrievalwithlucene.demo.PageRankTest - Starting PageRankTest on DESKTOP-M68RJ6T with PID 10624 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
+2020-12-15 17:43:46.742 [main] INFO  com.datasetretrievalwithlucene.demo.PageRankTest - No active profile set, falling back to default profiles: default
+2020-12-15 17:43:48.564 [main] INFO  com.datasetretrievalwithlucene.demo.PageRankTest - Started PageRankTest in 2.223 seconds (JVM running for 3.672)
+2020-12-15 17:43:48.752 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2020-12-15 17:43:48.993 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2020-12-15 17:43:49.025 [main] INFO  com.datasetretrievalwithlucene.demo.util.PageRank - [0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.011875000000000002, 0.008333333333333335, 0.008333333333333335, 0.011875000000000002, 0.01589732142857143, 0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.008477085707953396, 0.01616326332161854, 0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.012355654761904766, 0.008333333333333335]
+2020-12-15 17:43:49.045 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2020-12-15 17:43:49.053 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2020-12-15 17:50:11.632 [main] INFO  com.datasetretrievalwithlucene.demo.DINGTest - Starting DINGTest on DESKTOP-M68RJ6T with PID 5004 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
+2020-12-15 17:50:11.643 [main] INFO  com.datasetretrievalwithlucene.demo.DINGTest - No active profile set, falling back to default profiles: default
+2020-12-15 17:50:14.080 [main] INFO  com.datasetretrievalwithlucene.demo.DINGTest - Started DINGTest in 2.993 seconds (JVM running for 4.657)
+2020-12-15 17:50:14.369 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2020-12-15 17:50:14.594 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2020-12-15 17:50:14.724 [main] INFO  com.datasetretrievalwithlucene.demo.util.PageRank - [0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.011875000000000002, 0.008333333333333335, 0.008333333333333335, 0.015416666666666669, 0.01589732142857143, 0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.008620838082573457, 0.02936691893047113, 0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.021007440476190478, 0.008333333333333335]
+2020-12-15 17:50:14.755 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2020-12-15 17:50:14.767 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

@@ -1,19 +1,9 @@
 package com.datasetretrievalwithlucene.demo.util;
 
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.similarities.ClassicSimilarity;
-import org.apache.lucene.search.similarities.Similarity;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.MMapDirectory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import javax.annotation.Resource;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,12 +11,18 @@ import java.util.Map;
 
 public class PageRank {
     private static final Logger logger = LoggerFactory.getLogger(PageRank.class);
+    /**
+     * outLinks.get(i): i指向的点的集合
+     * inLinks.get(i): 指向i的点的集合
+     * outLinkCount.get(i): i指出的边数
+     * inLinkCount.get(i): 指向i的边数
+     */
     private static Map<Integer, Integer> outLinkCount = new HashMap<>();
     private static Map<Integer, Integer> inLinkCount = new HashMap<>();
     private static Map<Integer, List<Integer>> outLinks = new HashMap<>();
     private static Map<Integer, List<Integer>> inLinks = new HashMap<>();
     private static Integer maxID = 0;
-    public static void addEdge(Integer u, Integer v, Integer c) {
+    public static void AddEdge(Integer u, Integer v, Integer c) {
         if (outLinks.containsKey(u)) {
             outLinks.get(u).add(v);
         } else {
@@ -60,9 +56,9 @@ public class PageRank {
                 maxID = Math.max(maxID, dataset1);
                 maxID = Math.max(maxID, dataset2);
                 Integer count = Integer.parseInt(ri.get("count").toString());
-                addEdge(dataset1, dataset2, count);
+                AddEdge(dataset1, dataset2, count);
             }
-//            addEdge(13,9,10);
+//            AddEdge(13,9,10);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,7 +70,6 @@ public class PageRank {
      */
     public static void IterativePageRank(String field, JdbcTemplate jdbcTemplate) {
         ReadDataBase(jdbcTemplate);
-
         try {
             //Double N = (double) indexReader.getDocCount(field);
 //            maxID = jdbcTemplate.queryForObject("SELECT MAX(dataset1) FROM outerlink", Integer.class);
