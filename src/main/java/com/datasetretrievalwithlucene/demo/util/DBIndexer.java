@@ -1,9 +1,10 @@
 package com.datasetretrievalwithlucene.demo.util;
 
 import com.datasetretrievalwithlucene.demo.Bean.TripleID;
-import org.apache.log4j.Logger;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.IndexOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ public class DBIndexer {
     @Resource
     private JdbcTemplate jdbcTemplate;
 
-    private static Logger logger = Logger.getLogger(DBIndexer.class);
+    private static final Logger logger = LoggerFactory.getLogger(DBIndexer.class);
     private Map<Integer, String> id2text = new HashMap<>();
     private IndexFactory indexF;
     private Integer datasetCountLimit = 1000000;

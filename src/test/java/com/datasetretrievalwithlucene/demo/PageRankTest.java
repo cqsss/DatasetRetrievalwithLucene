@@ -2,7 +2,6 @@ package com.datasetretrievalwithlucene.demo;
 
 import com.datasetretrievalwithlucene.demo.util.GlobalVariances;
 import com.datasetretrievalwithlucene.demo.util.Statistics;
-import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.Document;
@@ -15,6 +14,8 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.BytesRef;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,7 +30,7 @@ import java.util.Map;
 public class PageRankTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private static Logger logger = Logger.getLogger(PageRankTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(PageRankTest.class);
     private Directory directory;
     private IndexReader indexReader;
     private IndexSearcher indexSearcher;
@@ -132,7 +133,7 @@ public class PageRankTest {
                 }
                 pr = tmp;
             }
-            logger.info(pr);
+            logger.info(pr.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

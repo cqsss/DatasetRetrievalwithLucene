@@ -1,6 +1,7 @@
 package com.datasetretrievalwithlucene.demo.util;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,7 +16,7 @@ import java.util.Map;
 @Service
 public class LabelMap {
 
-    private static Logger logger = Logger.getLogger(LabelMap.class);
+    private static final Logger logger = LoggerFactory.getLogger(LabelMap.class);
     private static Map<Integer, String> id2label = null;
 
     /**
