@@ -14,13 +14,11 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class Ranking {
-    private Statistics statistics;
-    private Directory directory;
-    private IndexReader indexReader;
-    private IndexSearcher indexSearcher;
-    public void init() {
+    private static Directory directory;
+    private static IndexReader indexReader;
+    private static IndexSearcher indexSearcher;
+    public static void init() {
         try {
-            statistics = new Statistics();
             directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
             indexReader = DirectoryReader.open(directory);
             indexSearcher = new IndexSearcher(indexReader);
@@ -28,7 +26,7 @@ public class Ranking {
             e.printStackTrace();
         }
     }
-    public Double BM25(Integer doc_id, String field, List<String> tokens) {
+    public static Double BM25(Integer doc_id, String field, List<String> tokens) {
         init();
         Double score = 0.0;
         Double k1 = 1.2;
@@ -61,7 +59,7 @@ public class Ranking {
         //System.out.println(score);
         return score;
     }
-    public Double TFIDF(Integer doc_id, String field, List<String> tokens) {
+    public static Double TFIDF(Integer doc_id, String field, List<String> tokens) {
         Double score = 0.0;
         try {
             Double docCount = (double) indexReader.getDocCount(field);
@@ -91,4 +89,5 @@ public class Ranking {
         //System.out.println(score);
         return score;
     }
+
 }

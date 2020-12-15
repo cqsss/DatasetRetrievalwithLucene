@@ -9,8 +9,12 @@ import javax.annotation.Resource;
 
 @RestController
 public class SearchController {
-    @Resource
-    private DBIndexer dbIndexer;
+    private final DBIndexer dbIndexer;
+
+    public SearchController(DBIndexer dbIndexer) {
+        this.dbIndexer = dbIndexer;
+    }
+
     @RequestMapping ("/index")
     public String DoIndex() {
         dbIndexer.main();

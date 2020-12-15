@@ -1,0 +1,8 @@
+2020-12-15 16:10:44.916 [main] INFO  com.datasetretrievalwithlucene.demo.PageRankTest - Starting PageRankTest on DESKTOP-M68RJ6T with PID 7772 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
+2020-12-15 16:10:44.924 [main] INFO  com.datasetretrievalwithlucene.demo.PageRankTest - No active profile set, falling back to default profiles: default
+2020-12-15 16:10:46.660 [main] INFO  com.datasetretrievalwithlucene.demo.PageRankTest - Started PageRankTest in 2.118 seconds (JVM running for 3.578)
+2020-12-15 16:10:46.841 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2020-12-15 16:10:47.062 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2020-12-15 16:10:47.091 [main] INFO  com.datasetretrievalwithlucene.demo.util.PageRank - [0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.011875000000000002, 0.008333333333333335, 0.008333333333333335, 0.011875000000000002, 0.01589732142857143, 0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.008477085707953396, 0.01616326332161854, 0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.012355654761904766, 0.008333333333333335]
+2020-12-15 16:10:47.111 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2020-12-15 16:10:47.118 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

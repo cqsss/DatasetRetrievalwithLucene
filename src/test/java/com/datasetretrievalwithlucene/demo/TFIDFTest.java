@@ -21,13 +21,11 @@ import java.util.List;
 
 @SpringBootTest
 public class TFIDFTest {
-    private Statistics statistics;
     private Directory directory;
     private IndexReader indexReader;
     private IndexSearcher indexSearcher;
     public void init() {
         try {
-            statistics = new Statistics();
             Similarity similarity= new ClassicSimilarity();
             directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
             indexReader = DirectoryReader.open(directory);
@@ -92,7 +90,7 @@ public class TFIDFTest {
                 System.out.println("Explanation： \n" + e);
                 System.out.println("********************************************************************");
                 System.out.println("custom TFIDF: ");
-                System.out.println(TFIDF(docID, "content", statistics.getTokens("dog cat")));
+                System.out.println(TFIDF(docID, "content", Statistics.getTokens("dog cat")));
                 System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             }
         } catch (Exception e) {

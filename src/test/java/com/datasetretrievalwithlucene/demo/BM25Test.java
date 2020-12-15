@@ -20,13 +20,11 @@ import java.util.List;
 
 @SpringBootTest
 public class BM25Test {
-    private Statistics statistics;
     private Directory directory;
     private IndexReader indexReader;
     private IndexSearcher indexSearcher;
     public void init() {
         try {
-            statistics = new Statistics();
             directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
             indexReader = DirectoryReader.open(directory);
             indexSearcher = new IndexSearcher(indexReader);
@@ -92,7 +90,7 @@ public class BM25Test {
                 System.out.println("Explanation： \n" + e);
                 System.out.println("********************************************************************");
                 System.out.println("custom BM25: ");
-                System.out.println(BM25(docID, "content", statistics.getTokens("dog cat")));
+                System.out.println(BM25(docID, "content", Statistics.getTokens("dog cat")));
                 System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             }
         } catch (Exception e) {
