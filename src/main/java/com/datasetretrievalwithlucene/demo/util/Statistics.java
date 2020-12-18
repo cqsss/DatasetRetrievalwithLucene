@@ -1,5 +1,7 @@
 package com.datasetretrievalwithlucene.demo.util;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -32,5 +34,22 @@ public class Statistics {
         tokenStream.close();
         System.out.println(res);
         return res;
+    }
+    public static JSONObject readJson(String filename) {
+        File file = new File(filename);
+        if(!file.exists()) return new JSONObject();
+        String text = "";
+        try {
+            Scanner sc = new Scanner(file);
+            while(sc.hasNextLine()) {
+                String line = sc.nextLine();
+                line = line.replace("\n", "").replace(" ", "").replace("\t", "");
+                text += line;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println( filename + " Load Success!" );
+        return JSON.parseObject(text);
     }
 }

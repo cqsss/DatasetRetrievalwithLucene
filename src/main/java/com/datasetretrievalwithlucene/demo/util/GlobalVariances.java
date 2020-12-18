@@ -1,5 +1,7 @@
 package com.datasetretrievalwithlucene.demo.util;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONPObject;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 
@@ -22,7 +24,8 @@ public class GlobalVariances {
     //SQL常数
     public static Integer maxListNumber = 100000;
 
-//    public static JSONObject boostWeights = null;
-//    public static JSONObject getBoostWeights() { if(null == boostWeights) boostWeights = Statistics.readJson("json/ParseMatch_boost.json"); return boostWeights; }
+    public static JSONObject boostWeights = null;
+    public static JSONObject getBoostWeights() { if(null == boostWeights) boostWeights = Statistics.readJson("src/main/resources/json/ParseMatch_boost.json"); return boostWeights; }
 
+    public static Integer FSDMUWindowSize = 8;
 }
