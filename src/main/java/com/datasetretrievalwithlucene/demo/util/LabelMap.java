@@ -22,7 +22,7 @@ public class LabelMap {
     /**
      * 从数据库中获取数据集id与实体id和label的映射
      */
-    public static void LoadFromDataBase(JdbcTemplate jdbcTemplate) {
+    public static void loadFromDataBase(JdbcTemplate jdbcTemplate) {
         Integer entityCount = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM entity;", Integer.class);
         logger.info("total entity number: " + entityCount);
         for (Integer i = 0; i <= entityCount / GlobalVariances.maxListNumber; i++) {
@@ -50,7 +50,7 @@ public class LabelMap {
     public static String query(Integer id, JdbcTemplate jdbcTemplate) {
         if (id2label == null) {
             id2label = new HashMap<>();
-            LoadFromDataBase(jdbcTemplate);
+            loadFromDataBase(jdbcTemplate);
         }
         if (!id2label.containsKey(id)) {
             logger.error(String.format("error! Cannot find entity for id : %d!", id));

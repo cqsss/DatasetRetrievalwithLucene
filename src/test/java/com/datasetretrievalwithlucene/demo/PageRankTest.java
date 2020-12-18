@@ -13,7 +13,7 @@ public class PageRankTest {
     @Test
     public void testPageRank() {
         try {
-            PageRank.IterativePageRank("content", jdbcTemplate);
+            PageRank.iterativePageRank("content", jdbcTemplate);
         } catch (Exception e) {
             e.printStackTrace();
         }

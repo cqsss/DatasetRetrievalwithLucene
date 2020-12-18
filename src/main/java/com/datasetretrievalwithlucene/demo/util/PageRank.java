@@ -22,7 +22,7 @@ public class PageRank {
     private static Map<Integer, List<Integer>> outLinks = new HashMap<>();
     private static Map<Integer, List<Integer>> inLinks = new HashMap<>();
     private static Integer maxID = 0;
-    public static void AddEdge(Integer u, Integer v, Integer c) {
+    public static void addEdge(Integer u, Integer v, Integer c) {
         if (outLinks.containsKey(u)) {
             outLinks.get(u).add(v);
         } else {
@@ -40,13 +40,13 @@ public class PageRank {
         Integer tmp = 0;
         if (outLinkCount.containsKey(u))
             tmp = outLinkCount.get(u);
-        outLinkCount.put(u, tmp + c);
+        outLinkCount.put(u, tmp + 1);
         tmp = 0;
         if (inLinkCount.containsKey(v))
             tmp = inLinkCount.get(v);
-        inLinkCount.put(v, tmp + c);
+        inLinkCount.put(v, tmp + 1);
     }
-    public static void ReadDataBase(JdbcTemplate jdbcTemplate) {
+    public static void readDataBase(JdbcTemplate jdbcTemplate) {
         try {
             List<Map<String, Object>> res;
             res = jdbcTemplate.queryForList("SELECT dataset1,dataset2,count FROM outerlink LIMIT 0,10");
@@ -56,9 +56,9 @@ public class PageRank {
                 maxID = Math.max(maxID, dataset1);
                 maxID = Math.max(maxID, dataset2);
                 Integer count = Integer.parseInt(ri.get("count").toString());
-                AddEdge(dataset1, dataset2, count);
+                addEdge(dataset1, dataset2, count);
             }
-//            AddEdge(13,9,10);
+//            addEdge(13,9,10);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -68,8 +68,8 @@ public class PageRank {
      * 单向边版本的PageRank
      * @param field
      */
-    public static void IterativePageRank(String field, JdbcTemplate jdbcTemplate) {
-        ReadDataBase(jdbcTemplate);
+    public static void iterativePageRank(String field, JdbcTemplate jdbcTemplate) {
+        readDataBase(jdbcTemplate);
         try {
             //Double N = (double) indexReader.getDocCount(field);
 //            maxID = jdbcTemplate.queryForObject("SELECT MAX(dataset1) FROM outerlink", Integer.class);

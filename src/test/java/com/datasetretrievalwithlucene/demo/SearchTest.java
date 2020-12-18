@@ -33,7 +33,6 @@ import java.util.List;
 
 @SpringBootTest
 public class SearchTest {
-    private Statistics statistics = new Statistics();
     private Directory directory;
     private IndexReader indexReader;
     private IndexSearcher indexSearcher;
@@ -89,6 +88,6 @@ public class SearchTest {
     }
     @Test
     public void testFreq() throws IOException {
-        getFreq(statistics.getTokens("cats and dogs"));
+        getFreq(Statistics.getTokens("cats and dogs"));
     }
 }

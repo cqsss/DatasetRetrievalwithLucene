@@ -27,7 +27,7 @@ public class DINGTest {
     private static Map<Integer, List<Integer>> outLinks = new HashMap<>();
     private static Map<Integer, List<Integer>> inLinks = new HashMap<>();
     private static Integer maxID = 0;
-    public static void AddEdge(Integer u, Integer v, Integer c, Integer p) {
+    public static void addEdge(Integer u, Integer v, Integer c, Integer p) {
         Integer tmp = 0;
         if (edgeCountSet.containsKey(new Pair<>(u, v))) {
             tmp = edgeCountSet.get(new Pair<>(u, v));
@@ -61,24 +61,25 @@ public class DINGTest {
             tmp = predicateCount.get(p);
         predicateCount.put(p, tmp + 1);
     }
-    public static void ReadDataBase(JdbcTemplate jdbcTemplate) {
+    public static void readDataBase(JdbcTemplate jdbcTemplate) {
         try {
             List<Map<String, Object>> res;
-            res = jdbcTemplate.queryForList("SELECT dataset1,dataset2,count FROM outerlink LIMIT 0,10");
+            res = jdbcTemplate.queryForList("SELECT sub_ds,obj_ds,predicate,count FROM outerlink3 LIMIT 0,10");
             for (Map<String, Object> ri : res) {
-                Integer dataset1 = Integer.parseInt(ri.get("dataset1").toString());
-                Integer dataset2 = Integer.parseInt(ri.get("dataset2").toString());
+                Integer dataset1 = Integer.parseInt(ri.get("sub_ds").toString());
+                Integer dataset2 = Integer.parseInt(ri.get("obj_ds").toString());
                 maxID = Math.max(maxID, dataset1);
                 maxID = Math.max(maxID, dataset2);
+                Integer predicate = Integer.parseInt(ri.get("predicate").toString());
                 Integer count = Integer.parseInt(ri.get("count").toString());
-                AddEdge(dataset1, dataset2, count, 1);
+                addEdge(dataset1, dataset2, count, predicate);
             }
-//            AddEdge(13,9,10);
+//            addEdge(13,9,10);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public static Double GetTF(Integer i, Integer j) {
+    public static Double getTF(Integer i, Integer j) {
         Double res = 0.0;
         for (Integer k : outLinks.get(i)) {
             res = Math.max(res, edgeCountSet.get(new Pair<>(i, k)));
@@ -86,24 +87,22 @@ public class DINGTest {
         res = edgeCountSet.get(new Pair<>(i, j)) / res;
         return res;
     }
-    public static Double GetIDF(Integer i, Integer j) {
-        Double res = 0.0;
-        res = maxID / (1.0 + predicateCount.get(edgePredicateSet.get(new Pair<>(i, j ))));
-        return res;
+    public static Double getIDF(Integer i, Integer j) {
+        return maxID / (1.0 + predicateCount.get(edgePredicateSet.get(new Pair<>(i, j))));
     }
-    public static Double GetW(Integer i, Integer j) {
-        return GetTF(i, j) * GetIDF(i, j);
+    public static Double getW(Integer i, Integer j) {
+        return getTF(i, j) * getIDF(i, j);
     }
-    public static Double GetP(Integer i, Integer j) {
+    public static Double getP(Integer i, Integer j) {
         Double res = 0.0;
         for (Integer k : outLinks.get(i)) {
-            res += GetW(i, k);
+            res += getW(i, k);
         }
-        res = GetW(i, j) / res;
+        res = getW(i, j) / res;
         return res;
     }
     public static void DING(String field, JdbcTemplate jdbcTemplate) {
-        ReadDataBase(jdbcTemplate);
+        readDataBase(jdbcTemplate);
         try {
             //Double N = (double) indexReader.getDocCount(field);
 //            maxID = jdbcTemplate.queryForObject("SELECT MAX(dataset1) FROM outerlink", Integer.class);
@@ -127,7 +126,7 @@ public class DINGTest {
                     sumPR = 0.0;
                     if(inLinks.containsKey(i + 1)) {
                         for (Integer j : inLinks.get(i + 1)) {
-                            sumPR += pr.get(j - 1) * GetP(j, i+1);
+                            sumPR += pr.get(j - 1) * getP(j, i+1);
                         }
                     }
                     sumPR *= d;

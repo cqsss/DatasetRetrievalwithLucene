@@ -28,7 +28,7 @@ public class DBIndexer {
      * @param count
      * @param id
      */
-    private void AddCount(Map<Integer, Integer> count, Integer id) {
+    private void addCount(Map<Integer, Integer> count, Integer id) {
         if(!count.containsKey(id)) count.put(id, 0);
         count.put(id, count.get(id) + 1);
     }
@@ -39,7 +39,7 @@ public class DBIndexer {
      * @param limit
      * @return
      */
-    private String GetTopUnitText(Map<Integer, Integer> count, Integer limit) {
+    private String getTopUnitText(Map<Integer, Integer> count, Integer limit) {
         List<Map.Entry<Integer, Integer>> countList = new ArrayList<>(count.entrySet());
         Collections.sort(countList, new Comparator<Map.Entry<Integer, Integer>>() {
             @Override
@@ -61,30 +61,30 @@ public class DBIndexer {
      * @param datasetTriples
      * @return
      */
-    private String GenerateText(List<TripleID> datasetTriples) {
+    private String generateText(List<TripleID> datasetTriples) {
         Map<Integer, Integer> subMap = new HashMap<>(); subMap.clear();
         Map<Integer, Integer> preMap = new HashMap<>(); preMap.clear();
         Map<Integer, Integer> objMap = new HashMap<>(); objMap.clear();
         Map<Integer, Integer> sumMap = new HashMap<>(); sumMap.clear();
         for (TripleID tri : datasetTriples) {
-            AddCount(subMap, tri.getSubject());
-            AddCount(preMap, tri.getPredicate());
-            AddCount(objMap, tri.getObject());
-            AddCount(sumMap, tri.getSubject());
-            AddCount(sumMap, tri.getObject());
+            addCount(subMap, tri.getSubject());
+            addCount(preMap, tri.getPredicate());
+            addCount(objMap, tri.getObject());
+            addCount(sumMap, tri.getSubject());
+            addCount(sumMap, tri.getObject());
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(GetTopUnitText(subMap, GlobalVariances.maxEntityNumber)); sb.append(";");
-        sb.append(GetTopUnitText(objMap, GlobalVariances.maxEntityNumber)); sb.append(";");
-        sb.append(GetTopUnitText(sumMap, GlobalVariances.maxEntityNumber)); sb.append(";");
-        sb.append(GetTopUnitText(preMap, GlobalVariances.maxRelationNumber)); sb.append(";");
+        sb.append(getTopUnitText(subMap, GlobalVariances.maxEntityNumber)); sb.append(";");
+        sb.append(getTopUnitText(objMap, GlobalVariances.maxEntityNumber)); sb.append(";");
+        sb.append(getTopUnitText(sumMap, GlobalVariances.maxEntityNumber)); sb.append(";");
+        sb.append(getTopUnitText(preMap, GlobalVariances.maxRelationNumber)); sb.append(";");
         return sb.toString();
     }
 
     /**
      * 得到数据集id到triple文本的映射
      */
-    private void MapID2TripleText() {
+    private void mapID2TripleText() {
         Integer tripleCount = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM triple;",Integer.class);
         Integer currentID = 1;
         List<TripleID> tripleIDS = new ArrayList<>();
@@ -97,7 +97,7 @@ public class DBIndexer {
                 Integer pre = Integer.parseInt(qi.get("predicate").toString());
                 Integer obj = Integer.parseInt(qi.get("object").toString());
                 if (dataset_id > currentID) {
-                    id2text.put(currentID, GenerateText(tripleIDS));
+                    id2text.put(currentID, generateText(tripleIDS));
                     logger.info("Completed mapping dataset " + currentID);
                     currentID = dataset_id;
                     tripleIDS = new ArrayList<>();
@@ -108,7 +108,7 @@ public class DBIndexer {
             logger.info("MapID2TripleText process: " + ((i.doubleValue() * GlobalVariances.maxListNumber.doubleValue() + GlobalVariances.maxListNumber.doubleValue()) / tripleCount.doubleValue()));
         }
         if(tripleIDS.size() > 0)
-            id2text.put(currentID, GenerateText(tripleIDS));
+            id2text.put(currentID, generateText(tripleIDS));
         logger.info("Completed MapID2TripleText!");
     }
 
@@ -117,7 +117,7 @@ public class DBIndexer {
      * @param local_id
      * @return
      */
-    private String GetTextFromLocalID(Integer local_id) {
+    private String getTextFromLocalID(Integer local_id) {
         if(id2text.containsKey(local_id)) return id2text.get(local_id);
         else return "";
     }
@@ -125,7 +125,7 @@ public class DBIndexer {
     /**
      * 生成文档并提价
      */
-    private void GenerateDocument() {
+    private void generateDocument() {
         Integer all = 0;
         List<Map<String, Object>> queryList = jdbcTemplate.queryForList("SELECT * FROM metadata");
         for (Map<String, Object> qi : queryList) {
@@ -143,7 +143,7 @@ public class DBIndexer {
             document.add(new StoredField("id", id));
 
             // Content
-            String content = GetTextFromLocalID(local_id);
+            String content = getTextFromLocalID(local_id);
             FieldType fieldType = new FieldType();
             fieldType.setStored(true);
             fieldType.setTokenized(true);
@@ -180,8 +180,8 @@ public class DBIndexer {
         id2text.clear();
         indexF = new IndexFactory();
         indexF.Init(GlobalVariances.store_Dir, GlobalVariances.commit_limit, GlobalVariances.globeAnalyzer);
-        MapID2TripleText();
-        GenerateDocument();
+        mapID2TripleText();
+        generateDocument();
         indexF.CloseIndexWriter();
     }
 }

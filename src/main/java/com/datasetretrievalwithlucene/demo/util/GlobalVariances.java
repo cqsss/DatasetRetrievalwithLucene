@@ -2,7 +2,6 @@ package com.datasetretrievalwithlucene.demo.util;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.omg.PortableInterceptor.INACTIVE;
 
 /**
  * 存放全局变量
@@ -22,4 +21,8 @@ public class GlobalVariances {
 
     //SQL常数
     public static Integer maxListNumber = 100000;
+
+//    public static JSONObject boostWeights = null;
+//    public static JSONObject getBoostWeights() { if(null == boostWeights) boostWeights = Statistics.readJson("json/ParseMatch_boost.json"); return boostWeights; }
+
 }

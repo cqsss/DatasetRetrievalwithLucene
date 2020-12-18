@@ -1,8 +1,3 @@
-2020-12-15 17:50:11.632 [main] INFO  com.datasetretrievalwithlucene.demo.DINGTest - Starting DINGTest on DESKTOP-M68RJ6T with PID 5004 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-15 17:50:11.643 [main] INFO  com.datasetretrievalwithlucene.demo.DINGTest - No active profile set, falling back to default profiles: default
-2020-12-15 17:50:14.080 [main] INFO  com.datasetretrievalwithlucene.demo.DINGTest - Started DINGTest in 2.993 seconds (JVM running for 4.657)
-2020-12-15 17:50:14.369 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2020-12-15 17:50:14.594 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2020-12-15 17:50:14.724 [main] INFO  com.datasetretrievalwithlucene.demo.util.PageRank - [0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.011875000000000002, 0.008333333333333335, 0.008333333333333335, 0.015416666666666669, 0.01589732142857143, 0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.008620838082573457, 0.02936691893047113, 0.008333333333333335, 0.008333333333333335, 0.008333333333333335, 0.021007440476190478, 0.008333333333333335]
-2020-12-15 17:50:14.755 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2020-12-15 17:50:14.767 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2020-12-18 15:03:52.817 [main] INFO  com.datasetretrievalwithlucene.demo.SearchTest - Starting SearchTest on DESKTOP-M68RJ6T with PID 13772 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
+2020-12-18 15:03:52.845 [main] INFO  com.datasetretrievalwithlucene.demo.SearchTest - No active profile set, falling back to default profiles: default
+2020-12-18 15:03:54.617 [main] INFO  com.datasetretrievalwithlucene.demo.SearchTest - Started SearchTest in 2.43 seconds (JVM running for 4.585)
