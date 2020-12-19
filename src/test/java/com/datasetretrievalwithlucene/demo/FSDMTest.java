@@ -46,6 +46,10 @@ public class FSDMTest {
     }
     public void getCollectionStatistics(List<String> tokens) {
         try {
+            wT = new HashMap<>();
+            wO = new HashMap<>();
+            wU = new HashMap<>();
+            fieldTermFreq = new HashMap<>();
             for (Map.Entry jsonObject : GlobalVariances.getBoostWeights().entrySet()) {
                 String field = jsonObject.getKey().toString();
                 Double w = Double.parseDouble(jsonObject.getValue().toString());
@@ -70,7 +74,8 @@ public class FSDMTest {
                 Document document = indexReader.document(doc_id);
                 fieldContent.put(field, Statistics.getTokens(document.get(field)));
                 Terms terms = indexReader.getTermVector(doc_id, field);
-                fieldDocLength.put(field, terms.getSumTotalTermFreq());
+                if (terms != null) fieldDocLength.put(field, terms.getSumTotalTermFreq());
+                else fieldDocLength.put(field, 0L);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,6 +95,7 @@ public class FSDMTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //System.out.println(qi + " TF_T: " + res);
         return res;
     }
     public Double getTF_O(String field, String qi1, String qi2) {
@@ -99,12 +105,13 @@ public class FSDMTest {
             if (qi1.equals(content.get(i)) && qi2.equals(content.get(i + 1)))
                 res += 1.0;
         }
+        //System.out.println(qi1 + " " + qi2 + " TF_O: " + res);
         return res;
     }
     public Double getTF_U(String field, String qi1, String qi2) {
         Double res = 0.0;
         List<String> content = fieldContent.get(field);
-        for (Integer i = 0; i < content.size(); i++) {
+        for (Integer i = 0; i + GlobalVariances.FSDMUWindowSize <= content.size(); i++) {
             Set<String> window = new HashSet<>();
             for (Integer j = 0; j < GlobalVariances.FSDMUWindowSize; j++) {
                 window.add(content.get(i + j));
@@ -112,66 +119,90 @@ public class FSDMTest {
             if(window.contains(qi1) && window.contains(qi2))
                 res += 1.0;
         }
+        //System.out.println(qi1 + " " + qi2 + " TF_U: " + res);
         return res;
     }
 
     public Double getFSDM_T(Integer doc_id, List<String> queries) {
         Double res = 0.0;
+
         try {
             for (String qi : queries) {
+                Double tmp = 0.0;
                 for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
                     String field = jsonObject.toString();
-                    Double mu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
+                    Double miu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
                     Double Cj = (double) indexReader.getSumTotalTermFreq(field);
-                    Double cf = (double) fieldTermFreq.get(qi);
+                    Double cf = 0.0;
+                    if (fieldTermFreq.containsKey(new Pair<>(field, qi)))
+                        cf = (double) fieldTermFreq.get(new Pair<>(field, qi));
                     Double Dj = (double) fieldDocLength.get(field);
-                    res += wT.get(field) * (getTF_T(doc_id, field, qi) + mu * cf / Cj) / (Dj + mu);
+                    tmp += wT.get(field) * (getTF_T(doc_id, field, qi) + miu * cf / Cj) / (Dj + miu);
                 }
+                System.out.println("T: " + tmp);
+                res += Math.log(tmp);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Math.log(res);
+        System.out.println("FSDM_T: " + res);
+        return res;
     }
-    public Double getFSDM_O(Integer doc_id, List<String> queries) {
+    public Double getFSDM_O(List<String> queries) {
         Double res = 0.0;
         try {
             for (Integer i = 0; i + 1 < queries.size(); i++) {
+                Double tmp = 0.0;
                 String qi1 = queries.get(i);
                 String qi2 = queries.get(i + 1);
                 for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
                     String field = jsonObject.toString();
-                    Double mu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
+                    Double miu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
                     Double Cj = (double) indexReader.getSumTotalTermFreq(field);
-                    Double cf = (double) fieldTermFreq.get(qi1);//??
+                    Double cf = 0.0;
+                    if (fieldTermFreq.containsKey(new Pair<>(field, qi1)))
+                        cf = (double) fieldTermFreq.get(new Pair<>(field, qi1));
+                    if (fieldTermFreq.containsKey(new Pair<>(field, qi2)))
+                        cf = Math.min(cf, (double) fieldTermFreq.get(new Pair<>(field, qi2)));
                     Double Dj = (double) fieldDocLength.get(field);
-                    res += wO.get(field) * (getTF_O(field, qi1, qi2) + mu * cf / Cj) / (Dj + mu);
+                    tmp += wO.get(field) * (getTF_O(field, qi1, qi2) + miu * cf / Cj) / (Dj + miu);
                 }
+                System.out.println("O: " + tmp);
+                res += Math.log(tmp);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Math.log(res);
+        System.out.println("FSDM_O: " + res);
+        return res;
     }
-    public Double getFSDM_U(Integer doc_id, List<String> queries) {
+    public Double getFSDM_U(List<String> queries) {
         Double res = 0.0;
         try {
             for (Integer i = 0; i + 1 < queries.size(); i++) {
+                Double tmp = 0.0;
                 String qi1 = queries.get(i);
                 String qi2 = queries.get(i + 1);
                 for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
                     String field = jsonObject.toString();
-                    Double mu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
+                    Double miu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
                     Double Cj = (double) indexReader.getSumTotalTermFreq(field);
-                    Double cf = (double) fieldTermFreq.get(qi1);//??
+                    Double cf = 0.0;
+                    if (fieldTermFreq.containsKey(new Pair<>(field, qi1)))
+                        cf = (double) fieldTermFreq.get(new Pair<>(field, qi1));
+                    if (fieldTermFreq.containsKey(new Pair<>(field, qi2)))
+                        cf = Math.min(cf, (double) fieldTermFreq.get(new Pair<>(field, qi2)));
                     Double Dj = (double) fieldDocLength.get(field);
-                    res += wU.get(field) * (getTF_U(field, qi1, qi2) + mu * cf / Cj) / (Dj + mu);
+                    tmp += wU.get(field) * (getTF_U(field, qi1, qi2) + miu * cf / Cj) / (Dj + miu);
                 }
+                System.out.println("U: " + tmp);
+                res += Math.log(tmp);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Math.log(res);
+        System.out.println("FSDM_U: " + res);
+        return res;
     }
     public Double FSDM(Integer doc_id, List<String> tokens) {
         Double lambdaT = 1.0 / 3.0;
@@ -179,13 +210,14 @@ public class FSDMTest {
         Double lambdaU = 1.0 / 3.0;
         getDocumentStatistics(doc_id);
         return lambdaT * getFSDM_T(doc_id, tokens) +
-               lambdaO * getFSDM_O(doc_id, tokens) +
-               lambdaU * getFSDM_U(doc_id, tokens);
+               lambdaO * getFSDM_O(tokens) +
+               lambdaU * getFSDM_U(tokens);
     }
     @Test
     public void testFSDM() {
         init();
-        /*try {
+        try {
+            getCollectionStatistics(Statistics.getTokens("dog cat"));
             Analyzer analyzer = new EnglishAnalyzer();
             QueryParser queryParser = new QueryParser("content", analyzer);
             Query query = queryParser.parse("dog cat");
@@ -204,6 +236,6 @@ public class FSDMTest {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
     }
 }

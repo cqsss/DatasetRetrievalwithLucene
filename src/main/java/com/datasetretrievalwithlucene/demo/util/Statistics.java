@@ -32,7 +32,7 @@ public class Statistics {
             res.add(charTerm.toString());
         }
         tokenStream.close();
-        System.out.println(res);
+        //System.out.println(res);
         return res;
     }
     public static JSONObject readJson(String filename) {
