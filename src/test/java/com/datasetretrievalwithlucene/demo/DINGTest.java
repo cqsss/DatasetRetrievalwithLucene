@@ -1,6 +1,6 @@
 package com.datasetretrievalwithlucene.demo;
 
-import com.datasetretrievalwithlucene.demo.util.PageRank;
+import com.datasetretrievalwithlucene.demo.util.QualityRanking;
 import javafx.util.Pair;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -18,7 +18,7 @@ import java.util.Map;
 public class DINGTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private static final Logger logger = LoggerFactory.getLogger(PageRank.class);
+    private static final Logger logger = LoggerFactory.getLogger(QualityRanking.class);
     private static Map<Pair<Integer, Integer>, Integer> edgeCountSet = new HashMap();
     private static Map<Pair<Integer, Integer>, Integer> edgePredicateSet = new HashMap();
     private static Map<Integer, Integer> outLinkCount = new HashMap<>();

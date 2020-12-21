@@ -1,8 +1,5 @@
-package com.datasetretrievalwithlucene.demo;
+package com.datasetretrievalwithlucene.demo.util;
 
-import com.alibaba.fastjson.JSON;
-import com.datasetretrievalwithlucene.demo.util.GlobalVariances;
-import com.datasetretrievalwithlucene.demo.util.Statistics;
 import javafx.util.Pair;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
@@ -10,36 +7,28 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
-import org.apache.lucene.search.similarities.ClassicSimilarity;
-import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.BytesRef;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.nio.file.Paths;
 import java.util.*;
 
-@SpringBootTest
-public class FSDMTest {
-    private Directory directory;
-    private IndexReader indexReader;
-    private IndexSearcher indexSearcher;
-    private Map<String, Double> wT;
-    private Map<String, Double> wO;
-    private Map<String, Double> wU;
-    private Map<Pair<String, String>, Long> fieldTermFreq;
-    private Map<String, List<String>> fieldContent;
-    private Map<String, Long> fieldDocLength;
-    public void init() {
+public class RelevanceRanking {
+    private static Directory directory;
+    private static IndexReader indexReader;
+    private static IndexSearcher indexSearcher;
+    private static Map<String, Double> wT;
+    private static Map<String, Double> wO;
+    private static Map<String, Double> wU;
+    private static Map<Pair<String, String>, Long> fieldTermFreq;
+    private static Map<String, List<String>> fieldContent;
+    private static Map<String, Long> fieldDocLength;
+    public static void init() {
         try {
-            Similarity similarity= new ClassicSimilarity();
             directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
             indexReader = DirectoryReader.open(directory);
             indexSearcher = new IndexSearcher(indexReader);
-            indexSearcher.setSimilarity(similarity);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -70,7 +59,7 @@ public class FSDMTest {
             e.printStackTrace();
         }
     }
-    public void getDocumentStatistics(Integer doc_id) {
+    public static void getDocumentStatistics(Integer doc_id) {
         try {
             fieldContent = new HashMap<>();
             fieldDocLength = new HashMap<>();
@@ -88,7 +77,7 @@ public class FSDMTest {
         }
     }
 
-    public Double getTF_T(Integer doc_id, String field, String qi) {
+    public static Double getTF_T(Integer doc_id, String field, String qi) {
         Double res = 0.0;
         try {
             Terms terms = indexReader.getTermVector(doc_id, field);
@@ -104,7 +93,7 @@ public class FSDMTest {
         //System.out.println(qi + " TF_T: " + res);
         return res;
     }
-    public Double getTF_O(String field, String qi1, String qi2) {
+    public static Double getTF_O(String field, String qi1, String qi2) {
         Double res = 0.0;
         List<String> content = fieldContent.get(field);
         for (Integer i = 0; i + 1 < content.size(); i++) {
@@ -114,7 +103,7 @@ public class FSDMTest {
         //System.out.println(qi1 + " " + qi2 + " TF_O: " + res);
         return res;
     }
-    public Double getTF_U(String field, String qi1, String qi2) {
+    public static Double getTF_U(String field, String qi1, String qi2) {
         Double res = 0.0;
         List<String> content = fieldContent.get(field);
         for (Integer i = 0; i + GlobalVariances.FSDMUWindowSize <= content.size(); i++) {
@@ -129,7 +118,7 @@ public class FSDMTest {
         return res;
     }
 
-    public Double getFSDM_T(Integer doc_id, List<String> queries) {
+    public static Double getFSDM_T(Integer doc_id, List<String> queries) {
         Double res = 0.0;
 
         try {
@@ -154,7 +143,7 @@ public class FSDMTest {
         System.out.println("FSDM_T: " + res);
         return res;
     }
-    public Double getFSDM_O(List<String> queries) {
+    public static Double getFSDM_O(List<String> queries) {
         Double res = 0.0;
         try {
             for (Integer i = 0; i + 1 < queries.size(); i++) {
@@ -182,7 +171,7 @@ public class FSDMTest {
         System.out.println("FSDM_O: " + res);
         return res;
     }
-    public Double getFSDM_U(List<String> queries) {
+    public static Double getFSDM_U(List<String> queries) {
         Double res = 0.0;
         try {
             for (Integer i = 0; i + 1 < queries.size(); i++) {
@@ -210,38 +199,77 @@ public class FSDMTest {
         System.out.println("FSDM_U: " + res);
         return res;
     }
-    public Double FSDM(Integer doc_id, List<String> tokens) {
+    public static Double FSDM(Integer doc_id, List<String> tokens) {
         Double lambdaT = 1.0 / 3.0;
         Double lambdaO = 1.0 / 3.0;
         Double lambdaU = 1.0 / 3.0;
         getDocumentStatistics(doc_id);
         return lambdaT * getFSDM_T(doc_id, tokens) +
-               lambdaO * getFSDM_O(tokens) +
-               lambdaU * getFSDM_U(tokens);
+                lambdaO * getFSDM_O(tokens) +
+                lambdaU * getFSDM_U(tokens);
     }
-    @Test
-    public void testFSDM() {
+    public static Double BM25(Integer doc_id, String field, List<String> tokens) {
         init();
+        Double score = 0.0;
+        Double k1 = 1.2;
+        Double b = 0.75;
         try {
-            getCollectionStatistics(Statistics.getTokens("dog cat"));
-            Analyzer analyzer = new EnglishAnalyzer();
-            QueryParser queryParser = new QueryParser("content", analyzer);
-            Query query = queryParser.parse("dog cat");
-            TopDocs docsSearch = indexSearcher.search(query, 10);
-            System.out.println("--- total ---: " + docsSearch.totalHits);
-            ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
-            for (ScoreDoc si : scoreDocs) {
-                Integer docID = si.doc;
-                System.out.println("doc_id: " + docID + ", score: " + si.score);
-                Explanation e = indexSearcher.explain(query, si.doc);
-                System.out.println("Explanation： \n" + e);
-                System.out.println("********************************************************************");
-                System.out.println("custom FSDM: ");
-                System.out.println(FSDM(docID, Statistics.getTokens("dog cat")));
-                System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            Double N = (double) indexReader.getDocCount(field);
+            Terms terms = indexReader.getTermVector(doc_id, field);
+            Double D = 1.0;
+            if(terms != null)
+                D = (double) terms.getSumTotalTermFreq();
+            Double avgdl = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
+            //System.out.println("doc_id: " + doc_id);
+            for (String token : tokens) {
+                BytesRef bytesRef = new BytesRef(token);
+                Double n = (double) indexReader.docFreq(new Term(field, bytesRef));
+                Double idf = Math.log((N - n + 0.5) / (n + 0.5) + 1);
+                Double f = 1.0;
+                if(terms != null)
+                {
+                    TermsEnum termsIterator = terms.iterator();
+                    if(termsIterator.seekExact(bytesRef)) f = (double)termsIterator.totalTermFreq();
+                }
+                Double tmp = idf * (f * (k1 + 1.0) / (f + k1 * (1.0 - b + b * D /avgdl)));
+                score += tmp;
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //System.out.println(score);
+        return score;
     }
+    public static Double TFIDF(Integer doc_id, String field, List<String> tokens) {
+        Double score = 0.0;
+        try {
+            Double docCount = (double) indexReader.getDocCount(field);
+            Terms terms = indexReader.getTermVector(doc_id, field);
+            Double D = 1.0;
+            if(terms != null)
+                D = (double) terms.getSumTotalTermFreq();
+            Double lengthNorm = 1.0 / Math.sqrt(D);
+            //System.out.println("doc_id: " + doc_id);
+            for (String token : tokens) {
+                BytesRef bytesRef = new BytesRef(token);
+                Double docFreq = (double) indexReader.docFreq(new Term(field, bytesRef));
+                Double idf = Math.log((docCount + 1.0) / (docFreq + 1.0)) + 1.0;
+                Double tf = 1.0;
+                if(terms != null)
+                {
+                    TermsEnum termsIterator = terms.iterator();
+                    if(termsIterator.seekExact(bytesRef)) tf = Math.sqrt((double)termsIterator.totalTermFreq());
+                }
+                Double tmp = lengthNorm * idf * tf;
+                score += tmp;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //System.out.println(score);
+        return score;
+    }
+
 }

@@ -1,6 +1,6 @@
 package com.datasetretrievalwithlucene.demo;
 
-import com.datasetretrievalwithlucene.demo.util.PageRank;
+import com.datasetretrievalwithlucene.demo.util.QualityRanking;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +13,7 @@ public class PageRankTest {
     @Test
     public void testPageRank() {
         try {
-            PageRank.iterativePageRank("content", jdbcTemplate);
+            QualityRanking.iterativePageRank("content", jdbcTemplate);
         } catch (Exception e) {
             e.printStackTrace();
         }

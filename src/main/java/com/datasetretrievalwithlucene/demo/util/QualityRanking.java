@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PageRank {
-    private static final Logger logger = LoggerFactory.getLogger(PageRank.class);
+public class QualityRanking {
+    private static final Logger logger = LoggerFactory.getLogger(QualityRanking.class);
     /**
      * outLinks.get(i): i指向的点的集合
      * inLinks.get(i): 指向i的点的集合

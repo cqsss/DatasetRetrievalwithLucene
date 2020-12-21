@@ -1,51 +1,6 @@
-2020-12-19 16:12:43.257 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 1132 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-19 16:12:43.292 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
-2020-12-19 16:12:45.192 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 2.653 seconds (JVM running for 4.866)
-2020-12-19 16:14:40.572 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 1508 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-19 16:14:40.580 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
-2020-12-19 16:14:42.526 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 2.523 seconds (JVM running for 4.366)
-2020-12-19 16:20:55.974 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 14652 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-19 16:20:55.987 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
-2020-12-19 16:20:57.655 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 2.149 seconds (JVM running for 3.576)
-2020-12-19 16:22:42.239 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 12692 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-19 16:22:42.249 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
-2020-12-19 16:22:43.826 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 1.932 seconds (JVM running for 3.39)
-2020-12-19 16:25:55.555 [main] INFO  com.datasetretrievalwithlucene.demo.JSONTest - Starting JSONTest on DESKTOP-M68RJ6T with PID 5392 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-19 16:25:55.566 [main] INFO  com.datasetretrievalwithlucene.demo.JSONTest - No active profile set, falling back to default profiles: default
-2020-12-19 16:25:57.314 [main] INFO  com.datasetretrievalwithlucene.demo.JSONTest - Started JSONTest in 2.168 seconds (JVM running for 3.536)
-2020-12-19 16:26:26.796 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 12372 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-19 16:26:26.804 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
-2020-12-19 16:26:28.435 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 2.111 seconds (JVM running for 3.553)
-2020-12-19 16:27:08.179 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 11100 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-19 16:27:08.187 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
-2020-12-19 16:27:09.971 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 2.127 seconds (JVM running for 3.548)
-2020-12-19 16:28:53.631 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 13416 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-19 16:28:53.646 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
-2020-12-19 16:28:55.262 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 2.138 seconds (JVM running for 3.563)
-2020-12-19 16:31:50.784 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 5184 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-19 16:31:50.795 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
-2020-12-19 16:31:52.439 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 2.078 seconds (JVM running for 3.568)
-2020-12-19 16:31:59.989 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 10604 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-19 16:32:00.001 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
-2020-12-19 16:32:01.813 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 2.332 seconds (JVM running for 3.713)
-2020-12-19 16:34:07.964 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 7404 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-19 16:34:07.974 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
-2020-12-19 16:34:09.852 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 2.298 seconds (JVM running for 3.698)
-2020-12-19 16:47:11.662 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 10096 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-19 16:47:11.673 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
-2020-12-19 16:47:13.734 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 2.498 seconds (JVM running for 3.954)
-2020-12-19 16:58:40.519 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 7320 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-19 16:58:40.528 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
-2020-12-19 16:58:42.129 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 1.981 seconds (JVM running for 3.307)
-2020-12-19 17:00:14.862 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 9936 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-19 17:00:14.881 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
-2020-12-19 17:00:16.532 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 2.302 seconds (JVM running for 3.632)
-2020-12-19 17:02:08.923 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 6568 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-19 17:02:08.937 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
-2020-12-19 17:02:10.595 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 2.154 seconds (JVM running for 3.56)
-2020-12-19 17:02:41.463 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 11784 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-19 17:02:41.472 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
-2020-12-19 17:02:43.054 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 1.963 seconds (JVM running for 3.335)
-2020-12-19 17:03:56.881 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 11036 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-19 17:03:56.891 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
-2020-12-19 17:03:58.485 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 2.129 seconds (JVM running for 3.466)
+2020-12-21 14:12:52.015 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 9716 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
+2020-12-21 14:12:52.062 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
+2020-12-21 14:12:53.906 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 2.612 seconds (JVM running for 5.417)
+2020-12-21 15:09:27.557 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Starting FSDMTest on DESKTOP-M68RJ6T with PID 6480 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
+2020-12-21 15:09:27.576 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - No active profile set, falling back to default profiles: default
+2020-12-21 15:09:29.253 [main] INFO  com.datasetretrievalwithlucene.demo.FSDMTest - Started FSDMTest in 2.086 seconds (JVM running for 3.642)
