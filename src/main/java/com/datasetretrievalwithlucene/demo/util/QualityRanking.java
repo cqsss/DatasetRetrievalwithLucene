@@ -22,7 +22,7 @@ public class QualityRanking {
     private static Map<Integer, List<Integer>> outLinks = new HashMap<>();
     private static Map<Integer, List<Integer>> inLinks = new HashMap<>();
     private static Integer maxID = 0;
-    public static void addEdge(Integer u, Integer v, Integer c) {
+    public static void addEdge(Integer u, Integer v) {
         if (outLinks.containsKey(u)) {
             outLinks.get(u).add(v);
         } else {
@@ -49,16 +49,14 @@ public class QualityRanking {
     public static void readDataBase(JdbcTemplate jdbcTemplate) {
         try {
             List<Map<String, Object>> res;
-            res = jdbcTemplate.queryForList("SELECT dataset1,dataset2,count FROM outerlink LIMIT 0,10");
+            res = jdbcTemplate.queryForList("SELECT sub_ds,obj_ds,count FROM sample_outerlink");
             for (Map<String, Object> ri : res) {
-                Integer dataset1 = Integer.parseInt(ri.get("dataset1").toString());
-                Integer dataset2 = Integer.parseInt(ri.get("dataset2").toString());
+                Integer dataset1 = Integer.parseInt(ri.get("sub_ds").toString());
+                Integer dataset2 = Integer.parseInt(ri.get("obj_ds").toString());
                 maxID = Math.max(maxID, dataset1);
                 maxID = Math.max(maxID, dataset2);
-                Integer count = Integer.parseInt(ri.get("count").toString());
-                addEdge(dataset1, dataset2, count);
+                addEdge(dataset1, dataset2);
             }
-//            addEdge(13,9,10);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,7 +72,7 @@ public class QualityRanking {
             //Double N = (double) indexReader.getDocCount(field);
 //            maxID = jdbcTemplate.queryForObject("SELECT MAX(dataset1) FROM outerlink", Integer.class);
 //            maxID = Math.max(maxID, jdbcTemplate.queryForObject("SELECT MAX(dataset2) FROM outerlink", Integer.class));
-            maxID = 18;
+            maxID = 15;
             Double N = (double) maxID;
             Double d = 0.85;
             List<Double> pr = new ArrayList<>();

@@ -20,20 +20,30 @@ public class DINGTest {
     private JdbcTemplate jdbcTemplate;
     private static final Logger logger = LoggerFactory.getLogger(QualityRanking.class);
     private static Map<Pair<Integer, Integer>, Integer> edgeCountSet = new HashMap();
-    private static Map<Pair<Integer, Integer>, Integer> edgePredicateSet = new HashMap();
+    private static Map<Pair<Integer, Integer>, Map<Integer, Integer>> edgeSet = new HashMap<>();
     private static Map<Integer, Integer> outLinkCount = new HashMap<>();
     private static Map<Integer, Integer> inLinkCount = new HashMap<>();
     private static Map<Integer, Integer> predicateCount = new HashMap<>();
     private static Map<Integer, List<Integer>> outLinks = new HashMap<>();
     private static Map<Integer, List<Integer>> inLinks = new HashMap<>();
     private static Integer maxID = 0;
+    private static Integer linkCount = 0;
     public static void addEdge(Integer u, Integer v, Integer c, Integer p) {
         Integer tmp = 0;
-        if (edgeCountSet.containsKey(new Pair<>(u, v))) {
-            tmp = edgeCountSet.get(new Pair<>(u, v));
+        Pair<Integer, Integer> uv = new Pair<>(u, v);
+        if (edgeSet.containsKey(uv)) {
+            if (edgeSet.get(uv).containsKey(p)) {
+                tmp = edgeSet.get(uv).get(p);
+            }
+            edgeSet.get(uv).put(p, tmp + c);
+        } else {
+            edgeSet.put(uv, new HashMap<>(p, c));
         }
-        edgeCountSet.put(new Pair<>(u, v), c + tmp);
-        edgePredicateSet.put(new Pair<>(u, v), p);
+        tmp = 0;
+        if (edgeCountSet.containsKey(uv)) {
+            tmp = edgeCountSet.get(uv);
+        }
+        edgeCountSet.put(uv, tmp + c);
         if (outLinks.containsKey(u)) {
             outLinks.get(u).add(v);
         } else {
@@ -57,14 +67,17 @@ public class DINGTest {
             tmp = inLinkCount.get(v);
         inLinkCount.put(v, tmp + c);
         tmp = 0;
-        if (predicateCount.containsKey(p))
+        if (predicateCount.containsKey(p)) {
             tmp = predicateCount.get(p);
+        }
+        linkCount ++;
         predicateCount.put(p, tmp + 1);
     }
     public static void readDataBase(JdbcTemplate jdbcTemplate) {
         try {
             List<Map<String, Object>> res;
-            res = jdbcTemplate.queryForList("SELECT sub_ds,obj_ds,predicate,count FROM outerlink3 LIMIT 0,10");
+            //res = jdbcTemplate.queryForList("SELECT sub_ds,obj_ds,predicate,count FROM outerlink3 LIMIT 0,10");
+            res = jdbcTemplate.queryForList("SELECT sub_ds,obj_ds,predicate,count FROM sample_outerlink");
             for (Map<String, Object> ri : res) {
                 Integer dataset1 = Integer.parseInt(ri.get("sub_ds").toString());
                 Integer dataset2 = Integer.parseInt(ri.get("obj_ds").toString());
@@ -74,7 +87,6 @@ public class DINGTest {
                 Integer count = Integer.parseInt(ri.get("count").toString());
                 addEdge(dataset1, dataset2, count, predicate);
             }
-//            addEdge(13,9,10);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,7 +100,11 @@ public class DINGTest {
         return res;
     }
     public static Double getIDF(Integer i, Integer j) {
-        return maxID / (1.0 + predicateCount.get(edgePredicateSet.get(new Pair<>(i, j))));
+        Double tmp = 0.0;
+        for (Integer p : edgeSet.get(new Pair<>(i, j)).keySet()) {
+            tmp += predicateCount.get(p);
+        }
+        return Math.log((double) linkCount / (1.0 + tmp));
     }
     public static Double getW(Integer i, Integer j) {
         return getTF(i, j) * getIDF(i, j);
@@ -107,7 +123,7 @@ public class DINGTest {
             //Double N = (double) indexReader.getDocCount(field);
 //            maxID = jdbcTemplate.queryForObject("SELECT MAX(dataset1) FROM outerlink", Integer.class);
 //            maxID = Math.max(maxID, jdbcTemplate.queryForObject("SELECT MAX(dataset2) FROM outerlink", Integer.class));
-            maxID = 18;
+            maxID = 15;
             Double N = (double) maxID;
             Double d = 0.85;
             List<Double> pr = new ArrayList<>();
@@ -139,7 +155,7 @@ public class DINGTest {
                 System.out.println(pr);
             }
             System.out.println(pr);
-            logger.info(pr.toString());
+            //logger.info(pr.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
