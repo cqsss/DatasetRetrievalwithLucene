@@ -19,13 +19,10 @@ public class DINGTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private static final Logger logger = LoggerFactory.getLogger(QualityRanking.class);
-    private static Map<Pair<Integer, Integer>, Integer> edgeCountSet = new HashMap();
     private static Map<Pair<Integer, Integer>, Map<Integer, Integer>> edgeSet = new HashMap<>();
-    private static Map<Integer, Integer> outLinkCount = new HashMap<>();
-    private static Map<Integer, Integer> inLinkCount = new HashMap<>();
     private static Map<Integer, Integer> predicateCount = new HashMap<>();
-    private static Map<Integer, List<Integer>> outLinks = new HashMap<>();
-    private static Map<Integer, List<Integer>> inLinks = new HashMap<>();
+    private static Map<Integer, List<Pair<Integer, Integer>>> outLinks = new HashMap<>();
+    private static Map<Integer, List<Pair<Integer, Integer>>> inLinks = new HashMap<>();
     private static Integer maxID = 0;
     private static Integer linkCount = 0;
     public static void addEdge(Integer u, Integer v, Integer c, Integer p) {
@@ -37,35 +34,24 @@ public class DINGTest {
             }
             edgeSet.get(uv).put(p, tmp + c);
         } else {
-            edgeSet.put(uv, new HashMap<>(p, c));
+            Map<Integer, Integer> tmpMap = new HashMap<>();
+            tmpMap.put(p, c);
+            edgeSet.put(uv, tmpMap);
         }
-        tmp = 0;
-        if (edgeCountSet.containsKey(uv)) {
-            tmp = edgeCountSet.get(uv);
-        }
-        edgeCountSet.put(uv, tmp + c);
         if (outLinks.containsKey(u)) {
-            outLinks.get(u).add(v);
+            outLinks.get(u).add(new Pair<>(v, p));
         } else {
-            List<Integer> tmpList = new ArrayList<>();
-            tmpList.add(v);
+            List<Pair<Integer, Integer>> tmpList = new ArrayList<>();
+            tmpList.add(new Pair<>(v, p));
             outLinks.put(u, tmpList);
         }
         if (inLinks.containsKey(v)) {
-            inLinks.get(v).add(u);
+            inLinks.get(v).add(new Pair<>(u, p));
         } else {
-            List<Integer> tmpList = new ArrayList<>();
-            tmpList.add(u);
+            List<Pair<Integer, Integer>> tmpList = new ArrayList<>();
+            tmpList.add(new Pair<>(u, p));
             inLinks.put(v, tmpList);
         }
-        tmp = 0;
-        if (outLinkCount.containsKey(u))
-            tmp = outLinkCount.get(u);
-        outLinkCount.put(u, tmp + c);
-        tmp = 0;
-        if (inLinkCount.containsKey(v))
-            tmp = inLinkCount.get(v);
-        inLinkCount.put(v, tmp + c);
         tmp = 0;
         if (predicateCount.containsKey(p)) {
             tmp = predicateCount.get(p);
@@ -91,30 +77,26 @@ public class DINGTest {
             e.printStackTrace();
         }
     }
-    public static Double getTF(Integer i, Integer j) {
+    public static Double getTF(Integer i, Integer j, Integer p) {
         Double res = 0.0;
-        for (Integer k : outLinks.get(i)) {
-            res = Math.max(res, edgeCountSet.get(new Pair<>(i, k)));
+        for (Pair<Integer, Integer> k : outLinks.get(i)) {
+            res = Math.max(res, edgeSet.get(new Pair<>(i, k.getKey())).get(k.getValue()));
         }
-        res = edgeCountSet.get(new Pair<>(i, j)) / res;
+        res = (double) edgeSet.get(new Pair<>(i, j)).get(p) / res;
         return res;
     }
-    public static Double getIDF(Integer i, Integer j) {
-        Double tmp = 0.0;
-        for (Integer p : edgeSet.get(new Pair<>(i, j)).keySet()) {
-            tmp += predicateCount.get(p);
-        }
-        return Math.log((double) linkCount / (1.0 + tmp));
+    public static Double getIDF(Integer p) {
+        return Math.log((double) linkCount / (1.0 + predicateCount.get(p)));
     }
-    public static Double getW(Integer i, Integer j) {
-        return getTF(i, j) * getIDF(i, j);
+    public static Double getW(Integer i, Integer j, Integer p) {
+        return getTF(i, j, p) * getIDF(p);
     }
-    public static Double getP(Integer i, Integer j) {
+    public static Double getP(Integer i, Integer j, Integer p) {
         Double res = 0.0;
-        for (Integer k : outLinks.get(i)) {
-            res += getW(i, k);
+        for (Pair<Integer, Integer> k : outLinks.get(i)) {
+            res += getW(i, k.getKey(), k.getValue());
         }
-        res = getW(i, j) / res;
+        res = getW(i, j, p) / res;
         return res;
     }
     public static void DING(String field, JdbcTemplate jdbcTemplate) {
@@ -139,8 +121,8 @@ public class DINGTest {
                 for (Integer i = 0; i < maxID; i++) {
                     sumPR = 0.0;
                     if(inLinks.containsKey(i + 1)) {
-                        for (Integer j : inLinks.get(i + 1)) {
-                            sumPR += pr.get(j - 1) * getP(j, i+1);
+                        for (Pair<Integer, Integer> j : inLinks.get(i + 1)) {
+                            sumPR += pr.get(j.getKey() - 1) * getP(j.getKey(), i + 1, j.getValue());
                         }
                     }
                     sumPR *= d;
