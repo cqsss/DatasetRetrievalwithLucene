@@ -9,8 +9,8 @@
 ### 数据集排序
 - [ ] 根据数据集质量排序
   - [x] PageRank
-  - [x] Ding 
-- [ ] 根据数据集与查询相关性排序
+  - [x] Ding(has bug) 
+- [x] 根据数据集与查询相关性排序
   - [x] TF-IDF
   - [x] BM25
-  - [ ] FSDM
+  - [x] FSDM

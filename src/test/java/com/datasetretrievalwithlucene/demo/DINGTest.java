@@ -121,8 +121,6 @@ public class DINGTest {
         readDataBase(jdbcTemplate);
         try {
             //Double N = (double) indexReader.getDocCount(field);
-//            maxID = jdbcTemplate.queryForObject("SELECT MAX(dataset1) FROM outerlink", Integer.class);
-//            maxID = Math.max(maxID, jdbcTemplate.queryForObject("SELECT MAX(dataset2) FROM outerlink", Integer.class));
             maxID = 15;
             Double N = (double) maxID;
             Double d = 0.85;
