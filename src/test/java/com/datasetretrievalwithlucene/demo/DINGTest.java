@@ -19,10 +19,10 @@ public class DINGTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private static final Logger logger = LoggerFactory.getLogger(QualityRanking.class);
-    private static Map<Pair<Integer, Integer>, Map<Integer, Integer>> edgeSet = new HashMap<>();
-    private static Map<Integer, Integer> predicateCount = new HashMap<>();
-    private static Map<Integer, List<Pair<Integer, Integer>>> outLinks = new HashMap<>();
-    private static Map<Integer, List<Pair<Integer, Integer>>> inLinks = new HashMap<>();
+    private static final Map<Pair<Integer, Integer>, Map<Integer, Integer>> edgeSet = new HashMap<>();
+    private static final Map<Integer, Integer> predicateCount = new HashMap<>();
+    private static final Map<Integer, List<Pair<Integer, Integer>>> outLinks = new HashMap<>();
+    private static final Map<Integer, List<Pair<Integer, Integer>>> inLinks = new HashMap<>();
     private static Integer maxID = 0;
     private static Integer linkCount = 0;
     public static void addEdge(Integer u, Integer v, Integer c, Integer p) {

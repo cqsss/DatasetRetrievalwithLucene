@@ -17,10 +17,10 @@ public class QualityRanking {
      * outLinkCount.get(i): i指出的边数
      * inLinkCount.get(i): 指向i的边数
      */
-    private static Map<Integer, Integer> outLinkCount = new HashMap<>();
-    private static Map<Integer, Integer> inLinkCount = new HashMap<>();
-    private static Map<Integer, List<Integer>> outLinks = new HashMap<>();
-    private static Map<Integer, List<Integer>> inLinks = new HashMap<>();
+    private static final Map<Integer, Integer> outLinkCount = new HashMap<>();
+    private static final Map<Integer, Integer> inLinkCount = new HashMap<>();
+    private static final Map<Integer, List<Integer>> outLinks = new HashMap<>();
+    private static final Map<Integer, List<Integer>> inLinks = new HashMap<>();
     private static Integer maxID = 0;
     public static void addEdge(Integer u, Integer v) {
         if (outLinks.containsKey(u)) {
