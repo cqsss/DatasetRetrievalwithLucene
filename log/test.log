@@ -1,3 +1,3 @@
-2020-12-23 16:39:26.977 [main] INFO  com.datasetretrievalwithlucene.demo.TermFreqTest - Starting TermFreqTest on DESKTOP-M68RJ6T with PID 7816 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-23 16:39:26.986 [main] INFO  com.datasetretrievalwithlucene.demo.TermFreqTest - No active profile set, falling back to default profiles: default
-2020-12-23 16:39:28.585 [main] INFO  com.datasetretrievalwithlucene.demo.TermFreqTest - Started TermFreqTest in 1.961 seconds (JVM running for 3.416)
+2020-12-23 18:38:13.550 [main] INFO  com.datasetretrievalwithlucene.demo.TermFreqTest - Starting TermFreqTest on DESKTOP-M68RJ6T with PID 4732 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
+2020-12-23 18:38:13.560 [main] INFO  com.datasetretrievalwithlucene.demo.TermFreqTest - No active profile set, falling back to default profiles: default
+2020-12-23 18:38:15.225 [main] INFO  com.datasetretrievalwithlucene.demo.TermFreqTest - Started TermFreqTest in 2.045 seconds (JVM running for 3.509)
