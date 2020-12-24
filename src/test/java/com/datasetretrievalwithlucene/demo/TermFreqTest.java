@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.regex.Pattern;
 
 @SpringBootTest
 public class TermFreqTest {
@@ -17,6 +18,11 @@ public class TermFreqTest {
     private static final Logger logger= LoggerFactory.getLogger(LoggerTest.class);
 
     private Map<String, Integer> termMap = new HashMap<>();
+    public boolean isNumeric(String str){
+        Pattern pattern = Pattern.compile("[0-9]*");
+        return pattern.matcher(str).matches();
+    }
+
     public void readTerms(String fileName) {
         List<Pair<String, Integer>> arr = new ArrayList<>();
         try {
@@ -51,6 +57,7 @@ public class TermFreqTest {
             Integer cnt = 0;
 
             for (Map.Entry<String, Integer> i : arr) {
+                if (isNumeric(i.getKey()) || i.getKey().length() < 2) continue;
                 System.out.println(i.getKey() + "\t" + i.getValue());
                 cnt ++;
                 if (cnt == 100) break;

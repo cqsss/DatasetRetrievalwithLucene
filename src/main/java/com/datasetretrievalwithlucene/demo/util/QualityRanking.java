@@ -105,4 +105,24 @@ public class QualityRanking {
             e.printStackTrace();
         }
     }
+    public static void DRank(String field, JdbcTemplate jdbcTemplate) {
+        readDataBase(jdbcTemplate);
+        try {
+            //Double N = (double) indexReader.getDocCount(field);
+            maxID = 15;
+            Double tmp;
+            List<Double> pr = new ArrayList<>();
+            for (Integer i = 0; i < maxID; i++) {
+                tmp = 0.0;
+                if (outLinkCount.containsKey(i))
+                    tmp += outLinkCount.get(i);
+                if (inLinkCount.containsKey(i))
+                    tmp += inLinkCount.get(i);
+                pr.add(tmp);
+            }
+            System.out.println(pr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

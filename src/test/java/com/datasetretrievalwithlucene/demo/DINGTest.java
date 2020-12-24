@@ -25,6 +25,7 @@ public class DINGTest {
     private static final Map<Integer, List<Pair<Integer, Integer>>> inLinks = new HashMap<>();
     private static Integer maxID = 0;
     private static Integer linkCount = 0;
+    private static Double linkSum = 0.0;
     public static void addEdge(Integer u, Integer v, Integer c, Integer p) {
         Integer tmp = 0;
         Pair<Integer, Integer> uv = new Pair<>(u, v);
@@ -57,6 +58,7 @@ public class DINGTest {
             tmp = predicateCount.get(p);
         }
         linkCount ++;
+        linkSum += (double) c;
         predicateCount.put(p, tmp + 1);
     }
     public static void readDataBase(JdbcTemplate jdbcTemplate) {
@@ -81,14 +83,31 @@ public class DINGTest {
         Double res = 0.0;
         for (Pair<Integer, Integer> k : outLinks.get(i)) {
             res = Math.max(res, edgeSet.get(new Pair<>(i, k.getKey())).get(k.getValue()));
+            //res += edgeSet.get(new Pair<>(i, k.getKey())).get(k.getValue());
         }
         res = (double) edgeSet.get(new Pair<>(i, j)).get(p) / res;
         return res;
     }
     public static Double getIDF(Integer p) {
         return Math.log((double) linkCount / (1.0 + predicateCount.get(p)));
+        //return Math.log(((double) linkCount - predicateCount.get(p) + 0.5) / (0.5 + predicateCount.get(p)) + 1.0);
+    }
+    public static Double getBM25(Integer i, Integer j, Integer p) {
+        Double avgll;
+        Double L = 0.0;
+        Double k1 = 1.2;
+        Double b = 0.75;
+        Double tf;
+        for (Pair<Integer, Integer> k : outLinks.get(i)) {
+            L += (double) edgeSet.get(new Pair<>(i, k.getKey())).get(k.getValue());
+        }
+        Double f = (double) edgeSet.get(new Pair<>(i, j)).get(p);
+        avgll = linkSum / (double) linkCount;
+        tf = (f * (k1 + 1.0)) / (f + k1 * (1.0 - b + b * L / avgll));
+        return tf * getIDF(p);
     }
     public static Double getW(Integer i, Integer j, Integer p) {
+        //return  getBM25(i, j, p);
         return getTF(i, j, p) * getIDF(p);
     }
     public static Double getP(Integer i, Integer j, Integer p) {
