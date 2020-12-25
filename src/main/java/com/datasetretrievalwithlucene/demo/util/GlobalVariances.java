@@ -28,4 +28,5 @@ public class GlobalVariances {
     public static JSONObject getBoostWeights() { if(null == boostWeights) boostWeights = Statistics.readJson("src/main/resources/json/ParseMatch_boost.json"); return boostWeights; }
 
     public static Integer FSDMUWindowSize = 8;
+    public static Integer queryPoolSize = 50;
 }

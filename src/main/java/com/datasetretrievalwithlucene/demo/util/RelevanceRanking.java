@@ -33,7 +33,7 @@ public class RelevanceRanking {
             e.printStackTrace();
         }
     }
-    public void getCollectionStatistics(List<String> tokens) {
+    public static void getCollectionStatistics(List<String> tokens) {
         try {
             wT = new HashMap<>();
             wO = new HashMap<>();
@@ -134,13 +134,13 @@ public class RelevanceRanking {
                     Double Dj = (double) fieldDocLength.get(field);
                     tmp += wT.get(field) * (getTF_T(doc_id, field, qi) + miu * cf / Cj) / (Dj + miu);
                 }
-                System.out.println("T: " + tmp);
+                //System.out.println("T: " + tmp);
                 res += Math.log(tmp);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("FSDM_T: " + res);
+        //System.out.println("FSDM_T: " + res);
         return res;
     }
     public static Double getFSDM_O(List<String> queries) {
@@ -162,13 +162,13 @@ public class RelevanceRanking {
                     Double Dj = (double) fieldDocLength.get(field);
                     tmp += wO.get(field) * (getTF_O(field, qi1, qi2) + miu * cf / Cj) / (Dj + miu);
                 }
-                System.out.println("O: " + tmp);
+                //System.out.println("O: " + tmp);
                 res += Math.log(tmp);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("FSDM_O: " + res);
+        //System.out.println("FSDM_O: " + res);
         return res;
     }
     public static Double getFSDM_U(List<String> queries) {
@@ -190,19 +190,20 @@ public class RelevanceRanking {
                     Double Dj = (double) fieldDocLength.get(field);
                     tmp += wU.get(field) * (getTF_U(field, qi1, qi2) + miu * cf / Cj) / (Dj + miu);
                 }
-                System.out.println("U: " + tmp);
+                //System.out.println("U: " + tmp);
                 res += Math.log(tmp);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("FSDM_U: " + res);
+        //System.out.println("FSDM_U: " + res);
         return res;
     }
     public static Double FSDM(Integer doc_id, List<String> tokens) {
         Double lambdaT = 1.0 / 3.0;
         Double lambdaO = 1.0 / 3.0;
         Double lambdaU = 1.0 / 3.0;
+        getCollectionStatistics(tokens);
         getDocumentStatistics(doc_id);
         return lambdaT * getFSDM_T(doc_id, tokens) +
                 lambdaO * getFSDM_O(tokens) +
@@ -225,7 +226,7 @@ public class RelevanceRanking {
                 BytesRef bytesRef = new BytesRef(token);
                 Double n = (double) indexReader.docFreq(new Term(field, bytesRef));
                 Double idf = Math.log((N - n + 0.5) / (n + 0.5) + 1);
-                Double f = 1.0;
+                Double f = 0.0;
                 if(terms != null)
                 {
                     TermsEnum termsIterator = terms.iterator();

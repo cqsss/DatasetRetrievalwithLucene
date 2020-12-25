@@ -18,8 +18,8 @@ public class TermFreqTest {
     private static final Logger logger= LoggerFactory.getLogger(LoggerTest.class);
 
     private Map<String, Integer> termMap = new HashMap<>();
-    public boolean isNumeric(String str){
-        Pattern pattern = Pattern.compile("[0-9]*");
+    public boolean isAlphabetic(String str){
+        Pattern pattern = Pattern.compile("[a-z,A-Z]*");
         return pattern.matcher(str).matches();
     }
 
@@ -57,7 +57,7 @@ public class TermFreqTest {
             Integer cnt = 0;
 
             for (Map.Entry<String, Integer> i : arr) {
-                if (isNumeric(i.getKey()) || i.getKey().length() < 2) continue;
+                if (!isAlphabetic(i.getKey()) || i.getKey().length() < 2) continue;
                 System.out.println(i.getKey() + "\t" + i.getValue());
                 cnt ++;
                 if (cnt == 100) break;

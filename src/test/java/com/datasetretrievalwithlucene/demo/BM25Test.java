@@ -49,7 +49,7 @@ public class BM25Test {
                 BytesRef bytesRef = new BytesRef(token);
                 Double n = (double) indexReader.docFreq(new Term(field, bytesRef));
                 Double idf = Math.log((N - n + 0.5) / (n + 0.5) + 1);
-                Double f = 1.0;
+                Double f = 0.0;
                 if(terms != null)
                 {
                     TermsEnum termsIterator = terms.iterator();
@@ -78,7 +78,8 @@ public class BM25Test {
         try {
             Analyzer analyzer = new EnglishAnalyzer();
             QueryParser queryParser = new QueryParser("content", analyzer);
-            Query query = queryParser.parse("dog cat");
+            Query query = queryParser.parse("wind speeds in Kansas");
+            System.out.println(query);
             TopDocs docsSearch = indexSearcher.search(query, 10);
             System.out.println("--- total ---: " + docsSearch.totalHits);
             ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
@@ -90,7 +91,7 @@ public class BM25Test {
                 System.out.println("Explanation： \n" + e);
                 System.out.println("********************************************************************");
                 System.out.println("custom BM25: ");
-                System.out.println(BM25(docID, "content", Statistics.getTokens("dog cat")));
+                System.out.println(BM25(docID, "content", Statistics.getTokens("wind speeds in Kansas")));
                 System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             }
         } catch (Exception e) {
