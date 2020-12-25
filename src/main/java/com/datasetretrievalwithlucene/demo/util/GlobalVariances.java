@@ -29,4 +29,6 @@ public class GlobalVariances {
 
     public static Integer FSDMUWindowSize = 8;
     public static Integer queryPoolSize = 50;
+    public static String queriesPath = "src/main/resources/in/queries.in";
+    public static String[] queryFields = {"content", "title", "notes"};
 }
