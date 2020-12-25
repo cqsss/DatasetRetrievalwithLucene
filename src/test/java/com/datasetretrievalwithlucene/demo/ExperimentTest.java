@@ -83,9 +83,6 @@ public class ExperimentTest {
                         return o2.getValue().compareTo(o1.getValue());
                     }
                 });
-                for (Integer i = 0; i < GlobalVariances.queryPoolSize; i++) {
-                    scoreSet.add(BM25scoreList.get(i).getKey());
-                }
                 List<Pair<Integer, Double>> TFIDFscoreList = new ArrayList<>();
                 for (ScoreDoc si : scoreDocs) {
                     Integer docID = si.doc;
@@ -103,9 +100,6 @@ public class ExperimentTest {
                         return o2.getValue().compareTo(o1.getValue());
                     }
                 });
-                for (Integer i = 0; i < GlobalVariances.queryPoolSize; i++) {
-                    scoreSet.add(TFIDFscoreList.get(i).getKey());
-                }
                 List<Pair<Integer, Double>> FSDMscoreList = new ArrayList<>();
                 for (ScoreDoc si : scoreDocs) {
                     Integer docID = si.doc;
@@ -120,10 +114,15 @@ public class ExperimentTest {
                         return o2.getValue().compareTo(o1.getValue());
                     }
                 });
-                for (Integer i = 0; i < GlobalVariances.queryPoolSize; i++) {
-                    scoreSet.add(FSDMscoreList.get(i).getKey());
+                for (Integer i = 0; i < GlobalVariances.queryPoolSize.length; i++) {
+                    for (Integer j = 0; j < GlobalVariances.queryPoolSize[i]; j++) {
+                        scoreSet.add(BM25scoreList.get(j).getKey());
+                        scoreSet.add(TFIDFscoreList.get(j).getKey());
+                        scoreSet.add(FSDMscoreList.get(j).getKey());
+                    }
+                    System.out.printf("%d ",scoreSet.size());
                 }
-                System.out.println(scoreSet.size());
+                System.out.printf("\n");
 //                System.out.println("BM25-------------------------------------------");
 //                for (Integer i = 0; i < 10; i++) {
 //                    System.out.println(BM25scoreList.get(i));

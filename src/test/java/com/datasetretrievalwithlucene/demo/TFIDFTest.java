@@ -51,7 +51,7 @@ public class TFIDFTest {
                 BytesRef bytesRef = new BytesRef(token);
                 Double docFreq = (double) indexReader.docFreq(new Term(field, bytesRef));
                 Double idf = Math.log((docCount + 1.0) / (docFreq + 1.0)) + 1.0;
-                Double tf = 1.0;
+                Double tf = 0.0;
                 if(terms != null)
                 {
                     TermsEnum termsIterator = terms.iterator();

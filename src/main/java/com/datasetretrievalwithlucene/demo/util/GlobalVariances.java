@@ -28,7 +28,7 @@ public class GlobalVariances {
     public static JSONObject getBoostWeights() { if(null == boostWeights) boostWeights = Statistics.readJson("src/main/resources/json/ParseMatch_boost.json"); return boostWeights; }
 
     public static Integer FSDMUWindowSize = 8;
-    public static Integer queryPoolSize = 50;
+    public static Integer[] queryPoolSize = {5, 10, 20, 50, 100};
     public static String queriesPath = "src/main/resources/in/queries.in";
     public static String[] queryFields = {"content", "title", "notes"};
 }
