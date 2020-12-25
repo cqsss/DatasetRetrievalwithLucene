@@ -217,7 +217,7 @@ public class RelevanceRanking {
         try {
             Double N = (double) indexReader.getDocCount(field);
             Terms terms = indexReader.getTermVector(doc_id, field);
-            Double D = 1.0;
+            Double D = 0.0;
             if(terms != null)
                 D = (double) terms.getSumTotalTermFreq();
             Double avgdl = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
@@ -247,10 +247,10 @@ public class RelevanceRanking {
         try {
             Double docCount = (double) indexReader.getDocCount(field);
             Terms terms = indexReader.getTermVector(doc_id, field);
-            Double D = 1.0;
+            Double D = 0.0;
             if(terms != null)
                 D = (double) terms.getSumTotalTermFreq();
-            Double lengthNorm = 1.0 / Math.sqrt(D);
+            Double lengthNorm = 1.0 / (Math.sqrt(D) + 1.0);
             //System.out.println("doc_id: " + doc_id);
             for (String token : tokens) {
                 BytesRef bytesRef = new BytesRef(token);
