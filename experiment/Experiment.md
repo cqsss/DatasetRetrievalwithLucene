@@ -11,7 +11,7 @@ marp: true
     - query的质量
     - 包含该query的字段
 - 根据query得到hits
-    - 对hits根据task进行打分（3分制或4分制或5分制）
+    - 对hits根据query进行打分（3分制或4分制或5分制）
     - 3-5人对同一数据集进行打分，不同取多数，无多数取平均
     - 给用户呈现哪些内容
     - 质量和相关性评判标准（打分标准）
@@ -56,8 +56,3 @@ marp: true
 - Precision@k
 - Recall@k
 - F值 or MAP
----
-### Common Problems
-
-- 参数选择问题（手动 or 训练）
-- 结果分析问题（对比策略问题）
