@@ -18,8 +18,10 @@ marp: true
     - 是否区分质量分数与相关性分数
 ---
 - 具体流程：
-    1. 统计content字段、title字段、notes字段中出现次数最多的前100个有效term（去除数字等无意义的term），根据这些term编写query，并测试这些query的hits数量（1000以上？），取不同baseline的前20（30？50？）集合。
-    2. 将得到的hits随机提供给用户（3人以上）进行打分，用户可以查看每个数据集的title、description、url、(content？)、etc.，根据该数据集的质量及与该query的相关程度进行打分。
+    1. 统计class&property字段、title&notes字段中出现次数最多的前50个有效term（去除含数字的或长度为1的term）；
+    2. 人工去除这些term中无实际意义的，在google dataset search上搜索，取搜索下拉框推荐查询中长度小于等于5个单词的查询；
+    3. 取这些查询不同baseline的hits前20集合；
+    4. 将得到的hits随机提供给用户（3人以上）进行打分，根据该数据集与该query的相关程度进行打分。
 ---
 
 ### Baseline

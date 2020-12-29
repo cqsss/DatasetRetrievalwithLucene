@@ -1,5 +1,6 @@
 package com.datasetretrievalwithlucene.demo;
 
+import com.datasetretrievalwithlucene.demo.Bean.DatasetScore;
 import com.datasetretrievalwithlucene.demo.util.GlobalVariances;
 import com.datasetretrievalwithlucene.demo.util.RelevanceRanking;
 import com.datasetretrievalwithlucene.demo.util.Statistics;
@@ -72,7 +73,7 @@ public class ExperimentTest {
 //                    System.out.println("dataset_id: " + document.get("dataset_id") + ", score: " + si.score);
 //                    Explanation e = indexSearcher.explain(parsedQuery, si.doc);
 //                    System.out.println("Explanation： \n" + e);
-                    for (Integer i = 0; i < 3; i++) {
+                    for (Integer i = 0; i < fields.length; i++) {
                         score += RelevanceRanking.BM25(docID, fields[i], Statistics.getTokens(query));
                     }
                     BM25scoreList.add(new Pair<>(datasetID, score));
@@ -86,10 +87,10 @@ public class ExperimentTest {
                 List<Pair<Integer, Double>> TFIDFscoreList = new ArrayList<>();
                 for (ScoreDoc si : scoreDocs) {
                     Integer docID = si.doc;
-                    Document document = indexReader.document(docID);
+                    Document document = indexReader.document(docID);    
                     Integer datasetID = Integer.parseInt(document.get("dataset_id"));
                     Double score = 0.0;
-                    for (Integer i = 0; i < 3; i++) {
+                    for (Integer i = 0; i < fields.length; i++) {
                         score += RelevanceRanking.TFIDF(docID, fields[i], Statistics.getTokens(query));
                     }
                     TFIDFscoreList.add(new Pair<>(datasetID, score));

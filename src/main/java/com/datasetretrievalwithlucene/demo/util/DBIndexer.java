@@ -21,6 +21,9 @@ public class DBIndexer {
 
     private static final Logger logger = LoggerFactory.getLogger(DBIndexer.class);
     private Map<Integer, String> id2text = new HashMap<>();
+    private Map<Integer, String> propertyText = new HashMap<>();
+    private Map<Integer, String> classText = new HashMap<>();
+    private Set<Integer> classSet = new HashSet<>();
     private IndexFactory indexF;
     private Integer datasetCountLimit = 1000000;
     /**
@@ -49,7 +52,7 @@ public class DBIndexer {
         });
         StringBuilder sb = new StringBuilder();
 
-        for (Integer i = 0; i < countList.size() && i < limit; i++) {
+        for (int i = 0; i < countList.size() && i < limit; i++) {
             sb.append(LabelMap.query(countList.get(i).getKey(), jdbcTemplate));
             sb.append(" ");
         }
@@ -62,10 +65,10 @@ public class DBIndexer {
      * @return
      */
     private String generateText(List<TripleID> datasetTriples) {
-        Map<Integer, Integer> subMap = new HashMap<>(); subMap.clear();
-        Map<Integer, Integer> preMap = new HashMap<>(); preMap.clear();
-        Map<Integer, Integer> objMap = new HashMap<>(); objMap.clear();
-        Map<Integer, Integer> sumMap = new HashMap<>(); sumMap.clear();
+        Map<Integer, Integer> subMap = new HashMap<>();
+        Map<Integer, Integer> preMap = new HashMap<>();
+        Map<Integer, Integer> objMap = new HashMap<>();
+        Map<Integer, Integer> sumMap = new HashMap<>();
         for (TripleID tri : datasetTriples) {
             addCount(subMap, tri.getSubject());
             addCount(preMap, tri.getPredicate());
@@ -80,32 +83,62 @@ public class DBIndexer {
         sb.append(getTopUnitText(preMap, GlobalVariances.maxRelationNumber)); sb.append(";");
         return sb.toString();
     }
-
+    private String generatePropertyText (List<Integer> propertyList) {
+        Map<Integer, Integer> preMap = new HashMap<>();
+        for (Integer i : propertyList) {
+            addCount(preMap, i);
+        }
+        return getTopUnitText(preMap, GlobalVariances.maxRelationNumber);
+    }
+    private String generateClassText (Set<Integer> classList) {
+        StringBuilder res = new StringBuilder();
+        String tmp;
+        for (Integer i : classList) {
+            tmp = LabelMap.query(i, jdbcTemplate);
+            tmp = tmp.substring(tmp.lastIndexOf("/")+1);
+            res.append(tmp);
+            res.append(" ");
+        }
+        return res.toString();
+    }
+    private void getClassIDSet() {
+        List<Integer> classList = jdbcTemplate.queryForList("SELECT DISTINCT(object) FROM triple WHERE predicate IN (SELECT global_id FROM entity WHERE label LIKE '%type%' AND is_literal=0)", Integer.class);
+        classSet.addAll(classList);
+    }
     /**
      * 得到数据集id到triple文本的映射
      */
     private void mapID2TripleText() {
+        getClassIDSet();
         Integer tripleCount = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM triple;",Integer.class);
         Integer currentID = 1;
         List<TripleID> tripleIDS = new ArrayList<>();
-        tripleIDS.clear();
-        for (Integer i = 0; i <= tripleCount / GlobalVariances.maxListNumber; i++) {
+        List<Integer> propertyIDS = new ArrayList<>();
+        Set<Integer> classIDS = new HashSet<>();
+        for (int i = 0; i <= tripleCount / GlobalVariances.maxListNumber; i++) {
             List<Map<String, Object>> queryList = jdbcTemplate.queryForList(String.format("SELECT dataset_id,subject,predicate,object FROM triple LIMIT %d,%d;", i * GlobalVariances.maxListNumber, GlobalVariances.maxListNumber));
             for (Map<String, Object> qi : queryList) {
-                Integer dataset_id = Integer.parseInt(qi.get("dataset_id").toString());
+                int dataset_id = Integer.parseInt(qi.get("dataset_id").toString());
                 Integer sub = Integer.parseInt(qi.get("subject").toString());
                 Integer pre = Integer.parseInt(qi.get("predicate").toString());
                 Integer obj = Integer.parseInt(qi.get("object").toString());
                 if (dataset_id > currentID) {
                     id2text.put(currentID, generateText(tripleIDS));
+                    propertyText.put(currentID, generatePropertyText(propertyIDS));
+                    classText.put(currentID, generateClassText(classIDS));
                     logger.info("Completed mapping dataset " + currentID);
                     currentID = dataset_id;
                     tripleIDS = new ArrayList<>();
-                    tripleIDS.clear();
+                    propertyIDS = new ArrayList<>();
+                    classIDS = new HashSet<>();
                 }
                 tripleIDS.add(new TripleID(sub, pre, obj));
+                propertyIDS.add(pre);
+                if (classSet.contains(obj)) {
+                    classIDS.add(obj);
+                }
             }
-            logger.info("MapID2TripleText process: " + ((i.doubleValue() * GlobalVariances.maxListNumber.doubleValue() + GlobalVariances.maxListNumber.doubleValue()) / tripleCount.doubleValue()));
+            logger.info("MapID2TripleText process: " + (((double) i * GlobalVariances.maxListNumber.doubleValue() + GlobalVariances.maxListNumber.doubleValue()) / tripleCount.doubleValue()));
         }
         if(tripleIDS.size() > 0)
             id2text.put(currentID, generateText(tripleIDS));
@@ -118,15 +151,28 @@ public class DBIndexer {
      * @return
      */
     private String getTextFromLocalID(Integer local_id) {
-        if(id2text.containsKey(local_id)) return id2text.get(local_id);
-        else return "";
+        return id2text.getOrDefault(local_id, "");
+    }
+    private String getPropertyFromLocalID(Integer local_id) {
+        return propertyText.getOrDefault(local_id, "");
+    }
+    private String getClassFromLocalID(Integer local_id) {
+        return classText.getOrDefault(local_id, "");
     }
 
     /**
      * 生成文档并提价
      */
     private void generateDocument() {
-        Integer all = 0;
+        int all = 0;
+        FieldType fieldType = new FieldType();
+        fieldType.setStored(true);
+        fieldType.setTokenized(true);
+        fieldType.setStoreTermVectorPositions(true);
+        fieldType.setStoreTermVectorOffsets(true);
+        fieldType.setStoreTermVectorPayloads(true);
+        fieldType.setStoreTermVectors(true);
+        fieldType.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
         List<Map<String, Object>> queryList = jdbcTemplate.queryForList("SELECT * FROM metadata");
         for (Map<String, Object> qi : queryList) {
             Document document = new Document();
@@ -142,22 +188,30 @@ public class DBIndexer {
             String id = qi.get("id").toString();
             document.add(new StoredField("id", id));
 
+            // title & notes
+            String title = qi.get("title").toString();
+            String notes = qi.get("notes").toString();
+            document.add(new Field("title_notes", title + ";" + notes, fieldType));
+
             // Content
             String content = getTextFromLocalID(local_id);
-            FieldType fieldType = new FieldType();
-            fieldType.setStored(true);
-            fieldType.setTokenized(true);
-            fieldType.setStoreTermVectorPositions(true);
-            fieldType.setStoreTermVectorOffsets(true);
-            fieldType.setStoreTermVectorPayloads(true);
-            fieldType.setStoreTermVectors(true);
-            fieldType.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
             document.add(new Field("content", content, fieldType));
+
+            // property
+            String property = getPropertyFromLocalID(local_id);
+            document.add(new Field("property", property, fieldType));
+
+            // class
+            String _class = getClassFromLocalID(local_id);
+            document.add(new Field("class", _class, fieldType));
+
+            // property & class
+            document.add(new Field("class_property", _class + ";" + property, fieldType));
 
             // Normal Fields
             for (Map.Entry<String, Object> entry : qi.entrySet()) {
                 String name = entry.getKey();
-                if (name == "dataset_id" || name == "id")
+                if (name.equals("dataset_id") || name.equals("id"))
                     continue;
                 String value = "";
                 if (entry.getValue() != null)
