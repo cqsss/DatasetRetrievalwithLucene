@@ -45,6 +45,7 @@ public class ExperimentTest {
             queries = new ArrayList<>();
             BufferedReader in = new BufferedReader(new FileReader(fileName));
             while ((str = in.readLine()) != null) {
+                str=str.replaceAll("\\p{P}"," ");
                 queries.add(str);
             }
         } catch (Exception e) {
@@ -63,8 +64,8 @@ public class ExperimentTest {
                 Query parsedQuery = queryParser.parse(query);
                 TopDocs docsSearch = indexSearcher.search(parsedQuery, 500);
                 ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
-                List<Pair<Integer, Double>> BM25scoreList = new ArrayList<>();
                 Set<Integer> scoreSet = new HashSet<>();
+                List<Pair<Integer, Double>> BM25scoreList = new ArrayList<>();
                 for (ScoreDoc si : scoreDocs) {
                     Integer docID = si.doc;
                     Document document = indexReader.document(docID);

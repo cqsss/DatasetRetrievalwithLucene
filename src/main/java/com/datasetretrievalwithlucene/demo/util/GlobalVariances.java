@@ -30,5 +30,6 @@ public class GlobalVariances {
     public static Integer FSDMUWindowSize = 8;
     public static Integer[] queryPoolSize = {5, 10, 20, 50, 100};
     public static String queriesPath = "src/main/resources/in/queries.in";
+    public static String GoogleQueriesPath = "src/main/resources/in/GoogleRelatedQueries.in";
     public static String[] queryFields = {"content", "title", "notes"};
 }

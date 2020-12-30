@@ -44,7 +44,7 @@ public class TermFreqTest {
     @Test
     public void testTermFreq() {
         try {
-            readTerms("indexProcessor/terms_content.in");
+            //readTerms("indexProcessor/terms_content.in");
             readTerms("indexProcessor/terms_notes.in");
             readTerms("indexProcessor/terms_title.in");
             List<Map.Entry<String, Integer>> arr = new ArrayList<>(termMap.entrySet());

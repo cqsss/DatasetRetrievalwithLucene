@@ -36,7 +36,7 @@ public class LabelMap {
                 id2label.put(id, label);
             }
             logger.info("entity id: " + (i * GlobalVariances.maxListNumber + GlobalVariances.maxListNumber));
-            logger.info("LoadFromDataBase process: " + ((i.doubleValue() * GlobalVariances.maxListNumber.doubleValue() + GlobalVariances.maxListNumber.doubleValue()) / entityCount.doubleValue()));
+            //logger.info("LoadFromDataBase process: " + ((i.doubleValue() * GlobalVariances.maxListNumber.doubleValue() + GlobalVariances.maxListNumber.doubleValue()) / entityCount.doubleValue()));
         }
         logger.info("Completed LoadFromDataBase!");
     }
