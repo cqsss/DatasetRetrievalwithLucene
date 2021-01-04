@@ -98,7 +98,7 @@ public class DBIndexer {
         return getTopUnitText(claMap, GlobalVariances.maxEntityNumber);
     }
     private void getClassIDSet() {
-        List<Integer> classList = jdbcTemplate.queryForList("SELECT DISTINCT(object) FROM triple WHERE predicate IN (SELECT global_id FROM entity WHERE label LIKE '%type%' AND is_literal=0)", Integer.class);
+        List<Integer> classList = jdbcTemplate.queryForList("SELECT DISTINCT(object) FROM triple WHERE predicate IN (SELECT global_id FROM entity WHERE (label LIKE '%rdf-syntax-ns#%' OR label LIKE '%rdf-schema#%') AND is_literal=0)", Integer.class);
         classSet.addAll(classList);
     }
     /**
