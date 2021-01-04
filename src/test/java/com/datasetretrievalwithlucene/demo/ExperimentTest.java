@@ -26,13 +26,12 @@ import java.util.*;
 
 @SpringBootTest
 public class ExperimentTest {
-    private Directory directory;
     private IndexReader indexReader;
     private IndexSearcher indexSearcher;
     private List<String> queries;
     public void init() {
         try {
-            directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
+            Directory directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
             indexReader = DirectoryReader.open(directory);
             indexSearcher = new IndexSearcher(indexReader);
         } catch (Exception e) {
@@ -74,12 +73,12 @@ public class ExperimentTest {
 //                    System.out.println("dataset_id: " + document.get("dataset_id") + ", score: " + si.score);
 //                    Explanation e = indexSearcher.explain(parsedQuery, si.doc);
 //                    System.out.println("Explanation： \n" + e);
-                    for (Integer i = 0; i < fields.length; i++) {
-                        score += RelevanceRanking.BM25(docID, fields[i], Statistics.getTokens(query));
+                    for (String field : fields) {
+                        score += RelevanceRanking.BM25(docID, field, Statistics.getTokens(query));
                     }
                     BM25scoreList.add(new Pair<>(datasetID, score));
                 }
-                Collections.sort(BM25scoreList, new Comparator<Pair<Integer, Double>>() {
+                BM25scoreList.sort(new Comparator<Pair<Integer, Double>>() {
                     @Override
                     public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
                         return o2.getValue().compareTo(o1.getValue());
@@ -91,12 +90,12 @@ public class ExperimentTest {
                     Document document = indexReader.document(docID);    
                     Integer datasetID = Integer.parseInt(document.get("dataset_id"));
                     Double score = 0.0;
-                    for (Integer i = 0; i < fields.length; i++) {
-                        score += RelevanceRanking.TFIDF(docID, fields[i], Statistics.getTokens(query));
+                    for (String field : fields) {
+                        score += RelevanceRanking.TFIDF(docID, field, Statistics.getTokens(query));
                     }
                     TFIDFscoreList.add(new Pair<>(datasetID, score));
                 }
-                Collections.sort(TFIDFscoreList, new Comparator<Pair<Integer, Double>>() {
+                TFIDFscoreList.sort(new Comparator<Pair<Integer, Double>>() {
                     @Override
                     public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
                         return o2.getValue().compareTo(o1.getValue());
@@ -104,20 +103,21 @@ public class ExperimentTest {
                 });
                 List<Pair<Integer, Double>> FSDMscoreList = new ArrayList<>();
                 for (ScoreDoc si : scoreDocs) {
-                    Integer docID = si.doc;
+                    int docID = si.doc;
                     Document document = indexReader.document(docID);
                     Integer datasetID = Integer.parseInt(document.get("dataset_id"));
                     Double score = RelevanceRanking.FSDM(docID, Statistics.getTokens(query));
                     FSDMscoreList.add(new Pair<>(datasetID, score));
                 }
-                Collections.sort(FSDMscoreList, new Comparator<Pair<Integer, Double>>() {
+                FSDMscoreList.sort(new Comparator<Pair<Integer, Double>>() {
                     @Override
                     public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
                         return o2.getValue().compareTo(o1.getValue());
                     }
                 });
-                for (Integer i = 0; i < GlobalVariances.queryPoolSize.length; i++) {
-                    for (Integer j = 0; j < GlobalVariances.queryPoolSize[i]; j++) {
+                for (int i = 0; i < GlobalVariances.queryPoolSize.length; i++) {
+                    if (scoreDocs.length<GlobalVariances.queryPoolSize[i]) break;
+                    for (int j = 0; j < GlobalVariances.queryPoolSize[i]; j++) {
                         scoreSet.add(BM25scoreList.get(j).getKey());
                         scoreSet.add(TFIDFscoreList.get(j).getKey());
                         scoreSet.add(FSDMscoreList.get(j).getKey());

@@ -19,10 +19,11 @@ marp: true
 ---
 - 具体流程：
     1. 统计class&property字段、title&notes字段中出现次数最多的前50个有效term（去除含数字的或长度为1的term）；
-    2. 在google dataset search上搜索这些term，取搜索下拉框推荐查询作为origin queries；
-    3. 取origin queries中去掉标点符号后使用Lucene中English Analyzer parse后长度小于等于8的且只包含英语和数字的作为实验用查询。
-    4. 取这些查询不同baseline的hits前20集合；
-    5. 将得到的hits随机提供给用户（3人以上）进行打分，根据该数据集与该query的相关程度进行打分。
+    2. 在google dataset search上搜索这些term，取搜索下拉框推荐的相关查询作为origin queries；
+    3. 取origin queries中**去掉标点符号**后使用Lucene中English Analyzer **parse后长度小于等于8**的且**只包含英语和数字**的作为test queries；
+    4. 取test queries中使用Lucene默认评分函数得分大于阈值k的hits数较多的作为实验用查询；
+    5. 取这些查询不同baseline的hits前20集合；
+    6. 将得到的hits随机提供给用户（3人以上）进行打分，根据该数据集与该query的相关程度进行打分。
 ---
 
 ### Baseline

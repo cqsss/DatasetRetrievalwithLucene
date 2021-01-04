@@ -44,7 +44,7 @@ public class DBIndexer {
      */
     private String getTopUnitText(Map<Integer, Integer> count, Integer limit) {
         List<Map.Entry<Integer, Integer>> countList = new ArrayList<>(count.entrySet());
-        Collections.sort(countList, new Comparator<Map.Entry<Integer, Integer>>() {
+        countList.sort(new Comparator<Map.Entry<Integer, Integer>>() {
             @Override
             public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
                 return o2.getValue().compareTo(o1.getValue());
@@ -91,15 +91,11 @@ public class DBIndexer {
         return getTopUnitText(preMap, GlobalVariances.maxRelationNumber);
     }
     private String generateClassText (Set<Integer> classList) {
-        StringBuilder res = new StringBuilder();
-        String tmp;
+        Map<Integer, Integer> claMap = new HashMap<>();
         for (Integer i : classList) {
-            tmp = LabelMap.query(i, jdbcTemplate);
-            tmp = tmp.substring(tmp.lastIndexOf("/")+1);
-            res.append(tmp);
-            res.append(" ");
+            addCount(claMap, i);
         }
-        return res.toString();
+        return getTopUnitText(claMap, GlobalVariances.maxEntityNumber);
     }
     private void getClassIDSet() {
         List<Integer> classList = jdbcTemplate.queryForList("SELECT DISTINCT(object) FROM triple WHERE predicate IN (SELECT global_id FROM entity WHERE label LIKE '%type%' AND is_literal=0)", Integer.class);
@@ -178,8 +174,6 @@ public class DBIndexer {
             Document document = new Document();
 
             all ++;
-            if (all % 1000 == 0)
-                logger.info("Start generating document: " + all);
             // local ID
             Integer local_id = Integer.parseInt(qi.get("dataset_id").toString());
             document.add(new StoredField("dataset_id", local_id.toString()));
@@ -221,7 +215,7 @@ public class DBIndexer {
 
             // commit document
             indexF.CommitDocument(document);
-            if (all % 1000 == 0)
+            if (all % 10000 == 0)
                 logger.info("Completed generating document: " + all);
             if (all > datasetCountLimit) break;
 

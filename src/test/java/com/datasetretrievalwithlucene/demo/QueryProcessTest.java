@@ -3,11 +3,27 @@ package com.datasetretrievalwithlucene.demo;
 import com.datasetretrievalwithlucene.demo.util.GlobalVariances;
 import com.datasetretrievalwithlucene.demo.util.Statistics;
 import javafx.util.Pair;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.expressions.Expression;
+import org.apache.lucene.expressions.SimpleBindings;
+import org.apache.lucene.expressions.js.JavascriptCompiler;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.*;
+import org.apache.lucene.search.similarities.ClassicSimilarity;
+import org.apache.lucene.search.similarities.Similarity;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.MMapDirectory;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +32,11 @@ import java.util.Map;
 @SpringBootTest
 public class QueryProcessTest {
     private List<Pair<String, String>> queryList = new ArrayList<>();
-    public void readQueries(String fileName) {
+    private List<String> queries;
+    private Directory directory;
+    private IndexReader indexReader;
+    private IndexSearcher indexSearcher;
+    public void readOriginQueries(String fileName) {
         try {
             String str;
             String[] tmps;
@@ -33,11 +53,54 @@ public class QueryProcessTest {
             e.printStackTrace();
         }
     }
+    public void readQueries(String fileName) {
+        try {
+            String str;
+            queries = new ArrayList<>();
+            BufferedReader in = new BufferedReader(new FileReader(fileName));
+            while ((str = in.readLine()) != null) {
+                str=str.replaceAll("\\p{P}"," ");
+                queries.add(str);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     @Test
     public void testQueryProcess(){
-        readQueries(GlobalVariances.GoogleQueriesPath);
+        readOriginQueries(GlobalVariances.GoogleQueriesPath);
         for (Pair<String, String> i : queryList) {
             System.out.println(i.getKey() + ";" + i.getValue());
+        }
+    }
+    @Test
+    public void testQueryHits() {
+        readQueries(GlobalVariances.queriesPath);
+        for (String qi : queries) {
+            for  (double k = 0.0; k <= 2.0; k += 0.1){
+                String[] fields = GlobalVariances.queryFields;
+                Analyzer analyzer = new EnglishAnalyzer();
+                QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
+                try {
+                    Query query = queryParser.parse(qi);
+                    Integer queryLength = query.toString().split(" ").length / fields.length;
+                    directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
+                    indexReader = DirectoryReader.open(directory);
+                    indexSearcher = new IndexSearcher(indexReader);
+                    TopDocs docsSearch = indexSearcher.search(query, 500);
+                    ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
+                    int cnt = 0;
+                    for (ScoreDoc si : scoreDocs) {
+                        double averageScore = si.score / (double) queryLength / (double) fields.length;
+                        if (averageScore >= k) cnt++;
+                        //System.out.println(e);
+                    }
+                    System.out.printf("%d\t", cnt);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.printf("\n");
         }
     }
 }

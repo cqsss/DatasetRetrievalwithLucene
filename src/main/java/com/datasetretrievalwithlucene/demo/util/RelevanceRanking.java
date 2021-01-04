@@ -17,7 +17,6 @@ import java.util.*;
 public class RelevanceRanking {
     private static Directory directory;
     private static IndexReader indexReader;
-    private static IndexSearcher indexSearcher;
     private static Map<String, Double> wT;
     private static Map<String, Double> wO;
     private static Map<String, Double> wU;
@@ -28,7 +27,6 @@ public class RelevanceRanking {
         try {
             directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
             indexReader = DirectoryReader.open(directory);
-            indexSearcher = new IndexSearcher(indexReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,7 +37,7 @@ public class RelevanceRanking {
             wO = new HashMap<>();
             wU = new HashMap<>();
             fieldTermFreq = new HashMap<>();
-            Double base = 0.0;
+            double base = 0.0;
             for (Map.Entry jsonObject : GlobalVariances.getBoostWeights().entrySet()) {
                 String field = jsonObject.getKey().toString();
                 Double w = Double.parseDouble(jsonObject.getValue().toString());
@@ -78,7 +76,7 @@ public class RelevanceRanking {
     }
 
     public static Double getTF_T(Integer doc_id, String field, String qi) {
-        Double res = 0.0;
+        double res = 0.0;
         try {
             Terms terms = indexReader.getTermVector(doc_id, field);
             BytesRef bytesRef = new BytesRef(qi);
@@ -94,9 +92,9 @@ public class RelevanceRanking {
         return res;
     }
     public static Double getTF_O(String field, String qi1, String qi2) {
-        Double res = 0.0;
+        double res = 0.0;
         List<String> content = fieldContent.get(field);
-        for (Integer i = 0; i + 1 < content.size(); i++) {
+        for (int i = 0; i + 1 < content.size(); i++) {
             if (qi1.equals(content.get(i)) && qi2.equals(content.get(i + 1)))
                 res += 1.0;
         }
@@ -104,7 +102,7 @@ public class RelevanceRanking {
         return res;
     }
     public static Double getTF_U(String field, String qi1, String qi2) {
-        Double res = 0.0;
+        double res = 0.0;
         List<String> content = fieldContent.get(field);
         for (Integer i = 0; i + GlobalVariances.FSDMUWindowSize <= content.size(); i++) {
             Set<String> window = new HashSet<>();
@@ -119,19 +117,18 @@ public class RelevanceRanking {
     }
 
     public static Double getFSDM_T(Integer doc_id, List<String> queries) {
-        Double res = 0.0;
-
+        double res = 0.0;
         try {
             for (String qi : queries) {
-                Double tmp = 0.0;
+                double tmp = 0.0;
                 for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
                     String field = jsonObject.toString();
-                    Double miu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
-                    Double Cj = (double) indexReader.getSumTotalTermFreq(field);
-                    Double cf = 0.0;
+                    double miu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
+                    double Cj = (double) indexReader.getSumTotalTermFreq(field);
+                    double cf = 0.0;
                     if (fieldTermFreq.containsKey(new Pair<>(field, qi)))
                         cf = (double) fieldTermFreq.get(new Pair<>(field, qi));
-                    Double Dj = (double) fieldDocLength.get(field);
+                    double Dj = (double) fieldDocLength.get(field);
                     tmp += wT.get(field) * (getTF_T(doc_id, field, qi) + miu * cf / Cj) / (Dj + miu);
                 }
                 //System.out.println("T: " + tmp);
@@ -144,22 +141,22 @@ public class RelevanceRanking {
         return res;
     }
     public static Double getFSDM_O(List<String> queries) {
-        Double res = 0.0;
+        double res = 0.0;
         try {
-            for (Integer i = 0; i + 1 < queries.size(); i++) {
-                Double tmp = 0.0;
+            for (int i = 0; i + 1 < queries.size(); i++) {
+                double tmp = 0.0;
                 String qi1 = queries.get(i);
                 String qi2 = queries.get(i + 1);
                 for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
                     String field = jsonObject.toString();
-                    Double miu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
-                    Double Cj = (double) indexReader.getSumTotalTermFreq(field);
-                    Double cf = 0.0;
+                    double miu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
+                    double Cj = (double) indexReader.getSumTotalTermFreq(field);
+                    double cf = 0.0;
                     if (fieldTermFreq.containsKey(new Pair<>(field, qi1)))
                         cf = (double) fieldTermFreq.get(new Pair<>(field, qi1));
                     if (fieldTermFreq.containsKey(new Pair<>(field, qi2)))
                         cf = Math.min(cf, (double) fieldTermFreq.get(new Pair<>(field, qi2)));
-                    Double Dj = (double) fieldDocLength.get(field);
+                    double Dj = (double) fieldDocLength.get(field);
                     tmp += wO.get(field) * (getTF_O(field, qi1, qi2) + miu * cf / Cj) / (Dj + miu);
                 }
                 //System.out.println("O: " + tmp);
@@ -172,22 +169,22 @@ public class RelevanceRanking {
         return res;
     }
     public static Double getFSDM_U(List<String> queries) {
-        Double res = 0.0;
+        double res = 0.0;
         try {
-            for (Integer i = 0; i + 1 < queries.size(); i++) {
-                Double tmp = 0.0;
+            for (int i = 0; i + 1 < queries.size(); i++) {
+                double tmp = 0.0;
                 String qi1 = queries.get(i);
                 String qi2 = queries.get(i + 1);
                 for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
                     String field = jsonObject.toString();
-                    Double miu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
-                    Double Cj = (double) indexReader.getSumTotalTermFreq(field);
-                    Double cf = 0.0;
+                    double miu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
+                    double Cj = (double) indexReader.getSumTotalTermFreq(field);
+                    double cf = 0.0;
                     if (fieldTermFreq.containsKey(new Pair<>(field, qi1)))
                         cf = (double) fieldTermFreq.get(new Pair<>(field, qi1));
                     if (fieldTermFreq.containsKey(new Pair<>(field, qi2)))
                         cf = Math.min(cf, (double) fieldTermFreq.get(new Pair<>(field, qi2)));
-                    Double Dj = (double) fieldDocLength.get(field);
+                    double Dj = (double) fieldDocLength.get(field);
                     tmp += wU.get(field) * (getTF_U(field, qi1, qi2) + miu * cf / Cj) / (Dj + miu);
                 }
                 //System.out.println("U: " + tmp);
@@ -211,28 +208,28 @@ public class RelevanceRanking {
     }
     public static Double BM25(Integer doc_id, String field, List<String> tokens) {
         init();
-        Double score = 0.0;
-        Double k1 = 1.2;
-        Double b = 0.75;
+        double score = 0.0;
+        double k1 = 1.2;
+        double b = 0.75;
         try {
-            Double N = (double) indexReader.getDocCount(field);
+            double N = (double) indexReader.getDocCount(field);
             Terms terms = indexReader.getTermVector(doc_id, field);
-            Double D = 0.0;
+            double D = 0.0;
             if(terms != null)
                 D = (double) terms.getSumTotalTermFreq();
-            Double avgdl = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
+            double avgdl = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
             //System.out.println("doc_id: " + doc_id);
             for (String token : tokens) {
                 BytesRef bytesRef = new BytesRef(token);
-                Double n = (double) indexReader.docFreq(new Term(field, bytesRef));
-                Double idf = Math.log((N - n + 0.5) / (n + 0.5) + 1);
-                Double f = 0.0;
+                double n = (double) indexReader.docFreq(new Term(field, bytesRef));
+                double idf = Math.log((N - n + 0.5) / (n + 0.5) + 1);
+                double f = 0.0;
                 if(terms != null)
                 {
                     TermsEnum termsIterator = terms.iterator();
                     if(termsIterator.seekExact(bytesRef)) f = (double)termsIterator.totalTermFreq();
                 }
-                Double tmp = idf * (f * (k1 + 1.0) / (f + k1 * (1.0 - b + b * D /avgdl)));
+                double tmp = idf * (f * (k1 + 1.0) / (f + k1 * (1.0 - b + b * D /avgdl)));
                 score += tmp;
             }
 
@@ -243,26 +240,26 @@ public class RelevanceRanking {
         return score;
     }
     public static Double TFIDF(Integer doc_id, String field, List<String> tokens) {
-        Double score = 0.0;
+        double score = 0.0;
         try {
-            Double docCount = (double) indexReader.getDocCount(field);
+            double docCount = (double) indexReader.getDocCount(field);
             Terms terms = indexReader.getTermVector(doc_id, field);
-            Double D = 0.0;
+            double D = 0.0;
             if(terms != null)
                 D = (double) terms.getSumTotalTermFreq();
-            Double lengthNorm = 1.0 / (Math.sqrt(D) + 1.0);
+            double lengthNorm = 1.0 / (Math.sqrt(D) + 1.0);
             //System.out.println("doc_id: " + doc_id);
             for (String token : tokens) {
                 BytesRef bytesRef = new BytesRef(token);
-                Double docFreq = (double) indexReader.docFreq(new Term(field, bytesRef));
-                Double idf = Math.log((docCount + 1.0) / (docFreq + 1.0)) + 1.0;
-                Double tf = 0.0;
+                double docFreq = (double) indexReader.docFreq(new Term(field, bytesRef));
+                double idf = Math.log((docCount + 1.0) / (docFreq + 1.0)) + 1.0;
+                double tf = 0.0;
                 if(terms != null)
                 {
                     TermsEnum termsIterator = terms.iterator();
                     if(termsIterator.seekExact(bytesRef)) tf = Math.sqrt((double)termsIterator.totalTermFreq());
                 }
-                Double tmp = lengthNorm * idf * tf;
+                double tmp = lengthNorm * idf * tf;
                 score += tmp;
             }
 
