@@ -106,6 +106,7 @@ public class DBIndexer {
      */
     private void mapID2TripleText() {
         getClassIDSet();
+        logger.info("Completed getClassIDSet");
         Integer tripleCount = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM triple;",Integer.class);
         Integer currentID = 1;
         List<TripleID> tripleIDS = new ArrayList<>();
