@@ -18,12 +18,31 @@ marp: true
     - 是否区分质量分数与相关性分数
 ---
 - 具体流程：
-    1. 统计class&property字段、title&notes字段中出现次数最多的前50个有效term（去除含数字的或长度为1的term）；
-    2. 在google dataset search上搜索这些term，取搜索下拉框推荐的相关查询作为origin queries；
-    3. 取origin queries中**去掉标点符号**后使用Lucene中English Analyzer **parse后长度小于等于8**的且**只包含英语和数字**的作为test queries；
-    4. 取test queries中使用Lucene默认评分函数得分大于阈值k的hits数较多的作为实验用查询；
+    1. 统计**class&property**字段、**title&notes**字段中出现次数最多的前50个（或前100个）有效term（去除**含数字的或长度为1的**term）；
+    2. 在google dataset search上搜索这些term，取**搜索下拉框推荐的相关查询**作为origin queries（每个term10个，个别term不足10个）；
+    3. 取origin queries中**去掉标点符号**后使用Lucene(8.7.0)中English Analyzer **parse后长度小于等于8**的且**只包含英语和数字**的作为test queries；
+    4. 取test queries中使用Lucene默认评分函数**平均每词每字段得分大于阈值k的hits数多于20的**作为实验用查询；
     5. 取这些查询不同baseline的hits前20集合；
     6. 将得到的hits随机提供给用户（3人以上）进行打分，根据该数据集与该query的相关程度进行打分。
+---
+
+### labeling guidance
+
+- a dataset is off topic (0) if the information does not satisfy the information need, and should not be listed in the search results from a search engine;
+- a dataset is poor (1) if a search engine were to include this in the search results, but it should not be listed at the top;
+- a dataset is good (2) if you would expect this dataset to be included in the search results from a search engine;
+- a dataset is excellent (3) if you would expect this dataset ranked near the top of the search results from a search engine.
+
+---
+
+- property：所有predicate
+- class：所有'%rdf-syntax-ns#%'或'%rdf-schema#%'的predicate指向的object
+
+---
+
+- JASSjr: The Minimalistic BM25 Search Engine for Teaching and Learning Information Retrieval
+- Neural Vector Spaces for Unsupervised Information Retrieval
+
 ---
 
 ### Baseline
@@ -34,7 +53,7 @@ marp: true
     - FSDM
     - PageRank
     - DING
-    - DRank (仅根据数据集的度数排序的native rank)
+    - DRank (仅根据数据集的度数排序的naive rank)
     - Language Model* (Dirichlet smoothing and Jelinek-Mercer smoothing)
 ---
 - 混合方法排序

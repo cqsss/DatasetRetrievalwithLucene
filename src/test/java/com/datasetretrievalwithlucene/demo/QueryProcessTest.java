@@ -83,7 +83,11 @@ public class QueryProcessTest {
                 QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
                 try {
                     Query query = queryParser.parse(qi);
-                    Integer queryLength = query.toString().split(" ").length / fields.length;
+                    /**
+                     * sample query:
+                     * (content:dataset title:dataset notes:dataset) (content:prijzen title:prijzen notes:prijzen) (content:de title:de notes:de) (content:supermarkt title:supermarkt notes:supermarkt) (content:java title:java notes:java)
+                     */
+                    int queryLength = query.toString().split(" ").length / fields.length;
                     directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
                     indexReader = DirectoryReader.open(directory);
                     indexSearcher = new IndexSearcher(indexReader);

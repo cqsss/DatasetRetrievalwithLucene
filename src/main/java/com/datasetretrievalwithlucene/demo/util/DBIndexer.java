@@ -98,7 +98,7 @@ public class DBIndexer {
         return getTopUnitText(claMap, GlobalVariances.maxEntityNumber);
     }
     private void getClassIDSet() {
-        List<Integer> classList = jdbcTemplate.queryForList("SELECT DISTINCT(object) FROM triple WHERE predicate IN (SELECT global_id FROM entity WHERE (label LIKE '%rdf-syntax-ns#%' OR label LIKE '%rdf-schema#%') AND is_literal=0)", Integer.class);
+        List<Integer> classList = jdbcTemplate.queryForList("SELECT DISTINCT(object) FROM triple WHERE predicate IN (SELECT global_id FROM entity WHERE label LIKE '%rdf-syntax-ns#type%' AND is_literal=0)", Integer.class);
         classSet.addAll(classList);
     }
     /**
@@ -158,7 +158,7 @@ public class DBIndexer {
     }
 
     /**
-     * 生成文档并提价
+     * 生成文档并提交
      */
     private void generateDocument() {
         int all = 0;
@@ -173,7 +173,6 @@ public class DBIndexer {
         List<Map<String, Object>> queryList = jdbcTemplate.queryForList("SELECT * FROM metadata");
         for (Map<String, Object> qi : queryList) {
             Document document = new Document();
-
             all ++;
             // local ID
             Integer local_id = Integer.parseInt(qi.get("dataset_id").toString());
@@ -215,7 +214,7 @@ public class DBIndexer {
             }
 
             // commit document
-            indexF.CommitDocument(document);
+            indexF.commitDocument(document);
             if (all % 10000 == 0)
                 logger.info("Completed generating document: " + all);
             if (all > datasetCountLimit) break;
@@ -228,9 +227,9 @@ public class DBIndexer {
         logger.info("Start");
         id2text.clear();
         indexF = new IndexFactory();
-        indexF.Init(GlobalVariances.store_Dir, GlobalVariances.commit_limit, GlobalVariances.globeAnalyzer);
+        indexF.init(GlobalVariances.store_Dir, GlobalVariances.commit_limit, GlobalVariances.globeAnalyzer);
         mapID2TripleText();
         generateDocument();
-        indexF.CloseIndexWriter();
+        indexF.closeIndexWriter();
     }
 }

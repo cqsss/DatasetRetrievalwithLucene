@@ -29,13 +29,13 @@ public class LabelMap {
             List<Map<String, Object>> queryList = jdbcTemplate.queryForList(String.format("SELECT global_id,label,is_literal FROM entity LIMIT %d,%d;", i * GlobalVariances.maxListNumber, GlobalVariances.maxListNumber));
             for (Map<String, Object> qi : queryList) {
                 Integer id = Integer.parseInt(qi.get("global_id").toString());
-                Integer is_literal = Integer.parseInt(qi.get("is_literal").toString());
+                boolean is_literal = Boolean.parseBoolean(qi.get("is_literal").toString());
 
                 Object labelObject = qi.get("label");
                 String label = "";
                 if (labelObject != null)
                     label = labelObject.toString();
-                if (is_literal.equals(0) && label.contains("http"))
+                if (!is_literal && label.contains("http"))
                     label = label.substring(label.lastIndexOf("/")+1);
                 id2label.put(id, label);
             }

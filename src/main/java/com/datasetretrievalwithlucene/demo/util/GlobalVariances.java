@@ -14,8 +14,8 @@ public class GlobalVariances {
     public static Integer maxRelationNumber = 1000;
 
     // 数据存放常数
-    public static String store_Dir = "D:/db_index_new/";
-    public static String index_Dir = "D:/db_index_new/";
+    public static String store_Dir = "D:/db_index/";
+    public static String index_Dir = "D:/db_index/";
     public static Integer commit_limit = 10;
 
     // 分析器
@@ -30,6 +30,6 @@ public class GlobalVariances {
     public static Integer FSDMUWindowSize = 8;
     public static Integer[] queryPoolSize = {5, 10, 20, 50, 100};
     public static String queriesPath = "src/main/resources/in/queries.in";
-    public static String GoogleQueriesPath = "src/main/resources/in/GoogleRelatedQueries.in";
-    public static String[] queryFields = {"content", "title", "notes"};
+    public static String GoogleQueriesPath = "src/main/resources/in/class_propertyGoogleQueries.in";
+    public static String[] queryFields = {"title_notes", "class_property"};
 }

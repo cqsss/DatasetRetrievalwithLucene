@@ -20,7 +20,7 @@ public class IndexFactory {
      * 提交文档
      * @param document
      */
-    public void CommitDocument(Document document) {
+    public void commitDocument(Document document) {
         try {
             iwriter.addDocument(document);
             commit_cnt ++;
@@ -33,7 +33,7 @@ public class IndexFactory {
     /**
      * 关闭IndexWriter
      */
-    public void CloseIndexWriter() {
+    public void closeIndexWriter() {
         try {
             iwriter.close();
         } catch (Exception e) {
@@ -47,7 +47,7 @@ public class IndexFactory {
      * @param commit_lim
      * @param analyzer
      */
-    public void Init(String store_Path, Integer commit_lim, Analyzer analyzer) {
+    public void init(String store_Path, Integer commit_lim, Analyzer analyzer) {
         try {
             Directory directory = MMapDirectory.open(Paths.get(store_Path));
             IndexWriterConfig config = new IndexWriterConfig(analyzer);

@@ -44,9 +44,9 @@ public class TermFreqTest {
     @Test
     public void testTermFreq() {
         try {
-            //readTerms("indexProcessor/terms_content.in");
-            readTerms("indexProcessor/terms_notes.in");
-            readTerms("indexProcessor/terms_title.in");
+            //readTerms("indexProcessor/title_notes.in");
+            //readTerms("indexProcessor/class_property.in");
+            readTerms("indexProcessor/content.in");
             List<Map.Entry<String, Integer>> arr = new ArrayList<>(termMap.entrySet());
             Collections.sort(arr, new Comparator<Map.Entry<String, Integer>>() {
                 @Override

@@ -52,6 +52,35 @@ public class ExperimentTest {
         }
     }
     @Test
+    public void testTopK() {
+        init();
+        try {
+            readQueries(GlobalVariances.queriesPath);
+            for (double k = 0.0; k <= 2.0; k += 0.1) {
+                int cnt = 0;
+                for  (String qi : queries){
+                    String[] fields = GlobalVariances.queryFields;
+                    Analyzer analyzer = new EnglishAnalyzer();
+                    QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
+                    Query query = queryParser.parse(qi);
+                    int queryLength = query.toString().split(" ").length / fields.length;
+                    TopDocs docsSearch = indexSearcher.search(query, 5);
+                    ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
+                    boolean flag = false;
+                    for (ScoreDoc si : scoreDocs) {
+                        double averageScore = si.score / (double) queryLength / (double) fields.length;
+                        if (averageScore < k) flag = true;
+                        //System.out.println(e);
+                    }
+                    if (flag) cnt ++;
+                }
+                System.out.printf("%d\t",cnt);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @Test
     public void testExperiment() {
         init();
         try {
