@@ -105,6 +105,12 @@ public class QualityRanking {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 仅考虑度数的DRank
+     * @param field
+     * @param jdbcTemplate
+     */
     public static void DRank(String field, JdbcTemplate jdbcTemplate) {
         readDataBase(jdbcTemplate);
         try {
