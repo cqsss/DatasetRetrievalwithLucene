@@ -1,7 +1,0 @@
-2020-12-24 13:49:20.795 [main] INFO  com.datasetretrievalwithlucene.demo.DRankTest - Starting DRankTest on DESKTOP-M68RJ6T with PID 8496 (started by Chen Qiaosheng in G:\DatasetRetrievalwithLucene)
-2020-12-24 13:49:20.806 [main] INFO  com.datasetretrievalwithlucene.demo.DRankTest - No active profile set, falling back to default profiles: default
-2020-12-24 13:49:22.934 [main] INFO  com.datasetretrievalwithlucene.demo.DRankTest - Started DRankTest in 3.005 seconds (JVM running for 5.828)
-2020-12-24 13:49:23.144 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2020-12-24 13:49:23.504 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2020-12-24 13:49:23.543 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2020-12-24 13:49:23.559 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

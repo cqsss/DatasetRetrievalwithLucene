@@ -1,44 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="keywords" content="keyword1,keyword2,keyword3">
-    <meta name="description" content="this is my page">
-    <meta name="content-type" content="text/html; charset=UTF-8">
-    <script type="text/javascript" src="jquery-3.5.1.min.js"></script>
-    <script type="text/javascript">
-        $(function(){
-            $("#searchBtn").click(function(){
-                $.ajax({
-                    url:'search',
-                    data:'keyWord='+$("input[name='keyWord']").val(),
-                    dataType:'json',
-                    success:function(jd){
-                        $("div[name='c']").remove();
-                        for(var i=0;i<jd.length;i++){
-                            var html=
-                                "<div name='c'>"+
-                                "<h3>"+jd[i].foodname+"</h3>"+
-                                "<span>"+jd[i].foodname+"价格是："+jd[i].price+"</span>"+
-                                "<ht>"+
-                                "</div>"
-                            $("#foodDiv").append(html);
-                        }
-                    }
-                })
-            })
-        })
-    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.80.0">
+    <title>Dataset Search</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
+
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="/css/signin.css" rel="stylesheet">
 </head>
-<body>
-<div align="center">
-    <img src="log.png" style="height:55px;width: 190px;"><br>
-    <table>
-        <input type="text" name="keyWord" style="width:450px; height:30px;">
-        <input type="button" id="searchBtn" value="搜索一下" style="height: 37px;background-color: #38f">
-    </table>
-    <div id="foodDiv" align="justify">
-    </div>
-</div>
+<body class="text-center align-items-baseline">
+
+<main class="container">
+    <form class="mt-lg-5">
+        <img class="mt-5 mb-4" src="/img/logo.jpg" alt="" width="100" height="100">
+        <div class="d-flex justify-content-center">
+            <input class="form-control w-50" type="search" placeholder="Search" aria-label="Search">
+            <button class="w-30 btn btn-lg btn-primary" type="submit">Search</button>
+        </div>
+        <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
+        <p class="text-lg-center"></p>
+    </form>
+</main>
+
 </body>
 </html>
