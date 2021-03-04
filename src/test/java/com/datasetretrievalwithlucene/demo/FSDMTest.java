@@ -137,7 +137,7 @@ public class FSDMTest {
                 Double tmp = 0.0;
                 for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
                     String field = jsonObject.toString();
-                    Double miu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
+                    Double miu = (double) indexReader.getSumTotalTermFreq(field) / ((double) indexReader.getDocCount(field));
                     Double Cj = (double) indexReader.getSumTotalTermFreq(field);
                     Double cf = 0.0;
                     if (fieldTermFreq.containsKey(new Pair<>(field, qi)))
@@ -223,10 +223,10 @@ public class FSDMTest {
     public void testFSDM() {
         init();
         try {
-            getCollectionStatistics(Statistics.getTokens("dog cat"));
+            getCollectionStatistics(Statistics.getTokens("Top countries in production from aquaculture 2017"));
             Analyzer analyzer = new EnglishAnalyzer();
             QueryParser queryParser = new QueryParser("content", analyzer);
-            Query query = queryParser.parse("dog cat");
+            Query query = queryParser.parse("Top countries in production from aquaculture 2017");
             TopDocs docsSearch = indexSearcher.search(query, 10);
             System.out.println("--- total ---: " + docsSearch.totalHits);
             ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
@@ -237,7 +237,7 @@ public class FSDMTest {
                 System.out.println("Explanation： \n" + e);
                 System.out.println("********************************************************************");
                 System.out.println("custom FSDM: ");
-                System.out.println(FSDM(docID, Statistics.getTokens("dog cat")));
+                System.out.println(FSDM(docID, Statistics.getTokens("cat dog")));
                 System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             }
         } catch (Exception e) {

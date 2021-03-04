@@ -176,11 +176,11 @@ public class DBIndexer {
             all ++;
             // local ID
             Integer local_id = Integer.parseInt(qi.get("dataset_id").toString());
-            document.add(new StoredField("dataset_id", local_id.toString()));
+            document.add(new Field("dataset_id", local_id.toString(), fieldType));
 
             // Dataset ID
             String id = qi.get("id").toString();
-            document.add(new StoredField("id", id));
+            document.add(new Field("id", id, fieldType));
 
             // title & notes
             String title = qi.get("title").toString();

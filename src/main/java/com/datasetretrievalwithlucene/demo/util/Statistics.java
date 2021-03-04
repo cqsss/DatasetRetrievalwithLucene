@@ -49,7 +49,6 @@ public class Statistics {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        System.out.println( filename + " Load Success!" );
         return JSON.parseObject(text);
     }
 }

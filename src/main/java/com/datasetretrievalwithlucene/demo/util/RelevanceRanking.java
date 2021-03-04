@@ -5,6 +5,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.*;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
@@ -17,6 +18,7 @@ import java.util.*;
 public class RelevanceRanking {
     private static Directory directory;
     private static IndexReader indexReader;
+    private static IndexSearcher indexSearcher;
     private static Map<String, Double> wT;
     private static Map<String, Double> wO;
     private static Map<String, Double> wU;
@@ -27,6 +29,7 @@ public class RelevanceRanking {
         try {
             directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
             indexReader = DirectoryReader.open(directory);
+            indexSearcher = new IndexSearcher(indexReader);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -269,5 +272,66 @@ public class RelevanceRanking {
         //System.out.println(score);
         return score;
     }
+    public static List<Pair<Integer, Double>> RankingList(String query, Integer algorithm_sel) {
+        init();
+        List<Pair<Integer, Double>> BM25scoreList = new ArrayList<>();
+        List<Pair<Integer, Double>> TFIDFscoreList = new ArrayList<>();
+        List<Pair<Integer, Double>> FSDMscoreList = new ArrayList<>();
+        try {
+            String[] fields = GlobalVariances.queryFields;
+            Analyzer analyzer = new EnglishAnalyzer();
+            QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
+            Query parsedQuery = queryParser.parse(query);
+            TopDocs docsSearch = indexSearcher.search(parsedQuery, 500);
+            ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
+            for (ScoreDoc si : scoreDocs) {
+                Integer docID = si.doc;
+                Document document = indexReader.document(docID);
+                Integer datasetID = Integer.parseInt(document.get("dataset_id"));
+                Double score = 0.0;
+//                    System.out.println("dataset_id: " + document.get("dataset_id") + ", score: " + si.score);
+//                    Explanation e = indexSearcher.explain(parsedQuery, si.doc);
+//                    System.out.println("Explanation： \n" + e);
+                for (String field : fields) {
+                    score += BM25(docID, field, Statistics.getTokens(query));
+                }
+                BM25scoreList.add(new Pair<>(datasetID, score));
+                score = 0.0;
+                for (String field : fields) {
+                    score += RelevanceRanking.TFIDF(docID, field, Statistics.getTokens(query));
+                }
+                TFIDFscoreList.add(new Pair<>(datasetID, score));
+                score = RelevanceRanking.FSDM(docID, Statistics.getTokens(query));
+                FSDMscoreList.add(new Pair<>(datasetID, score));
+            }
+            BM25scoreList.sort(new Comparator<Pair<Integer, Double>>() {
+                @Override
+                public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
+                    return o2.getValue().compareTo(o1.getValue());
+                }
+            });
+            TFIDFscoreList.sort(new Comparator<Pair<Integer, Double>>() {
+                @Override
+                public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
+                    return o2.getValue().compareTo(o1.getValue());
+                }
+            });
+            FSDMscoreList.sort(new Comparator<Pair<Integer, Double>>() {
+                @Override
+                public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
+                    return o2.getValue().compareTo(o1.getValue());
+                }
+            });
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        switch (algorithm_sel) {
+            case 0: return BM25scoreList;
+            case 1: return TFIDFscoreList;
+            case 2: return FSDMscoreList;
+            default:
+                throw new IllegalStateException("Unexpected value: " + algorithm_sel);
+        }
+    }
 }
