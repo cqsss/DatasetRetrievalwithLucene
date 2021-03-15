@@ -136,7 +136,19 @@
         </div>
       </div>
 
-      <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+      <div th:each="dataset:${datasets}">
+        <dl class="row">
+          <dt class="col-sm-3">dataset_id</dt>
+          <dd class="col-sm-9" th:text="${dataset.dataset_id}"></dd>
+
+          <dt class="col-sm-3">title</dt>
+          <dd class="col-sm-9" th:text="${dataset.title}"></dd>
+
+          <dt class="col-sm-3">notes</dt>
+          <dd class="col-sm-9" th:text="${dataset.notes}"></dd>
+        </dl>
+      </div>
+
 
       <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
         <input type="radio" class="btn-check" name="rating" id="rating0" autocomplete="off">
@@ -150,13 +162,6 @@
 
         <input type="radio" class="btn-check" name="rating" id="rating3" autocomplete="off">
         <label class="btn btn-outline-primary" for="rating3" title="excellent">3</label>
-      </div>
-      <div class="mt-4 ms-2">
-        <h2 class="mt-4">labeling guidance</h2>
-        <p>a dataset is off topic (0) if the information does not satisfy the information need, and should not be listed in the search results from a search engine;</p>
-        <p>a dataset is poor (1) if a search engine were to include this in the search results, but it should not be listed at the top;</p>
-        <p>a dataset is good (2) if you would expect this dataset to be included in the search results from a search engine;</p>
-        <p>a dataset is excellent (3) if you would expect this dataset ranked near the top of the search results from a search engine.</p>
       </div>
     </main>
   </div>

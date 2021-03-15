@@ -137,6 +137,7 @@ public class FSDMTest {
                 Double tmp = 0.0;
                 for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
                     String field = jsonObject.toString();
+                    if(wT.get(field) == 0.0) continue;
                     Double miu = (double) indexReader.getSumTotalTermFreq(field) / ((double) indexReader.getDocCount(field));
                     Double Cj = (double) indexReader.getSumTotalTermFreq(field);
                     Double cf = 0.0;
@@ -163,6 +164,7 @@ public class FSDMTest {
                 String qi2 = queries.get(i + 1);
                 for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
                     String field = jsonObject.toString();
+                    if(wO.get(field) == 0.0) continue;
                     Double miu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
                     Double Cj = (double) indexReader.getSumTotalTermFreq(field);
                     Double cf = 0.0;
@@ -191,6 +193,7 @@ public class FSDMTest {
                 String qi2 = queries.get(i + 1);
                 for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
                     String field = jsonObject.toString();
+                    if(wU.get(field) == 0.0) continue;
                     Double miu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
                     Double Cj = (double) indexReader.getSumTotalTermFreq(field);
                     Double cf = 0.0;
@@ -237,7 +240,7 @@ public class FSDMTest {
                 System.out.println("Explanation： \n" + e);
                 System.out.println("********************************************************************");
                 System.out.println("custom FSDM: ");
-                System.out.println(FSDM(docID, Statistics.getTokens("cat dog")));
+                System.out.println(FSDM(docID, Statistics.getTokens("Top countries in production from aquaculture 2017")));
                 System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             }
         } catch (Exception e) {
