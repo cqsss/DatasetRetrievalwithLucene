@@ -136,7 +136,15 @@
         </div>
       </div>
 
-      <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+      <div>
+        <dl class="row">
+          <dt class="col-sm-3">query</dt>
+          <dd class="col-sm-9" th:text="${query}"></dd>
+
+          <dt class="col-sm-3">dataset_id</dt>
+          <dd class="col-sm-9" th:text="${dataset_id}"></dd>
+        </dl>
+      </div>
 
       <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
         <input type="radio" class="btn-check" name="rating" id="rating0" autocomplete="off">
