@@ -14,5 +14,16 @@ public class UserService {
     public UserService(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
-    public List<User> getAll() {return userMapper.getAll();};
+    public List<User> getAll() {return userMapper.getAll();}
+    public User getByUsername(String username) {
+        return userMapper.getByUsername(username);
+    }
+    public boolean searchUser(String username){
+        if(userMapper.getByUsername(username) != null) {
+            return  true;
+        } else {
+            return  false;
+        }
+    }
+
 }

@@ -1,0 +1,275 @@
+id	text	title
+1	"El Viajero's tourism dataset integrates the various contents from newspapers and digital platforms belonging to the Prisa Digital Group in the domain of news and blogs about travel. 
+It relies on the Open Provenance Model to capture the provenance of each resource, and it gathers information about more than 20.000 travel guides, pictures, videos and posts belonging to the platforms."	El Viajero's tourism dataset
+2	StatusNet instance hosted at http://1w6.org	statusnet-1w6-org
+3		bio2rdf-sgd-resources
+4	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Norwegian treebank.
+"	Universal Dependencies Treebank Norwegian
+5	StatusNet instance hosted at http://somsants.net	statusnet-somsants-net
+6	ClinicalTrials.gov is a registry and results database of publicly and privately supported clinical studies of human participants conducted around the world. 	Bio2RDF::Clinicaltrials
+7	The Saccharomyces Genome Database (SGD) collects and organizes information about the molecular biology and genetics of the yeast Saccharomyces cerevisiae. SGD contains a variety of biological information and tools with which to search and analyze it.	Bio2RDF::Sgd
+8	Collection of the datasets used by papers published in [IEEE VIS](http://ieeevis.org/) and related conferences, provided as [Linked Open Data](http://linkeddata.org/). This dataset is derived from the individual datasets listed in the [ieee-vis](http://datahub.io/group/ieee-vis) group. (Note that this LOD bubble should be connected to http://datahub.io/dataset/rkb-explorer-ieee/related)	IEEE VIS Source Data
+9	Orphanet is a database of information on rare diseases and orphan drugs for all publics. Its aim is to contribute to the improvement of the diagnosis, care and treatment of patients with rare diseases.	Bio2RDF::Orphanet
+10	"Groundbreaking biomedical research requires access to cutting edge scientific resources; however such resources are often invisible beyond the laboratories or universities where they were developed. eagle-i is a national research resource discovery platform to help biomedical scientists search for and find previously invisible, but highly valuable, resources. 
+Resource descriptions collected at each participating institution are freely available as linked open data.
+See: http://www.eagle-i.net/"	eagle-i @ Florida Agricultural and Mechanical University
+11	"RDF version of the Apertium bilingual dictionary OC-CA. The original dataset (in LMF) comes from http://hdl.handle.net/10230/17107 . The RDF version of the lexica is modelled using lemon (http://lemon-model.net/) and the translation module (http://purl.org/net/translation). More about the Apertium RDF dictionaries at http://linguistic.linkeddata.es/apertium/
+"	Apertium RDF OC-CA
+12	Japanese blogging plattform	jugem
+13	Linked Data version of the metadata and data listed at http://hub.healthdata.gov.	HealthData.gov Platform (HDP) on the Semantic Web
+14	"British National Bibliography (BNB) published as Linked Data by the British Library, linked to external sources including: [VIAF](http://viaf.org/), [ISNI](http://isni.org), [LCSH](http://id.loc.gov/authorities/), [Lexvo](http://www.lexvo.org/), [GeoNames](http://www.geonames.org/ontology/documentation.html), MARC [country](http://id.loc.gov/vocabulary/countries.html), and [language](http://id.loc.gov/vocabulary/languages.html).
+Published to [this data model for books](https://www.bl.uk/bibliographic/pdfs/bldatamodelbook.pdf); [this data model for serials](https://www.bl.uk/bibliographic/pdfs/bldatamodelserial.pdf) and this data model for forthcoming books (http://www.bl.uk/bibliographic/pdfs/bldatamodelcip.pdf).
+
+Current release of approximately 4.25 million descriptions (148,596,955 triples) of books (including monographs published over time); forthcoming books and serials published in the UK over the last 60 years.The dataset, covering UK publications since 1950, is updated monthly."	British National Bibliography (BNB) - Linked Open Data
+15	"RDF version of the Apertium bilingual dictionary ES-GL. The original dataset (in LMF) comes from http://hdl.handle.net/10230/17121 . The RDF version of the lexica is modelled using lemon (http://lemon-model.net/) and the translation module (http://purl.org/net/translation). More about the Apertium RDF dictionaries at http://linguistic.linkeddata.es/apertium/
+"	Apertium RDF ES-GL
+16	"RDF version of the Apertium bilingual dictionary PT-CA. The original dataset (in LMF) comes from http://hdl.handle.net/10230/17120 . The RDF version of the lexica is modelled using lemon (http://lemon-model.net/) and the translation module (http://purl.org/net/translation). More about the Apertium RDF dictionaries at http://linguistic.linkeddata.es/apertium/
+"	Apertium RDF PT-CA
+17	A software engineering taxonomy derived from Wikipedia	SETaxonomy
+18	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Czech-CLTT treebank.
+"	Universal Dependencies Treebank Czech-CLTT
+19	The Resource Registry is a curated collection of datasets and terminologies used in the life sciences	Bio2RDF::Lsr
+20	RDF version of the Apertium bilingual dictionary ES-CA. The original dataset (in LMF) comes from http://hdl.handle.net/10230/17127 . The RDF version of the lexica is modelled using lemon (http://lemon-model.net/) and the translation module (http://purl.org/net/translation). More about the Apertium RDF dictionaries at http://linguistic.linkeddata.es/apertium/	Apertium RDF ES-CA
+21	"Data exposed: Information on Biological Orders, Families, Species as well as species occurrence records and related data
+
+The data set currently contains information and linked data for: 19,230 Species, 1,671 Familes, 221 Orders. We have approximately 6,500 species observations, but are awaiting release on the majority of those.
+
+Also see TaxonConcept, where species are modeled differently.
+
+Size of dump and data set: 6.7 MB gzip"	GeoSpecies Knowledge Base
+22	"Groundbreaking biomedical research requires access to cutting edge scientific resources; however such resources are often invisible beyond the laboratories or universities where they were developed. eagle-i is a national research resource discovery platform to help biomedical scientists search for and find previously invisible, but highly valuable, resources. 
+Resource descriptions collected at each participating institution are freely available as linked open data."	eagle-i @ Charles R. Drew University
+23	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Czech treebank.
+"	Universal Dependencies Treebank Czech
+24	"The Mathematics Subject Classification (MSC2010) as a Linked Open Dataset using SKOS - Simple Knowledge Organization System.
+The Mathematics Subject Classi?cation (MSC) is a widely used scheme for classifying documents in mathematics by subject.  The Final MSC2010 revision was made public here in May 2009, and deployed in production in July 2009 by Zbl for ZMATH and MR for MathSciNet.
+
+The license is CC-BY-NC-SA."	Mathematics Subject Classification
+25	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Ukrainian treebank.
+"	Universal Dependencies Treebank Ukrainian
+26	"Enel shares its corporate data as “Open Data”. 
+This dataset is the Data Catalog Vocabulary for Enel Open Data published on http://data.enel.com/."	Enel Open Data - DCAT
+27	"The NERC Vocabulary Server provides access to lists of standardised terms that cover a broad spectrum of disciplines of relevance to the oceanographic and wider community.
+
+Using standardised sets of terms (otherwise known as ""controlled vocabularies"") in metadata and to label data solves the problem of ambiguities associated with data markup and also enables records to be interpreted by computers. This opens up data sets to a whole world of possibilities for computer aided manipulation, distribution and long term reuse.
+
+All of the vocabularies are fully versioned and a permanent record is kept of all changes made."	NERC Vocabulary Server 2.0
+28	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Vietnamese treebank.
+"	Universal Dependencies Treebank Vietnamese
+29	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Dutch-LassySmall treebank.
+"	Universal Dependencies Treebank Dutch-LassySmall
+30	LCSH has been actively maintained since 1898 to catalog materials held at the Library of Congress. By virtue of cooperative cataloging other libraries around the United States also use LCSH to provide subject access to their collections. In addition LCSH is used internationally, often in translation.	Library of Congress Subject Headings
+31	"Linked Open Drug Data from the Health Insurance Fund of the Republic of Macedonia. 
+
+The dataset provides data about the referent (nominal) prices of drugs in Macedonia, along with the generic drug name, brand name, packaging, manufacturer, etc. The drugs from the dataset are linked among themselves with a ""similar to"" relation, and with an ""owl:seeAlso"" relation with corresponding drugs from the [DrugBank dataset](http://wifo5-03.informatik.uni-mannheim.de/drugbank/ ""DrugBank""). Both relations are based on the drug ATC code.
+
+The drug data from the Fund is described using a custom HIFM ontology, along with relations from the DrugBank dataset. 
+
+For more info on the dataset, please refer to [this paper](http://e-tnc.com/etnc/Portals/3/papers/loddhifm-ciit2013.pdf ""LODD from the HIFM"")."	Drug Data from the Health Insurance Fund of Macedonia
+32		taxonconcept-occurences
+33	"RDF version of the Apertium bilingual dictionary EU-EN. The original dataset (in LMF) comes from http://hdl.handle.net/10230/22870 . The RDF version of the lexica is modelled using lemon (http://lemon-model.net/) and the translation module (http://purl.org/net/translation). More about the Apertium RDF dictionaries at http://linguistic.linkeddata.es/apertium/
+"	Apertium RDF EU-EN
+34	Data from package:musicbrainz re-published as RDF.	DBTune.org Musicbrainz D2R Server
+35	"The JITA Classification Schema has been developed starting from a merger of NewsAgentTopic Classification Scheme (maintained by Mike Keen at Aberystwyth, UK, until 31st March 1998) and the RIS classification scheme of the (now defunct) Review of Information Science originally conceived by Dagobert Soergel (University of Maryland). JITA is an acronym of the authors' first names: ""J""osé Manuel Barrueco Cruz, ""I""mma Subirats Coll, ""T""homas Krichel and ""A""ntonella De Robbio. The authors thank Michael Keen, University of Wales Aberystwyth and Andy Powell, UKOLN for the permission of the using NewsAgentTopic Classification Scheme in the development of this schema. In addition, the authors are grateful for comments by Lorcan Dempsey (OCLC) and Sophie Rigny (Library of Congress)."	JITA Classification System of Library and Information Science
+36	"Datasets regarding the Influence Tracker (http://www.influencetracker.com) service.
+The SPARQL endpoint can be found at http://www.influencetracker.com:8890/sparql ."	Influence Tracker Dataset
+37	API access to UK primary and secondary legislation. The API provides access to legislation from the UK Statute Law Database and the OPSI website in HTML, XML and RDF formats. The data is not available for download as an entire set. See the documentation in the developer zone for further details.	UK Legislation
+38	OMIM is a comprehensive, authoritative, and timely compendium of human genes and genetic phenotypes. The full-text, referenced overviews in OMIM contain information on all known mendelian disorders and over 12,000 genes. OMIM focuses on the relationship between phenotype and genotype.	Bio2RDF::Omim
+39	StatusNet instance hosted at http://hackerposse.com	statusnet-hackerposse-com
+40	A collection of Authors for LREC2014 and related Workshops	A collection of Authors for LREC2014 and related Workshops
+41	Terminology covering divisions and structural elements of a building or monument	English Heritage Components Thesaurus
+42	Information about people and publications from the Research Group Data and Web Science at University of Mannheim	DWS-Group
+43	Interconnecting computer vision datasets	Linked Open Computer Vision
+44	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Polish treebank.
+"	Universal Dependencies Treebank Polish
+45	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Turkish treebank.
+"	Universal Dependencies Treebank Turkish
+46	To provide educational information to the public on biologically related topics, as well as to be a source of biological images for personal and non-commercial use.	Bioimages
+47	StatusNet instance hosted at http://otbm.fr	statusnet-otbm-fr
+48	The LAK dataset provides access to structured fulltext and metadata from key research publications in the field of learning analytics and educational data mining (see http://lak.linkededucation.org for details). It is regularly updated with data, for instance, from the LAK or EDM Conference series. 	Learning Analytics and Knowledge (LAK) Dataset
+49	"Groundbreaking biomedical research requires access to cutting edge scientific resources; however such resources are often invisible beyond the laboratories or universities where they were developed. eagle-i is a national research resource discovery platform to help biomedical scientists search for and find previously invisible, but highly valuable, resources. 
+Resource descriptions collected at each participating institution are freely available as linked open data.
+See: http://www.eagle-i.net/"	eagle-i @ University of Alaska Fairbanks
+50	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Slovenian treebank.
+"	Universal Dependencies Treebank Slovenian
+51	"This dataset contains the results of measurements that were performed for several Linked Open Datasets on 25/04/2018. We collected 400 RDF datasets and we measured the number of common real world entities, triples, properties classes and literals among any combination of these datasets. 
+This particular dataset contains the number of common real world entities, triples, classes, properties and triples between each pair, triad and  quad of datasets (combinations among 2, 3, and 4 datasets). 
+The results are published in the following formats:(a) csv and (b) ttl by using voidwh ontology (http://lov.okfn.org/dataset/lov/vocabs/voidwh).
+"	LODsyndesis Dataset
+52	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Finnish-FTB treebank.
+"	Universal Dependencies Treebank Finnish-FTB
+53	NCBI Gene provides information for genes from a wide range of species. A record may include nomenclature, Reference Sequences (RefSeqs), maps, pathways, variations, phenotypes, and links to genome-, phenotype-, and locus-specific resources worldwide.	Bio2RDF::Ncbigene
+54	This dataset aims at publishing the contents of Hungarian archives as Linked Open Data based on the National Digital Data Archive of Hungary. The dataset contains information about books, movies, articles published in Hungary and some of its resources are linked to other datasets (e.g. DBpedia, VIAF, NSZL).	National Digital Data Archive of Hungary (partial)
+55	"The [Achievement Standards Network](http://asn.jesandco.org ""Achievement Standards Network"") (ASN) provides open access to machine-readable representations of learning objectives published by education agencies and organizations. This is the ASN:US dataset of ""published"" learning objectives.  The ASN is also used in Australia [(ASN:AU)](http://www.australiancurriculum.edu.au/Technical/Introduction ""ASN:AU"").
+
+The ASN is is funded in part by the [Bill & Melinda Gates Foundation](http://gatesfoundation.org ""Bill & Melinda Gates Foundation"") and was initially funded by the [National Science Foundation](http://www.nsf.gov/ ""National Science Foundation"")."	ASN:US
+56	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Latin-ITTB treebank.
+"	Universal Dependencies Treebank Latin-ITTB
+57	"The Salzburgerland Tourismus dataset contains all the relevant data related to events, accommodations, local businesses, and more in Salzburgerland, Austria. The full dataset explanation is available at http://data.salzburgerland.com/dataset
+
+Links to 3rd party data
+--------------------------
+
+The Salzburgerland Tourismus dataset is reconciled with the *GeoNames* dataset.
+
+It also provides links to [Foursquare](http://foursquare.com) venues and [TripAdvisor](http://tripadvisor.com) locations."	Salzburgerland Tourismus
+58	"The data set has files for the Financial Regulation Ontology. Please refer to ""Source"" below for details."	Financial Regulation Ontology
+59	A thesaurus of craft types which survive as wrecks in English Heritage's maritime record	English Heritage Maritime Craft Thesaurus
+60	RDF version of the Apertium bilingual dictionary FR-ES. The original dataset (in LMF) comes from http://hdl.handle.net/10230/17090. The RDF version of the lexica is modelled using lemon (http://lemon-model.net/) and the translation module (http://purl.org/net/translation). More about the Apertium RDF dictionaries at http://linguistic.linkeddata.es/apertium/	Apertium RDF FR-ES
+61	Controlled lists for the public sector in Europe	ESD-Toolkit
+62	The UNESCO Thesaurus is a controlled and structured list of terms used in subject analysis and retrieval of documents and publications in the fields of education, culture, natural sciences, social and human sciences, communication and information. The Thesaurus is structured into seven major subject fields, or domains, broken down into microthesauri which allow you to gain a quick overview of the subject matter.	UNESCO Thesaurus
+63	A CrunchBase wrapper to Linked Data	Linked Crunchbase
+64	Dataset includes initial set of interlinked authority records at work, subject heading and personal name level, which is supposed to be expanded in future to represent catalogue of the National Library of Russia.	National Library of Russia BibCore Dataset
+65	"This music genre ontology has been [learned](https://en.wikipedia.org/wiki/Ontology_learning) from crowdsourced genre labels submitted by English speaking users to the central [beaTunes](http://www.beatunes.com/) database.
+
+Due to the nature of the creation process, the ontologies contain errors like noise/garbage (e.g. `!scott`), multiple entries for the same thing (translations), and genres labeled as Music Genre, that clearly are not music genres (e.g. `Book`).
+
+The creation process for the ontology is described [in this paper](http://www.tagtraum.com/download/schreiber_learnedgenreontologies_ismir2016.pdf)."	Learned Genre Ontology Eng
+66	The Kalikratis municipalities project represents an attempt to retrieve useful information from Hellenic municipalities of Kalikratis program. Kalikratis program, is called the Greek law, which implements the administrative division of Greece into new municipalities. The main goal of this attempt is to gather all the related to these municipalities data to a united space, so as to be used by innovative applications and services. Another goal is to enrich Greek open data.	Kallikratis municipalities
+67	Classification of monument types in Wales by function	RCAHMW Monument Types Thesaurus
+68	Semantic repository that contains and publishes co-reference information, forming the underlying distributed storage model behind the RKB Explorer initiative.	School of Electronics and Computer Science, University of Southampton
+69	Dataset con información ecoturística de los municipios de Riofrío y Tuluá pertenecientes a la subregión Centro del Valle del Cauca (Colombia). Realizado como parte de un proyecto de investigación de la Universidad del Valle sede Tuluá aprobado por la vicerrectoría de investigaciones en el año 2015	DataEco
+70	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Latvian treebank.
+"	Universal Dependencies Treebank Latvian
+71	StatusNet instance hosted at http://rainbowdash.net	statusnet-rainbowdash-net
+72	aA collection of accepted Papers at LREC2014 and related Workshops	A collection of Papers for LREC2014 and related Workshops
+73	Thesaurus of main constructional material types (eg. the walls) for indexing of monuments	English Heritage Building Materials Thesaurus
+74	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's English-LinES treebank.
+"	Universal Dependencies Treebank English-LinES
+75	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Spanish-AnCora treebank.
+"	Universal Dependencies Treebank Spanish-AnCora
+76	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Croatian treebank.
+"	Universal Dependencies Treebank Croatian
+77	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Russian treebank.
+"	Universal Dependencies Treebank Russian
+78	The dbSNP database is a repository for both single base nucleotide subsitutions and short deletion and insertion polymorphisms.	Bio2RDF::Dbsnp
+79	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Romanian treebank.
+"	Universal Dependencies Treebank Romanian
+80	iServe is the place on the Web where linked data meets services. In a nutshell, iServe is a platform for publishing Semantic Web Services as linked data, no matter their original format.	iServe: Linked Services Registry
+81	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Basque treebank.
+"	Universal Dependencies Treebank Basque
+82	"Linked Data version of the US Patent and Trademark Office (USPTO) data.
+Number of triples: 212,234,735. Number of resources: 3,215,768
+Links to other datasets: DBpedia, EUPatents, WorldBank and LinkedGeoData"	USPTO Patent data
+83	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Slovenian-SST treebank.
+"	Universal Dependencies Treebank Slovenian-SST
+84	"RDF version of the Apertium bilingual dictionary EN-ES. The original dataset (in LMF) comes from http://hdl.handle.net/10230/17110 . The RDF version of the lexica is modelled using lemon (http://lemon-model.net/) and the translation module (http://purl.org/net/translation). More about the Apertium RDF dictionaries at http://linguistic.linkeddata.es/apertium/
+
+"	Apertium RDF EN-ES
+85	"This dataset is composed of events and media descriptions associated with these events. It is obtained from three large public event directories (last.fm, eventful and upcoming) represented with the LODE ontology and from large media directories (flickr, youtube) represented with the W3C Media Ontology. It is interlinked with the larger Linked Open Data cloud and in particular with DBpedia, Freebase, Geonames. It also contains links to numerous related web pages, including MusicBrainz, Geonames, Last.fm, Eventful, Upcoming and Foursquare.
+
+"	EventMedia
+86	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Arabic treebank.
+"	Universal Dependencies Treebank Arabic
+87	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Galician treebank.
+"	Universal Dependencies Treebank Galician
+88	"Open linked data from the Hungarian National Museum. 
+The following datasets and subsets are available:
+
+* Collections (dataset, short  name: colls)
+ * Bibliographic Data of the Central Library (subset, short name: colls-lib-bib)
+
+The Bibliographic Data of the Central Library contains the entire online catalogue of the library in BIBFRAME format and provides links to external sources including: [BNF](http://data.bnf.fr), [ISNI](http://isni.org), [LC NAF](http://id.loc.gov/authorities/names.html), [VIAF](http:viaf.org) and [Wikidata](http://wikidata.org).
+
+One of the aims of this publication is to make Hungarian librarians more familiar with BIBFRAME. In order to achieve this the BIBFRAME and the MARC descriptions are cross linked. Knowing the BIBFRAME URI of an instance:
+
+[http://data.hnm.hu/id/colls/lib/bib/Instance/MNMKVT19563](http://data.hnm.hu/id/colls/lib/bib/Instance/MNMKVT19563)
+
+one can get the MARC description by appending "".opac"" to the URI:
+
+[http://data.hnm.hu/doc/colls/lib/bib/Instance/MNMKVT19563.opac](http://data.hnm.hu/doc/colls/lib/bib/Instance/MNMKVT19563.opac).
+
+Knowing the permalink of an OPAC record 
+
+[http://link.hnm.hu/lib/bib/MNMKVT19563](http://link.hnm.hu/lib/bib/MNMKVT19563)
+
+one can get the BIBRAME description in HTML format by appending .rdf to it:
+
+[http://link.hnm.hu/lib/bib/MNMKVT19563.rdf](http://link.hnm.hu/lib/bib/MNMKVT19563.rdf).
+
+Other formats can also be invoked by appending the following extensions:
+.rdf-ttl, .rdf-nt, .rdf-json, .rdf-jsonld, and .rdf-rdf. The .rdf-rdf extentsion gives back the rdf-xml format.
+
+Clicking the BIBFRAME icon in the OPAC also leads to the BIBFRAME description.
+
+The OPAC pages also support the link rel discovery service in order for the crawlers and other programs to find the RDF descriptions in different formats automatically.
+
+The project was carried out in partnership with @Cult srl., Italy (MARC BIBFRAME conversion) and Monguz Ltd., Hungary (OPAC modification). We also used some parts of the ALIADA open source tool.
+
+The @Cult MARC21 BIBFRAME conversion have the following main features:
+
+- Work recognition
+- Entity recognition
+- Name entities are linked to external datasets.
+
+The BIBFRAME dataset will be updated periodically as BIBFRAME and the conversion evolves. "	data-hnm-hu - Hungarian National Museum Datasets
+89	"A community-curated collection of namespace prefix mappings for use in RDF applications.
+
+Features a lookup API and bulk download."	prefix.cc
+90	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Hindi treebank.
+"	Universal Dependencies Treebank Hindi
+91	StatusNet instance hosted at http://timttmy.co.uk	statusnet-timttmy-co-uk
+92	"Groundbreaking biomedical research requires access to cutting edge scientific resources; however such resources are often invisible beyond the laboratories or universities where they were developed. eagle-i is a national research resource discovery platform to help biomedical scientists search for and find previously invisible, but highly valuable, resources. 
+Resource descriptions collected at each participating institution are freely available as linked open data.
+See: http://www.eagle-i.net/"	eagle-i @ Clark Atlanta University
+93		bootsnall
+94	Classification of monument type records by function	English Heritage Monument Types Thesaurus
+95	BBC Music is a team working in the department of Audio and Music Interactive at the BBC. Responsible for the BBC Music website - the portal site to music content across the BBC website. It is also the location of the BBC's album reviews, covering all major releases in every genre on a monthly basis and written by a wide range of music experts. Contributors include Andrew Mueller, Nick Barraclough, David Quantick, Barney Hoskyns and Paul Lester. Music reviews are edited by former Drowned in Sound and Clash magazine online editor Mike Diver.	BBC Music
+96	This corpus consists of *sentiment* annotations of Amazon reviews for different product categories in the languages German and English. The reviews themselves are not part of this data publication. The annotations are fine-grained, including aspects and subjective phrases. In addition, the relation of an aspect to be a target of a subjective phrase is provided as well as the polarity of the subjective phrase. The corpus consists of 622 English and 611 German reviews for coffee machines, cutlery, microwaves, toaster, trash cans, vacuum cleaner, washing machines and dishwasher. The English corpus is annotated with more than 8000 aspects and 5000 subjective phrases, the German part with more than 6000 aspects and around 5000 subjective phrases (depending on the annotator). Each review is independently annotated by two annotators.	USAGE review corpus
+97	"Universal Dependencies is a project that seeks to develop cross-linguistically consistent treebank annotation for many languages, with the goal of facilitating multilingual parser development, cross-lingual learning, and parsing research from a language typology perspective. The annotation scheme is based on (universal) Stanford dependencies (de Marneffe et al., 2006, 2008, 2014), Google universal part-of-speech tags (Petrov et al., 2012), and the Interset interlingua for morphosyntactic tagsets (Zeman, 2008).
+
+This dataset refers to UD's Latin-PROIEL treebank.
+"	Universal Dependencies Treebank Latin-PROIEL
+98	"RDF version of the Apertium bilingual dictionary PT-GL. The original dataset (in LMF) comes from http://hdl.handle.net/10230/17115 . The RDF version of the lexica is modelled using lemon (http://lemon-model.net/) and the translation module (http://purl.org/net/translation). More about the Apertium RDF dictionaries at http://linguistic.linkeddata.es/apertium/
+"	Apertium RDF PT-GL
+99	"Presents a standard conversion of Princeton WordNet to RDF/OWL. It describes how it was converted and gives examples of how it may be queried for use in Semantic Web applications.
+
+Editors:
+Mark van Assem, Vrije Universiteit Amsterdam
+Aldo Gangemi, ISTC-CNR, Rome
+Guus Schreiber, Vrije Universiteit Amsterdam"	WordNet 2.0 (W3C)
+100	The Mouse Genome Database (MGD) project includes data on gene characterization, nomenclature, mapping, gene homologies among mammals, sequence links, phenotypes, allelic variants and mutants, and strain data.	Bio2RDF::Mgi
