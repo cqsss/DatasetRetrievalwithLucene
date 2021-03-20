@@ -6,6 +6,8 @@ target/
 *.log
 *.in
 *.log.gz
+*.tsv
+*.csv
 
 ### STS ###
 .apt_generated
