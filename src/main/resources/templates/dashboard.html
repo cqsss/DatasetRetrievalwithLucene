@@ -141,7 +141,7 @@
       </div>
 
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <form>
+          <form name="rating">
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
           <input type="radio" class="btn-check" name="rating" id="rating0" value="0" autocomplete="off">
           <label class="btn btn-outline-primary" for="rating0" title="off topic">0</label>
@@ -183,9 +183,13 @@
     <script src="/js/dashboard.js"></script>
     <script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
   <script>
-    $("input[name=rating]").click(function(){
-      var rating = $(this).val();
-      alert(rating);
+    $.ajax({
+      type: "post",
+      url: "/rating",//访问controller路径
+      success: function (data) {
+        console.log(data)
+        $('#rating').val(data);
+      }
     });
   </script>
   </body>
