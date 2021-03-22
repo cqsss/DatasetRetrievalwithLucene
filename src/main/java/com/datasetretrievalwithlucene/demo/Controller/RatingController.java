@@ -1,26 +1,35 @@
 package com.datasetretrievalwithlucene.demo.Controller;
 
+import com.datasetretrievalwithlucene.demo.Bean.Annotation;
 import com.datasetretrievalwithlucene.demo.Bean.QueryData;
 import com.datasetretrievalwithlucene.demo.Bean.User;
+import com.datasetretrievalwithlucene.demo.Service.AnnotationService;
 import com.datasetretrievalwithlucene.demo.Service.QueryDataService;
 import com.datasetretrievalwithlucene.demo.Service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 public class RatingController {
     private final QueryDataService queryDataService;
     private final UserService userService;
+    private final AnnotationService annotationService;
 
-    public RatingController(UserService userService, QueryDataService queryDataService) {
+    public RatingController(UserService userService, QueryDataService queryDataService, AnnotationService annotationService) {
         this.userService = userService;
         this.queryDataService = queryDataService;
+        this.annotationService = annotationService;
     }
 
     @RequestMapping("/login")
@@ -56,6 +65,7 @@ public class RatingController {
         QueryData queryData = queryDataService.getById(query_data_id);
         String query = queryData.getQuery();
         int dataset_id = queryData.getQuery_data_id();
+        int user_id = userService.getIdByUsername(username);
         int max_id = queryDataService.getMaxId();
         if (query_data_id > max_id) {
             model.addAttribute("msg", "最后一个");
@@ -65,16 +75,45 @@ public class RatingController {
         }
         int previous_id = Math.max(query_data_id-1,1);
         int next_id = Math.min(query_data_id+1,max_id);
+        int score = -1;
+        Annotation annotation;
+        if(annotationService.searchAnnotation(user_id, query, dataset_id)) {
+            annotation = annotationService.getAnnotation(user_id, query, dataset_id);
+            score = annotation.getRating();
+        }
+
         model.addAttribute("previous_id", previous_id);
         model.addAttribute("next_id", next_id);
         model.addAttribute("query", query);
         model.addAttribute("dataset_id", dataset_id);
         model.addAttribute("username", username);
+        model.addAttribute("score", score);
         return "dashboard";
     }
     @RequestMapping(value = "/rating", method = RequestMethod.POST)
-    public void rating(@RequestParam("rating") String rating) {
-        System.out.println(rating);
+    @ResponseBody
+    public void rating(@RequestParam("q")String query,
+                       @RequestParam("dsid")int dataset_id,
+                       @RequestParam("username")String username, @RequestBody String rating) {
+        int score = Integer.parseInt(rating.substring(rating.length()-1));
+        int user_id = userService.getIdByUsername(username);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.now();
+        String annotation_time = dateTime.format(formatter);
+        Annotation annotation;
+        if(annotationService.searchAnnotation(user_id, query, dataset_id)) {
+            annotation = annotationService.getAnnotation(user_id, query, dataset_id);
+            int annotation_id = annotation.getAnnotation_id();
+            annotationService.updateRatingById(annotation_id, score, annotation_time);
+        } else {
+            annotation = new Annotation();
+            annotation.setUser_id(user_id);
+            annotation.setQuery(query);
+            annotation.setDataset_id(dataset_id);
+            annotation.setRating(score);
+            annotation.setAnnotation_time(annotation_time);
+            annotationService.insertAnnotation(annotation);
+        }
     }
     @GetMapping(value = "/logout/{username}")
     public String logout(HttpSession httpSession, @PathVariable("username") String username, Model model){

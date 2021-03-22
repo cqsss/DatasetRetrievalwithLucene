@@ -22,6 +22,9 @@ public interface AnnotationMapper {
     @Insert("insert into annotation(user_id,query,dataset_id,rating,annotation_time) values(#{user_id}, #{query},#{dataset_id},#{rating},#{annotation_time})")
     void insertAnnotation(Annotation annotation);
 
-    @Update("update annotation set rating=#{rating} where annotation_id=#{annotation_id}")
-    void updateRatingById(@Param("annotation_id") int annotation_id, @Param("rating") int rating);
+    @Update("update annotation set rating=#{rating}, annotation_time=#{annotation_time} where annotation_id=#{annotation_id}")
+    void updateRatingById(@Param("annotation_id") int annotation_id, @Param("rating") int rating, @Param("annotation_time") String annotation_time);
+
+    @Select("select rating from annotation where query=#{query} and dataset_id=#{dataset_id}")
+    List<Integer> getRating(@Param("query") String query, @Param("dataset_id") int dataset_id);
 }

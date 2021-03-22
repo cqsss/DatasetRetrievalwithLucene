@@ -143,16 +143,16 @@
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           <form name="rating">
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-          <input type="radio" class="btn-check" name="rating" id="rating0" value="0" autocomplete="off">
+          <input type="radio" class="btn-check" name="rating" id="rating0" value="0" autocomplete="off" th:checked="${score==0}">
           <label class="btn btn-outline-primary" for="rating0" title="off topic">0</label>
 
-          <input type="radio" class="btn-check" name="rating" id="rating1" value="1" autocomplete="off">
+          <input type="radio" class="btn-check" name="rating" id="rating1" value="1" autocomplete="off" th:checked="${score==1}">
           <label class="btn btn-outline-primary" for="rating1" title="poor">1</label>
 
-          <input type="radio" class="btn-check" name="rating" id="rating2" value="2" autocomplete="off">
+          <input type="radio" class="btn-check" name="rating" id="rating2" value="2" autocomplete="off" th:checked="${score==2}">
           <label class="btn btn-outline-primary" for="rating2" title="good">2</label>
 
-          <input type="radio" class="btn-check" name="rating" id="rating3" value="3" autocomplete="off">
+          <input type="radio" class="btn-check" name="rating" id="rating3" value="3" autocomplete="off" th:checked="${score==3}">
           <label class="btn btn-outline-primary" for="rating3" title="excellent">3</label>
         </div>
           </form>
@@ -183,13 +183,15 @@
     <script src="/js/dashboard.js"></script>
     <script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
   <script>
-    $.ajax({
-      type: "post",
-      url: "/rating",//访问controller路径
-      success: function (data) {
-        console.log(data)
-        $('#rating').val(data);
-      }
+    $("input[name=rating]").click(function(){
+      var rating = $(this).val();
+      $.ajax({
+        url:'/rating?q='+'[[${query}]]'+'&dsid='+'[[${dataset_id}]]'+'&username='+'[[${username}]]',
+        data: {rating},
+        type: 'POST',
+        success:function(data){
+        },
+      })
     });
   </script>
   </body>

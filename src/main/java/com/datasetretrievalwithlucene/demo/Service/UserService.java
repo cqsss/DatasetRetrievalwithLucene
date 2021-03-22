@@ -2,6 +2,7 @@ package com.datasetretrievalwithlucene.demo.Service;
 
 import com.datasetretrievalwithlucene.demo.Bean.User;
 import com.datasetretrievalwithlucene.demo.Mapper.UserMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,4 +27,7 @@ public class UserService {
         }
     }
 
+    public int getIdByUsername(String username) {
+        return userMapper.getIdByUsername(username);
+    }
 }
