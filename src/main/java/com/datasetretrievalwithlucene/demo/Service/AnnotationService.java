@@ -17,12 +17,12 @@ public class AnnotationService {
 
     public List<Annotation> getAll() {return annotationMapper.getAll();}
 
-    public Annotation getAnnotation(int user_id, String query, int dataset_id) {
-        return annotationMapper.getAnnotation(user_id, query, dataset_id);
+    public Annotation getAnnotation(int user_id, int query_id, int dataset_id) {
+        return annotationMapper.getAnnotation(user_id, query_id, dataset_id);
     }
 
-    public boolean searchAnnotation(int user_id, String query, int dataset_id) {
-        if(getAnnotation(user_id, query, dataset_id) == null) {
+    public boolean searchAnnotation(int user_id, int query_id, int dataset_id) {
+        if(getAnnotation(user_id, query_id, dataset_id) == null) {
             return false;
         } else {
             return true;
@@ -37,7 +37,7 @@ public class AnnotationService {
         annotationMapper.updateRatingById(annotation_id, rating, annotation_time);
     }
 
-    public List<Integer> getRating(String query, int dataset_id) {
-        return annotationMapper.getRating(query, dataset_id);
+    public List<Integer> getRating(int query_id, int dataset_id) {
+        return annotationMapper.getRating(query_id, dataset_id);
     }
 }

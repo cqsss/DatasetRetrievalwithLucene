@@ -3,7 +3,7 @@ package com.datasetretrievalwithlucene.demo.Bean;
 public class Annotation {
     private int annotation_id;
     private int user_id;
-    private String query;
+    private int query_id;
     private int dataset_id;
     private int rating;
     private String annotation_time;
@@ -24,12 +24,12 @@ public class Annotation {
         this.user_id = user_id;
     }
 
-    public String getQuery() {
-        return query;
+    public int getQuery_id() {
+        return query_id;
     }
 
-    public void setQuery(String query) {
-        this.query = query;
+    public void setQuery_id(int query_id) {
+        this.query_id = query_id;
     }
 
     public int getDataset_id() {

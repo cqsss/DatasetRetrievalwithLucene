@@ -30,4 +30,8 @@ public class UserService {
     public int getIdByUsername(String username) {
         return userMapper.getIdByUsername(username);
     }
+
+    public void updateLastIdByUserId(int user_id, int last_annotation_id) {
+        userMapper.updateLastIdByUserId(user_id, last_annotation_id);
+    }
 }
