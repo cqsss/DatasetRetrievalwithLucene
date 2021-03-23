@@ -64,7 +64,7 @@ public class RatingController {
     public String dashboard(@RequestParam("qdid") int query_data_id,
                             @RequestParam("username") String username,
                             Model model) {
-        QueryData queryData = queryDataService.getById(query_data_id);
+        QueryData queryData = queryDataService.getQueryDataById(query_data_id);
         int query_id = queryData.getQuery_id();
         Query query = queryService.getQueryById(query_id);
         int dataset_id = queryData.getDataset_id();

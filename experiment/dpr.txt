@@ -1,0 +1,7 @@
+python generate_dense_embeddings.py model_file=/home/ygu/CQS/DPR/dpr/downloads/checkpoint/retriever/single-adv-hn/nq/bert-base-encoder.cp ctx_src=metadata out_file=/home/ygu/CQS/DPR/dpr/downloads/data/local_test/metadata_out
+
+python generate_dense_embeddings.py model_file=F:\DPR\dpr\downloads\checkpoint\retriever\single-adv-hn\nq\bert-base-encoder.cp ctx_src=test out_file=F:\DPR\dpr\downloads\data\local_test\test_out
+
+python generate_dense_embeddings.py model_file=F:\DPR\dpr\downloads\checkpoint\retriever\single-adv-hn\nq\bert-base-encoder.cp ctx_src=metadata0 out_file=F:\DPR\dpr\downloads\data\local_test\metadata_0_out
+
+python dense_retriever.py model_file=F:\DPR\dpr\downloads\checkpoint\retriever\single-adv-hn\nq\bert-base-encoder.cp qa_dataset=local_test ctx_datatsets=[test0,test1] encoded_ctx_files=[F:\DPR\dpr\downloads\data\local_test\test0_out_0,F:\DPR\dpr\downloads\data\local_test\test1_out_0] out_file=F:\DPR\dpr\downloads\data\local_test\test_result
