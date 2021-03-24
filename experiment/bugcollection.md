@@ -13,4 +13,4 @@
 - Bug
 `RuntimeError: [enforce fail at ..\c10\core\CPUAllocator.cpp:72] data. DefaultCPUAllocator: not enough memory: you tried to allocate 25165824 bytes. Buy new RAM!`
 - Solution
-
+分组生成emmbeding

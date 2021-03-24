@@ -54,63 +54,24 @@
   <div class="row">
     <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
       <div class="position-sticky pt-3">
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Relevance Ranking methods</span>
+        </h6>
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">
-              <span data-feather="home"></span>
-              Dashboard
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file"></span>
-              Orders
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="shopping-cart"></span>
-              Products
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="users"></span>
-              Customers
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="bar-chart-2"></span>
-              Reports
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="layers"></span>
-              Integrations
-            </a>
-          </li>
-        </ul>
-
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-          <span>Ranking methods</span>
-        </h6>
-        <ul class="nav flex-column mb-2">
-          <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=TFIDF'}">
               <span data-feather="file-text"></span>
               TF-IDF
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=BM25'}">
               <span data-feather="file-text"></span>
               BM25
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=FSDM'}">
               <span data-feather="file-text"></span>
               FSDM
             </a>
@@ -119,6 +80,30 @@
             <a class="nav-link" href="#">
               <span data-feather="file-text"></span>
               DPR
+            </a>
+          </li>
+        </ul>
+
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Quality Ranking methods</span>
+        </h6>
+        <ul class="nav flex-column mb-2">
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="bar-chart-2"></span>
+              DRank
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="bar-chart-2"></span>
+              PageRank
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="bar-chart-2"></span>
+              DING
             </a>
           </li>
         </ul>
@@ -136,15 +121,15 @@
         </div>
       </div>
 
-      <div th:each="dataset:${datasets}">
+      <div class="border-bottom" th:each="dataset:${datasets}">
         <dl class="row">
-          <dt class="col-sm-3">dataset_id</dt>
+          <dt class="col-sm-2">dataset_id</dt>
           <dd class="col-sm-9" th:text="${dataset.dataset_id}"></dd>
 
-          <dt class="col-sm-3">title</dt>
+          <dt class="col-sm-2">title</dt>
           <dd class="col-sm-9" th:text="${dataset.title}"></dd>
 
-          <dt class="col-sm-3">notes</dt>
+          <dt class="col-sm-2">notes</dt>
           <dd class="col-sm-9" th:text="${dataset.notes}"></dd>
         </dl>
       </div>

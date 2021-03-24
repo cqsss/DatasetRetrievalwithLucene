@@ -28,15 +28,39 @@ public class SearchController {
     public String starter() {
         return "search";
     }
+    @RequestMapping(value = "/dosearch", method = RequestMethod.POST)
+    public String dosearch(@RequestParam("query") String query) {
+        return "redirect:/result?q=" + query + "&method=BM25";
+    }
 
-    @RequestMapping(value = "/result", method = RequestMethod.POST)
-    public String BM25result(@RequestParam("query") String query, Model model) {
-        List<Pair<Integer, Double>> BM25scoreList = RelevanceRanking.RankingList(query, 0);
+    @GetMapping(value = "/result")
+    public String BM25result(@RequestParam("q") String query,
+                             @RequestParam("method") String method,
+                             Model model) {
+        //String method = "BM25";
         List<Dataset> datasetList = new ArrayList<>();
-        for (Pair<Integer, Double> i : BM25scoreList) {
-            datasetList.add(datasetService.getByDatasetId(i.getKey()));
+        switch (method) {
+            case "BM25":
+                List<Pair<Integer, Double>> BM25scoreList = RelevanceRanking.BM25RankingList(query);
+                for (Pair<Integer, Double> i : BM25scoreList) {
+                    datasetList.add(datasetService.getByDatasetId(i.getKey()));
+                }
+                break;
+            case "TFIDF":
+                List<Pair<Integer, Double>> TFIDFscoreList = RelevanceRanking.TFIDFRankingList(query);
+                for (Pair<Integer, Double> i : TFIDFscoreList) {
+                    datasetList.add(datasetService.getByDatasetId(i.getKey()));
+                }
+                break;
+            case "FSDM":
+                List<Pair<Integer, Double>> FSDMscoreList = RelevanceRanking.FSDMRankingList(query);
+                for (Pair<Integer, Double> i : FSDMscoreList) {
+                    datasetList.add(datasetService.getByDatasetId(i.getKey()));
+                }
+                break;
         }
         model.addAttribute("datasets", datasetList);
+        model.addAttribute("query", query);
         return "resultlist";
     }
 

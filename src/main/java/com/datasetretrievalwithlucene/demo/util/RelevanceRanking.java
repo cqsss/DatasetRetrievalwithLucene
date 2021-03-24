@@ -12,6 +12,8 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.BytesRef;
 
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -282,6 +284,167 @@ public class RelevanceRanking {
         }
         //System.out.println(score);
         return score;
+    }
+
+    public static void DPR (String query) {
+        Process proc = null;
+        try {
+            String[] argv = new String[] {
+                    GlobalVariances.python_interpreter,
+                    GlobalVariances.dense_retriever,
+                    GlobalVariances.model_file,
+                    GlobalVariances.qa_dataset,
+                    GlobalVariances.ctx_datatsets,
+                    GlobalVariances.encoded_ctx_files,
+                    GlobalVariances.out_file
+            };
+            File query_file = new File(GlobalVariances.query_tsv);
+            if (!query_file.exists()) {
+                query_file.createNewFile();
+            }
+            FileWriter fileWriter = new FileWriter(query_file.getAbsoluteFile());
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(query + "\t" + "['1','1']");
+            bufferedWriter.close();
+            proc = Runtime.getRuntime().exec(argv);
+            //System.err.println("proc:"+proc);
+            BufferedReader in = new BufferedReader(new
+                    InputStreamReader(proc.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                //System.out.println(line);
+            }
+            in.close();
+            proc.waitFor();
+            proc.destroy();
+            //System.out.println("end");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static List<Pair<Integer, Double>> BM25RankingList(String query) {
+        init();
+        List<Pair<Integer, Double>> BM25scoreList = new ArrayList<>();
+        try {
+            String[] fields = GlobalVariances.queryFields;
+            Analyzer analyzer = new EnglishAnalyzer();
+            QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
+            Query parsedQuery = queryParser.parse(query);
+            TopDocs docsSearch = indexSearcher.search(parsedQuery, GlobalVariances.HitSize);
+            ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
+            List<String> queryTokens = Statistics.getTokens(query);
+            for (ScoreDoc si : scoreDocs) {
+                Integer docID = si.doc;
+                Document document = indexReader.document(docID);
+                Integer datasetID = Integer.parseInt(document.get("dataset_id"));
+                Double score = 0.0;
+//                    System.out.println("dataset_id: " + document.get("dataset_id") + ", score: " + si.score);
+//                    Explanation e = indexSearcher.explain(parsedQuery, si.doc);
+//                    System.out.println("Explanation： \n" + e);
+                for (String field : fields) {
+                    score += BM25(docID, field, queryTokens);
+                }
+                BM25scoreList.add(new Pair<>(datasetID, score));
+            }
+            BM25scoreList.sort(new Comparator<Pair<Integer, Double>>() {
+                @Override
+                public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
+                    return o2.getValue().compareTo(o1.getValue());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return BM25scoreList;
+    }
+
+    public static List<Pair<Integer, Double>> TFIDFRankingList(String query) {
+        init();
+        List<Pair<Integer, Double>> TFIDFscoreList = new ArrayList<>();
+        try {
+            String[] fields = GlobalVariances.queryFields;
+            Analyzer analyzer = new EnglishAnalyzer();
+            QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
+            Query parsedQuery = queryParser.parse(query);
+            TopDocs docsSearch = indexSearcher.search(parsedQuery, GlobalVariances.HitSize);
+            ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
+            List<String> queryTokens = Statistics.getTokens(query);
+            for (ScoreDoc si : scoreDocs) {
+                Integer docID = si.doc;
+                Document document = indexReader.document(docID);
+                Integer datasetID = Integer.parseInt(document.get("dataset_id"));
+                Double score = 0.0;
+//                    System.out.println("dataset_id: " + document.get("dataset_id") + ", score: " + si.score);
+//                    Explanation e = indexSearcher.explain(parsedQuery, si.doc);
+//                    System.out.println("Explanation： \n" + e);
+                for (String field : fields) {
+                    score += TFIDF(docID, field, queryTokens);
+                }
+                TFIDFscoreList.add(new Pair<>(datasetID, score));
+            }
+            TFIDFscoreList.sort(new Comparator<Pair<Integer, Double>>() {
+                @Override
+                public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
+                    return o2.getValue().compareTo(o1.getValue());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return TFIDFscoreList;
+    }
+
+    public static List<Pair<Integer, Double>> FSDMRankingList(String query) {
+        init();
+        List<Pair<Integer, Double>> FSDMscoreList = new ArrayList<>();
+        try {
+            String[] fields = GlobalVariances.queryFields;
+            Analyzer analyzer = new EnglishAnalyzer();
+            QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
+            Query parsedQuery = queryParser.parse(query);
+            TopDocs docsSearch = indexSearcher.search(parsedQuery, GlobalVariances.HitSize);
+            ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
+            List<String> queryTokens = Statistics.getTokens(query);
+            for (ScoreDoc si : scoreDocs) {
+                Integer docID = si.doc;
+                Document document = indexReader.document(docID);
+                Integer datasetID = Integer.parseInt(document.get("dataset_id"));
+                Double score = 0.0;
+//                    System.out.println("dataset_id: " + document.get("dataset_id") + ", score: " + si.score);
+//                    Explanation e = indexSearcher.explain(parsedQuery, si.doc);
+//                    System.out.println("Explanation： \n" + e);
+                score = RelevanceRanking.FSDM(docID, queryTokens);
+                FSDMscoreList.add(new Pair<>(datasetID, score));
+            }
+            FSDMscoreList.sort(new Comparator<Pair<Integer, Double>>() {
+                @Override
+                public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
+                    return o2.getValue().compareTo(o1.getValue());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return FSDMscoreList;
+    }
+
+    public static List<Pair<Integer, Double>> DPRRankingList(String query) {
+        DPR(query);
+        List<Pair<Integer, Double>> DPRRankingList = new ArrayList<>();
+        try {
+            File result_file = new File(GlobalVariances.out_file_path);
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(result_file));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                System.out.println(line);
+                String[] split_line = line.split("\t");
+                DPRRankingList.add(new Pair<>(Integer.parseInt(split_line[0]),Double.parseDouble(split_line[1])));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return DPRRankingList;
     }
 
     public static List<Pair<Integer, Double>> RankingList(String query, Integer algorithm_sel) {

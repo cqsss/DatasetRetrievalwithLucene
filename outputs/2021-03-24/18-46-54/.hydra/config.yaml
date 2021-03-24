@@ -1,0 +1,95 @@
+indexers:
+  flat:
+    _target_: dpr.indexer.faiss_indexers.DenseFlatIndexer
+  hnsw:
+    _target_: dpr.indexer.faiss_indexers.DenseHNSWFlatIndexer
+  hnsw_sq:
+    _target_: dpr.indexer.faiss_indexers.DenseHNSWSQIndexer
+qa_dataset: local_metadata
+ctx_datatsets:
+- metadata0
+- metadata1
+- metadata2
+- metadata3
+- metadata4
+encoded_ctx_files:
+- F:\DPR\dpr\downloads\data\local_test\metadata_0_out_0
+- F:\DPR\dpr\downloads\data\local_test\metadata_1_out_0
+- F:\DPR\dpr\downloads\data\local_test\metadata_2_out_0
+- F:\DPR\dpr\downloads\data\local_test\metadata_3_out_0
+- F:\DPR\dpr\downloads\data\local_test\metadata_4_out_0
+out_file: F:\DPR\dpr\downloads\data\local_test\test_result
+match: string
+n_docs: 100
+validation_workers: 16
+batch_size: 128
+do_lower_case: true
+encoder_path: null
+index_path: null
+kilt_out_file: null
+model_file: F:\DPR\dpr\downloads\checkpoint\retriever\single-adv-hn\nq\bert-base-encoder.cp
+validate_as_tables: false
+rpc_retriever_cfg_file: null
+indexer: flat
+special_tokens: null
+local_rank: -1
+global_loss_buf_sz: 150000
+device: null
+distributed_world_size: null
+no_cuda: false
+n_gpu: null
+fp16: false
+fp16_opt_level: O1
+encoder:
+  encoder_model_type: hf_bert
+  pretrained_model_cfg: bert-base-uncased
+  pretrained_file: null
+  projection_dim: 0
+  sequence_length: 256
+  dropout: 0.1
+  fix_ctx_encoder: false
+  pretrained: true
+datasets:
+  local_test:
+    _target_: dpr.data.retriever_data.CsvQASrc
+    file: F:\DPR\dpr\downloads\data\local_test\test_query.tsv
+  local_matadata:
+    _target_: dpr.data.retriever_data.CsvQASrc
+    file: F:\DPR\dpr\downloads\data\local_test\metadata_query.tsv
+ctx_sources:
+  test0:
+    _target_: dpr.data.retriever_data.CsvCtxSrc
+    file: F:\DPR\dpr\downloads\data\local_test\test0.tsv
+    id_prefix: 'test:'
+  test1:
+    _target_: dpr.data.retriever_data.CsvCtxSrc
+    file: F:\DPR\dpr\downloads\data\local_test\test1.tsv
+    id_prefix: 'test:'
+  metadata:
+    _target_: dpr.data.retriever_data.CsvCtxSrc
+    file: F:/DPR/dpr/downloads/data/local_test/metadata.tsv
+    id_prefix: 'metadata:'
+  metadata0:
+    _target_: dpr.data.retriever_data.CsvCtxSrc
+    file: F:/DPR/dpr/downloads/data/local_test/metadata_0.tsv
+    id_prefix: 'metadata:'
+  metadata1:
+    _target_: dpr.data.retriever_data.CsvCtxSrc
+    file: F:/DPR/dpr/downloads/data/local_test/metadata_1.tsv
+    id_prefix: 'metadata:'
+  metadata2:
+    _target_: dpr.data.retriever_data.CsvCtxSrc
+    file: F:/DPR/dpr/downloads/data/local_test/metadata_2.tsv
+    id_prefix: 'metadata:'
+  metadata3:
+    _target_: dpr.data.retriever_data.CsvCtxSrc
+    file: F:/DPR/dpr/downloads/data/local_test/metadata_3.tsv
+    id_prefix: 'metadata:'
+  metadata4:
+    _target_: dpr.data.retriever_data.CsvCtxSrc
+    file: F:/DPR/dpr/downloads/data/local_test/metadata_4.tsv
+    id_prefix: 'metadata:'
+  metadata5:
+    _target_: dpr.data.retriever_data.CsvCtxSrc
+    file: F:/DPR/dpr/downloads/data/local_test/metadata_5.tsv
+    id_prefix: 'metadata:'
