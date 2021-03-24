@@ -15,4 +15,4 @@
   - [x] TF-IDF
   - [x] BM25
   - [x] FSDM
-  - [ ] DPR
+  - [x] DPR
