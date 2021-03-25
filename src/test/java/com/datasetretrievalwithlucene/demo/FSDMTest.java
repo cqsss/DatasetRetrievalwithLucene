@@ -2,6 +2,7 @@ package com.datasetretrievalwithlucene.demo;
 
 import com.alibaba.fastjson.JSON;
 import com.datasetretrievalwithlucene.demo.util.GlobalVariances;
+import com.datasetretrievalwithlucene.demo.util.RelevanceRanking;
 import com.datasetretrievalwithlucene.demo.util.Statistics;
 import javafx.util.Pair;
 import org.apache.lucene.analysis.Analyzer;
@@ -230,7 +231,7 @@ public class FSDMTest {
             Analyzer analyzer = new EnglishAnalyzer();
             QueryParser queryParser = new QueryParser("content", analyzer);
             Query query = queryParser.parse("Top countries in production from aquaculture 2017");
-            TopDocs docsSearch = indexSearcher.search(query, 10);
+            TopDocs docsSearch = indexSearcher.search(query, 100);
             System.out.println("--- total ---: " + docsSearch.totalHits);
             ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
             for (ScoreDoc si : scoreDocs) {
@@ -246,5 +247,9 @@ public class FSDMTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    @Test
+    public void testFSDMRankingList() {
+        System.out.println(RelevanceRanking.FSDMRankingList("Top countries in production from aquaculture 2017"));
     }
 }

@@ -7,13 +7,15 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.*;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.BytesRef;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -286,10 +288,10 @@ public class RelevanceRanking {
         return score;
     }
 
-    public static void DPR (String query) {
+    public static void DPR(String query) {
         Process proc = null;
         try {
-            String[] argv = new String[] {
+            String[] argv = new String[]{
                     GlobalVariances.python_interpreter,
                     GlobalVariances.dense_retriever,
                     GlobalVariances.model_file,
@@ -383,12 +385,7 @@ public class RelevanceRanking {
                 }
                 TFIDFscoreList.add(new Pair<>(datasetID, score));
             }
-            TFIDFscoreList.sort(new Comparator<Pair<Integer, Double>>() {
-                @Override
-                public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
-                    return o2.getValue().compareTo(o1.getValue());
-                }
-            });
+            TFIDFscoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -407,7 +404,7 @@ public class RelevanceRanking {
             ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
             List<String> queryTokens = Statistics.getTokens(query);
             for (ScoreDoc si : scoreDocs) {
-                Integer docID = si.doc;
+                int docID = si.doc;
                 Document document = indexReader.document(docID);
                 Integer datasetID = Integer.parseInt(document.get("dataset_id"));
                 Double score = 0.0;
@@ -417,12 +414,7 @@ public class RelevanceRanking {
                 score = RelevanceRanking.FSDM(docID, queryTokens);
                 FSDMscoreList.add(new Pair<>(datasetID, score));
             }
-            FSDMscoreList.sort(new Comparator<Pair<Integer, Double>>() {
-                @Override
-                public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
-                    return o2.getValue().compareTo(o1.getValue());
-                }
-            });
+            FSDMscoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -437,9 +429,9 @@ public class RelevanceRanking {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(result_file));
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                System.out.println(line);
+                //System.out.println(line);
                 String[] split_line = line.split("\t");
-                DPRRankingList.add(new Pair<>(Integer.parseInt(split_line[0]),Double.parseDouble(split_line[1])));
+                DPRRankingList.add(new Pair<>(Integer.parseInt(split_line[0]), Double.parseDouble(split_line[1])));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -479,24 +471,9 @@ public class RelevanceRanking {
                 score = RelevanceRanking.FSDM(docID, Statistics.getTokens(query));
                 FSDMscoreList.add(new Pair<>(datasetID, score));
             }
-            BM25scoreList.sort(new Comparator<Pair<Integer, Double>>() {
-                @Override
-                public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
-                    return o2.getValue().compareTo(o1.getValue());
-                }
-            });
-            TFIDFscoreList.sort(new Comparator<Pair<Integer, Double>>() {
-                @Override
-                public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
-                    return o2.getValue().compareTo(o1.getValue());
-                }
-            });
-            FSDMscoreList.sort(new Comparator<Pair<Integer, Double>>() {
-                @Override
-                public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
-                    return o2.getValue().compareTo(o1.getValue());
-                }
-            });
+            BM25scoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+            TFIDFscoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+            FSDMscoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
 
         } catch (Exception e) {
             e.printStackTrace();

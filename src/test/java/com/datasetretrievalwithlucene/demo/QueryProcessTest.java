@@ -70,7 +70,7 @@ public class QueryProcessTest {
     public void testQueryProcess(){
         readOriginQueries(GlobalVariances.GoogleQueriesPath);
         for (Pair<String, String> i : queryList) {
-            System.out.println(i.getKey() + ";" + i.getValue());
+            System.out.println(i.getKey() + "\t" + i.getValue());
         }
     }
     @Test

@@ -2,8 +2,6 @@ package com.datasetretrievalwithlucene.demo.Service;
 
 import com.datasetretrievalwithlucene.demo.Bean.QueryData;
 import com.datasetretrievalwithlucene.demo.Mapper.QueryDataMapper;
-import com.datasetretrievalwithlucene.demo.Mapper.QueryMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

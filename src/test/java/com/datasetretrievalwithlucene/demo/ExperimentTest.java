@@ -107,12 +107,7 @@ public class ExperimentTest {
                     }
                     BM25scoreList.add(new Pair<>(datasetID, score));
                 }
-                BM25scoreList.sort(new Comparator<Pair<Integer, Double>>() {
-                    @Override
-                    public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
-                        return o2.getValue().compareTo(o1.getValue());
-                    }
-                });
+                BM25scoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
                 List<Pair<Integer, Double>> TFIDFscoreList = new ArrayList<>();
                 for (ScoreDoc si : scoreDocs) {
                     Integer docID = si.doc;
@@ -124,12 +119,7 @@ public class ExperimentTest {
                     }
                     TFIDFscoreList.add(new Pair<>(datasetID, score));
                 }
-                TFIDFscoreList.sort(new Comparator<Pair<Integer, Double>>() {
-                    @Override
-                    public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
-                        return o2.getValue().compareTo(o1.getValue());
-                    }
-                });
+                TFIDFscoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
                 List<Pair<Integer, Double>> FSDMscoreList = new ArrayList<>();
                 for (ScoreDoc si : scoreDocs) {
                     int docID = si.doc;
@@ -138,12 +128,7 @@ public class ExperimentTest {
                     Double score = RelevanceRanking.FSDM(docID, Statistics.getTokens(query));
                     FSDMscoreList.add(new Pair<>(datasetID, score));
                 }
-                FSDMscoreList.sort(new Comparator<Pair<Integer, Double>>() {
-                    @Override
-                    public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
-                        return o2.getValue().compareTo(o1.getValue());
-                    }
-                });
+                FSDMscoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
                 for (int i = 0; i < GlobalVariances.queryPoolSize.length; i++) {
                     if (scoreDocs.length<GlobalVariances.queryPoolSize[i]) break;
                     for (int j = 0; j < GlobalVariances.queryPoolSize[i]; j++) {

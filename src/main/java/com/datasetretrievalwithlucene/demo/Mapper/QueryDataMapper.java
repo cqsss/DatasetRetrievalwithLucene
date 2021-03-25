@@ -1,6 +1,5 @@
 package com.datasetretrievalwithlucene.demo.Mapper;
 
-import com.datasetretrievalwithlucene.demo.Bean.Query;
 import com.datasetretrievalwithlucene.demo.Bean.QueryData;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

@@ -3,6 +3,7 @@ package com.datasetretrievalwithlucene.demo.Bean;
 public class Query {
     int query_id;
     String query;
+    String topic_source;
 
     public int getQuery_id() {
         return query_id;
@@ -27,6 +28,4 @@ public class Query {
     public void setTopic_source(String topic_source) {
         this.topic_source = topic_source;
     }
-
-    String topic_source;
 }

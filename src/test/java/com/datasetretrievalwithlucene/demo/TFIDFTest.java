@@ -1,6 +1,7 @@
 package com.datasetretrievalwithlucene.demo;
 
 import com.datasetretrievalwithlucene.demo.util.GlobalVariances;
+import com.datasetretrievalwithlucene.demo.util.RelevanceRanking;
 import com.datasetretrievalwithlucene.demo.util.Statistics;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
@@ -96,5 +97,9 @@ public class TFIDFTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    @Test
+    public void testTFIDFRankingList() {
+        System.out.println(RelevanceRanking.TFIDFRankingList("Top countries in production from aquaculture 2017"));
     }
 }

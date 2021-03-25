@@ -28,6 +28,7 @@ public class SearchController {
     public String starter() {
         return "search";
     }
+
     @RequestMapping(value = "/dosearch", method = RequestMethod.POST)
     public String dosearch(@RequestParam("query") String query) {
         return "redirect:/result?q=" + query + "&method=BM25";

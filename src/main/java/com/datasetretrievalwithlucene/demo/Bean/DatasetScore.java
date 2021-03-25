@@ -1,7 +1,6 @@
 package com.datasetretrievalwithlucene.demo.Bean;
 
 import javafx.util.Pair;
-import org.omg.CORBA.PUBLIC_MEMBER;
 
 import java.util.List;
 

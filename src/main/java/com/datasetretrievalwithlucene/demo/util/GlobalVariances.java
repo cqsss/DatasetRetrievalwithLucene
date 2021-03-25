@@ -17,7 +17,7 @@ public class GlobalVariances {
     public static String store_Dir = "D:/db_index/";
     public static String index_Dir = "D:/db_index/";
     public static Integer commit_limit = 10;
-    public static Integer HitSize = 10;
+    public static Integer HitSize = 500;
     public static Integer FSDMUWindowSize = 8;
 
     // 分析器
@@ -31,7 +31,7 @@ public class GlobalVariances {
 
     public static Integer[] queryPoolSize = {5, 10, 20, 50, 100};
     public static String queriesPath = "src/main/resources/in/queries.in";
-    public static String GoogleQueriesPath = "src/main/resources/in/class_propertyGoogleQueries.in";
+    public static String GoogleQueriesPath = "src/main/resources/in/title_notesGoogleQueries 2021.3.25.in";
     public static String[] queryFields = {"title_notes", "class_property"};
 
     //DPR

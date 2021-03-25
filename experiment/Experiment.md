@@ -36,12 +36,7 @@ marp: true
 ---
 
 - property：所有predicate
-- class：所有'%rdf-syntax-ns#%'或'%rdf-schema#%'的predicate指向的object
-
----
-
-- JASSjr: The Minimalistic BM25 Search Engine for Teaching and Learning Information Retrieval
-- Neural Vector Spaces for Unsupervised Information Retrieval
+- class：所有'%rdf-syntax-ns#type%'的predicate指向的object
 
 ---
 
@@ -51,10 +46,10 @@ marp: true
     - TF-IDF
     - BM25
     - FSDM
+    - DPR
     - PageRank
     - DING
     - DRank (仅根据数据集的度数排序的naive rank)
-    - Language Model* (Dirichlet smoothing and Jelinek-Mercer smoothing)
 ---
 - 混合方法排序
     - Quality(PageRank、DING、DRank) + Relevance(TF-IDF、BM25、FSDM)

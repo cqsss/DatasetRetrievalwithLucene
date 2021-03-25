@@ -2,13 +2,9 @@ package com.datasetretrievalwithlucene.demo.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +32,7 @@ public class LabelMap {
                 if (labelObject != null)
                     label = labelObject.toString();
                 if (!is_literal && label.contains("http"))
-                    label = label.substring(label.lastIndexOf("/")+1);
+                    label = label.substring(label.lastIndexOf("/") + 1);
                 id2label.put(id, label);
             }
             logger.info("entity id: " + (i * GlobalVariances.maxListNumber + GlobalVariances.maxListNumber));
@@ -47,6 +43,7 @@ public class LabelMap {
 
     /**
      * 查询local_id数据集中id实体的label
+     *
      * @param id
      * @param jdbcTemplate
      * @return

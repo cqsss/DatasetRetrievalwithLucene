@@ -12,6 +12,6 @@ public class DPRTest {
     }
     @Test
     public void testDPRRankingList() {
-        System.out.println(RelevanceRanking.DPRRankingList("Video surveillance market size worldwide 2016-2025"));
+        System.out.println(RelevanceRanking.DPRRankingList("Top countries in production from aquaculture 2017"));
     }
 }

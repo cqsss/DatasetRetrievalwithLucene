@@ -1,13 +1,13 @@
 package com.datasetretrievalwithlucene.demo.util;
 
 import com.datasetretrievalwithlucene.demo.Bean.TripleID;
-import org.apache.lucene.document.*;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
 import org.apache.lucene.index.IndexOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
@@ -16,28 +16,30 @@ import java.util.*;
 @Repository
 public class DBIndexer {
 
+    private static final Logger logger = LoggerFactory.getLogger(DBIndexer.class);
     @Resource
     private JdbcTemplate jdbcTemplate;
-
-    private static final Logger logger = LoggerFactory.getLogger(DBIndexer.class);
     private Map<Integer, String> id2text = new HashMap<>();
     private Map<Integer, String> propertyText = new HashMap<>();
     private Map<Integer, String> classText = new HashMap<>();
     private Set<Integer> classSet = new HashSet<>();
     private IndexFactory indexF;
     private Integer datasetCountLimit = 1000000;
+
     /**
      * 统计实体出现次数
+     *
      * @param count
      * @param id
      */
     private void addCount(Map<Integer, Integer> count, Integer id) {
-        if(!count.containsKey(id)) count.put(id, 0);
+        if (!count.containsKey(id)) count.put(id, 0);
         count.put(id, count.get(id) + 1);
     }
 
     /**
      * 获取数量前几的实体label文本
+     *
      * @param count
      * @param limit
      * @return
@@ -61,6 +63,7 @@ public class DBIndexer {
 
     /**
      * 根据实体生成文本
+     *
      * @param datasetTriples
      * @return
      */
@@ -77,37 +80,45 @@ public class DBIndexer {
             addCount(sumMap, tri.getObject());
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(getTopUnitText(subMap, GlobalVariances.maxEntityNumber)); sb.append(";");
-        sb.append(getTopUnitText(objMap, GlobalVariances.maxEntityNumber)); sb.append(";");
-        sb.append(getTopUnitText(sumMap, GlobalVariances.maxEntityNumber)); sb.append(";");
-        sb.append(getTopUnitText(preMap, GlobalVariances.maxRelationNumber)); sb.append(";");
+        sb.append(getTopUnitText(subMap, GlobalVariances.maxEntityNumber));
+        sb.append(";");
+        sb.append(getTopUnitText(objMap, GlobalVariances.maxEntityNumber));
+        sb.append(";");
+        sb.append(getTopUnitText(sumMap, GlobalVariances.maxEntityNumber));
+        sb.append(";");
+        sb.append(getTopUnitText(preMap, GlobalVariances.maxRelationNumber));
+        sb.append(";");
         return sb.toString();
     }
-    private String generatePropertyText (List<Integer> propertyList) {
+
+    private String generatePropertyText(List<Integer> propertyList) {
         Map<Integer, Integer> preMap = new HashMap<>();
         for (Integer i : propertyList) {
             addCount(preMap, i);
         }
         return getTopUnitText(preMap, GlobalVariances.maxRelationNumber);
     }
-    private String generateClassText (Set<Integer> classList) {
+
+    private String generateClassText(Set<Integer> classList) {
         Map<Integer, Integer> claMap = new HashMap<>();
         for (Integer i : classList) {
             addCount(claMap, i);
         }
         return getTopUnitText(claMap, GlobalVariances.maxEntityNumber);
     }
+
     private void getClassIDSet() {
         List<Integer> classList = jdbcTemplate.queryForList("SELECT DISTINCT(object) FROM triple WHERE predicate IN (SELECT global_id FROM entity WHERE label LIKE '%rdf-syntax-ns#type%' AND is_literal=0)", Integer.class);
         classSet.addAll(classList);
     }
+
     /**
      * 得到数据集id到triple文本的映射
      */
     private void mapID2TripleText() {
         getClassIDSet();
         logger.info("Completed getClassIDSet");
-        Integer tripleCount = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM triple;",Integer.class);
+        Integer tripleCount = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM triple;", Integer.class);
         Integer currentID = 1;
         List<TripleID> tripleIDS = new ArrayList<>();
         List<Integer> propertyIDS = new ArrayList<>();
@@ -137,22 +148,25 @@ public class DBIndexer {
             }
             logger.info("MapID2TripleText process: " + (((double) i * GlobalVariances.maxListNumber.doubleValue() + GlobalVariances.maxListNumber.doubleValue()) / tripleCount.doubleValue()));
         }
-        if(tripleIDS.size() > 0)
+        if (tripleIDS.size() > 0)
             id2text.put(currentID, generateText(tripleIDS));
         logger.info("Completed MapID2TripleText!");
     }
 
     /**
      * 由local_id获取文本
+     *
      * @param local_id
      * @return
      */
     private String getTextFromLocalID(Integer local_id) {
         return id2text.getOrDefault(local_id, "");
     }
+
     private String getPropertyFromLocalID(Integer local_id) {
         return propertyText.getOrDefault(local_id, "");
     }
+
     private String getClassFromLocalID(Integer local_id) {
         return classText.getOrDefault(local_id, "");
     }
@@ -173,7 +187,7 @@ public class DBIndexer {
         List<Map<String, Object>> queryList = jdbcTemplate.queryForList("SELECT * FROM metadata");
         for (Map<String, Object> qi : queryList) {
             Document document = new Document();
-            all ++;
+            all++;
             // local ID
             Integer local_id = Integer.parseInt(qi.get("dataset_id").toString());
             document.add(new Field("dataset_id", local_id.toString(), fieldType));

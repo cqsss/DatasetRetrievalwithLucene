@@ -1,6 +1,7 @@
 package com.datasetretrievalwithlucene.demo;
 
 import com.datasetretrievalwithlucene.demo.util.GlobalVariances;
+import com.datasetretrievalwithlucene.demo.util.RelevanceRanking;
 import com.datasetretrievalwithlucene.demo.util.Statistics;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
@@ -97,5 +98,9 @@ public class BM25Test {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    @Test
+    public void testBM25RankingList() {
+        System.out.println(RelevanceRanking.BM25RankingList("Top countries in production from aquaculture 2017"));
     }
 }

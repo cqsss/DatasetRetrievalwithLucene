@@ -22,6 +22,7 @@ public class QualityRanking {
     private static final Map<Integer, List<Integer>> outLinks = new HashMap<>();
     private static final Map<Integer, List<Integer>> inLinks = new HashMap<>();
     private static Integer maxID = 0;
+
     public static void addEdge(Integer u, Integer v) {
         if (outLinks.containsKey(u)) {
             outLinks.get(u).add(v);
@@ -46,6 +47,7 @@ public class QualityRanking {
             tmp = inLinkCount.get(v);
         inLinkCount.put(v, tmp + 1);
     }
+
     public static void readDataBase(JdbcTemplate jdbcTemplate) {
         try {
             List<Map<String, Object>> res;
@@ -64,6 +66,7 @@ public class QualityRanking {
 
     /**
      * 单向边版本的PageRank
+     *
      * @param field
      */
     public static void iterativePageRank(String field, JdbcTemplate jdbcTemplate) {
@@ -81,20 +84,20 @@ public class QualityRanking {
             }
             Integer cnt = 0;
             Integer t = 0;
-            while(cnt != maxID) {
+            while (cnt != maxID) {
                 cnt = 0;
-                t ++;
+                t++;
                 Double sumPR;
                 for (Integer i = 0; i < maxID; i++) {
                     sumPR = 0.0;
-                    if(inLinks.containsKey(i + 1)) {
+                    if (inLinks.containsKey(i + 1)) {
                         for (Integer j : inLinks.get(i + 1)) {
                             sumPR += pr.get(j - 1) / outLinkCount.get(j);
                         }
                     }
                     sumPR *= d;
                     sumPR += (1.0 - d) / N;
-                    if(sumPR.equals(pr.get(i)))
+                    if (sumPR.equals(pr.get(i)))
                         cnt++;
                     tmp.set(i, sumPR);
                 }
@@ -108,6 +111,7 @@ public class QualityRanking {
 
     /**
      * 仅考虑度数的DRank
+     *
      * @param field
      * @param jdbcTemplate
      */

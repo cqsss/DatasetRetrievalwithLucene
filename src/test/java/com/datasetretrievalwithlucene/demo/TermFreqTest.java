@@ -30,7 +30,7 @@ public class TermFreqTest {
             String[] tmps;
             BufferedReader in = new BufferedReader(new FileReader(fileName));
             while ((str = in.readLine()) != null) {
-                tmps = str.split(" ");
+                tmps = str.split("\t");
                 Integer tmp = 0;
                 if (termMap.containsKey(tmps[0])) {
                     tmp = termMap.get(tmps[0]);
@@ -44,9 +44,9 @@ public class TermFreqTest {
     @Test
     public void testTermFreq() {
         try {
-            //readTerms("indexProcessor/title_notes.in");
+            readTerms("indexProcessor/terms_class_property_1616650401152.in");
             //readTerms("indexProcessor/class_property.in");
-            readTerms("indexProcessor/content.in");
+            //readTerms("indexProcessor/content.in");
             List<Map.Entry<String, Integer>> arr = new ArrayList<>(termMap.entrySet());
             Collections.sort(arr, new Comparator<Map.Entry<String, Integer>>() {
                 @Override

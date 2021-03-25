@@ -14,7 +14,10 @@ public class DatasetService {
         this.datasetMapper = datasetMapper;
     }
 
-    public List<Dataset> getAll() {return datasetMapper.getAll();}
+    public List<Dataset> getAll() {
+        return datasetMapper.getAll();
+    }
+
     public Dataset getByDatasetId(int dataset_id) {
         return datasetMapper.getByDatasetId(dataset_id);
     }
