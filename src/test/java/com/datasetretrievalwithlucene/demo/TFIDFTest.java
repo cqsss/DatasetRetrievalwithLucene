@@ -80,7 +80,7 @@ public class TFIDFTest {
         try {
             Analyzer analyzer = new EnglishAnalyzer();
             QueryParser queryParser = new QueryParser("content", analyzer);
-            Query query = queryParser.parse("dog cat");
+            Query query = queryParser.parse("Dataset: Wohnungspreise in Ungarn");
             TopDocs docsSearch = indexSearcher.search(query, 10);
             System.out.println("--- total ---: " + docsSearch.totalHits);
             ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
@@ -91,7 +91,7 @@ public class TFIDFTest {
                 System.out.println("Explanation： \n" + e);
                 System.out.println("********************************************************************");
                 System.out.println("custom TFIDF: ");
-                System.out.println(TFIDF(docID, "content", Statistics.getTokens("dog cat")));
+                System.out.println(TFIDF(docID, "content", Statistics.getTokens("Dataset: Wohnungspreise in Ungarn")));
                 System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             }
         } catch (Exception e) {
@@ -100,6 +100,6 @@ public class TFIDFTest {
     }
     @Test
     public void testTFIDFRankingList() {
-        System.out.println(RelevanceRanking.TFIDFRankingList("Top countries in production from aquaculture 2017"));
+        System.out.println(RelevanceRanking.TFIDFRankingList("Dataset: Wohnungspreise in Ungarn"));
     }
 }

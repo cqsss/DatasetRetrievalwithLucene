@@ -31,7 +31,7 @@ import java.util.Map;
 
 @SpringBootTest
 public class QueryProcessTest {
-    private List<Pair<String, String>> queryList = new ArrayList<>();
+    private final List<Pair<String, String>> queryList = new ArrayList<>();
     private List<String> queries;
     private Directory directory;
     private IndexReader indexReader;
@@ -75,9 +75,10 @@ public class QueryProcessTest {
     }
     @Test
     public void testQueryHits() {
-        readQueries(GlobalVariances.queriesPath);
+        readQueries(GlobalVariances.testQueriesPath);
+        //readQueries(GlobalVariances.title_notesTestQueriesPath);
         for (String qi : queries) {
-            for  (double k = 0.0; k <= 2.0; k += 0.1){
+            for (double k = 0.0; k <= 2.0; k += 0.1){
                 String[] fields = GlobalVariances.queryFields;
                 Analyzer analyzer = new EnglishAnalyzer();
                 QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
@@ -87,6 +88,7 @@ public class QueryProcessTest {
                      * sample query:
                      * (content:dataset title:dataset notes:dataset) (content:prijzen title:prijzen notes:prijzen) (content:de title:de notes:de) (content:supermarkt title:supermarkt notes:supermarkt) (content:java title:java notes:java)
                      */
+                    //System.out.println(query);
                     int queryLength = query.toString().split(" ").length / fields.length;
                     directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
                     indexReader = DirectoryReader.open(directory);

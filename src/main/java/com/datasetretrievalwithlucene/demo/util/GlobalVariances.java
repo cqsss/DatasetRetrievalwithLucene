@@ -30,9 +30,10 @@ public class GlobalVariances {
     public static JSONObject getBoostWeights() { if(null == boostWeights) boostWeights = Statistics.readJson("src/main/resources/json/ParseMatch_boost.json"); return boostWeights; }
 
     public static Integer[] queryPoolSize = {5, 10, 20, 50, 100};
-    public static String queriesPath = "src/main/resources/in/queries.in";
+    public static String testQueriesPath = "src/main/resources/in/TestQueries.in";
+    public static String poolingQueriesPath = "src/main/resources/in/PoolingQueries.in";
     public static String GoogleQueriesPath = "src/main/resources/in/title_notesGoogleQueries 2021.3.25.in";
-    public static String[] queryFields = {"title_notes", "class_property"};
+    public static String[] queryFields = {"title", "notes", "class", "property"};
 
     //DPR
     public static String model_file = "model_file=F:\\DPR\\dpr\\downloads\\checkpoint\\retriever\\single-adv-hn\\nq\\bert-base-encoder.cp";

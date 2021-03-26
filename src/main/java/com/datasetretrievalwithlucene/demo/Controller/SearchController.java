@@ -38,27 +38,32 @@ public class SearchController {
     public String BM25result(@RequestParam("q") String query,
                              @RequestParam("method") String method,
                              Model model) {
-        //String method = "BM25";
+
         List<Dataset> datasetList = new ArrayList<>();
         switch (method) {
             case "BM25":
-                List<Pair<Integer, Double>> BM25scoreList = RelevanceRanking.BM25RankingList(query);
-                for (Pair<Integer, Double> i : BM25scoreList) {
+                List<Pair<Integer, Double>> BM25ScoreList = RelevanceRanking.BM25RankingList(query);
+                for (Pair<Integer, Double> i : BM25ScoreList) {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
                 }
                 break;
             case "TFIDF":
-                List<Pair<Integer, Double>> TFIDFscoreList = RelevanceRanking.TFIDFRankingList(query);
-                for (Pair<Integer, Double> i : TFIDFscoreList) {
+                List<Pair<Integer, Double>> TFIDFScoreList = RelevanceRanking.TFIDFRankingList(query);
+                for (Pair<Integer, Double> i : TFIDFScoreList) {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
                 }
                 break;
             case "FSDM":
-                List<Pair<Integer, Double>> FSDMscoreList = RelevanceRanking.FSDMRankingList(query);
-                for (Pair<Integer, Double> i : FSDMscoreList) {
+                List<Pair<Integer, Double>> FSDMScoreList = RelevanceRanking.FSDMRankingList(query);
+                for (Pair<Integer, Double> i : FSDMScoreList) {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
                 }
                 break;
+            case "DPR":
+                List<Pair<Integer, Double>> DPRScoreList = RelevanceRanking.DPRRankingList(query);
+                for (Pair<Integer, Double> i : DPRScoreList) {
+                    datasetList.add(datasetService.getByDatasetId(i.getKey()));
+                }
         }
         model.addAttribute("datasets", datasetList);
         model.addAttribute("query", query);

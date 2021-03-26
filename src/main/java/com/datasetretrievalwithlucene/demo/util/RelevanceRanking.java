@@ -327,6 +327,7 @@ public class RelevanceRanking {
 
     public static List<Pair<Integer, Double>> BM25RankingList(String query) {
         init();
+        query=query.replaceAll("\\p{P}"," ");
         List<Pair<Integer, Double>> BM25scoreList = new ArrayList<>();
         try {
             String[] fields = GlobalVariances.queryFields;
@@ -349,12 +350,7 @@ public class RelevanceRanking {
                 }
                 BM25scoreList.add(new Pair<>(datasetID, score));
             }
-            BM25scoreList.sort(new Comparator<Pair<Integer, Double>>() {
-                @Override
-                public int compare(Pair<Integer, Double> o1, Pair<Integer, Double> o2) {
-                    return o2.getValue().compareTo(o1.getValue());
-                }
-            });
+            BM25scoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -363,6 +359,7 @@ public class RelevanceRanking {
 
     public static List<Pair<Integer, Double>> TFIDFRankingList(String query) {
         init();
+        query=query.replaceAll("\\p{P}"," ");
         List<Pair<Integer, Double>> TFIDFscoreList = new ArrayList<>();
         try {
             String[] fields = GlobalVariances.queryFields;
@@ -394,6 +391,7 @@ public class RelevanceRanking {
 
     public static List<Pair<Integer, Double>> FSDMRankingList(String query) {
         init();
+        query=query.replaceAll("\\p{P}"," ");
         List<Pair<Integer, Double>> FSDMscoreList = new ArrayList<>();
         try {
             String[] fields = GlobalVariances.queryFields;
@@ -422,6 +420,7 @@ public class RelevanceRanking {
     }
 
     public static List<Pair<Integer, Double>> DPRRankingList(String query) {
+        query=query.replaceAll("\\p{P}"," ");
         DPR(query);
         List<Pair<Integer, Double>> DPRRankingList = new ArrayList<>();
         try {

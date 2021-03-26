@@ -19,12 +19,11 @@ public class DBIndexer {
     private static final Logger logger = LoggerFactory.getLogger(DBIndexer.class);
     @Resource
     private JdbcTemplate jdbcTemplate;
-    private Map<Integer, String> id2text = new HashMap<>();
-    private Map<Integer, String> propertyText = new HashMap<>();
-    private Map<Integer, String> classText = new HashMap<>();
-    private Set<Integer> classSet = new HashSet<>();
+    private final Map<Integer, String> id2text = new HashMap<>();
+    private final Map<Integer, String> propertyText = new HashMap<>();
+    private final Map<Integer, String> classText = new HashMap<>();
+    private final Set<Integer> classSet = new HashSet<>();
     private IndexFactory indexF;
-    private Integer datasetCountLimit = 1000000;
 
     /**
      * 统计实体出现次数
@@ -231,6 +230,7 @@ public class DBIndexer {
             indexF.commitDocument(document);
             if (all % 10000 == 0)
                 logger.info("Completed generating document: " + all);
+            int datasetCountLimit = 1000000;
             if (all > datasetCountLimit) break;
 
         }

@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 *.log
 *.in
+*.out
 *.log.gz
 *.tsv
 *.csv
