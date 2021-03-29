@@ -27,6 +27,11 @@ marp: true
 
 ---
 
+- property：所有predicate
+- class：所有'%rdf-syntax-ns#type%'的predicate指向的object
+
+---
+
 ### Pooling
 
 - Setup
@@ -38,7 +43,6 @@ marp: true
 
 - Result
 
-
 ---
 
 ### labeling guidance
@@ -47,11 +51,6 @@ marp: true
 - a dataset is poor (1) if a search engine were to include this in the search results, but it should not be listed at the top;
 - a dataset is good (2) if you would expect this dataset to be included in the search results from a search engine;
 - a dataset is excellent (3) if you would expect this dataset ranked near the top of the search results from a search engine.
-
----
-
-- property：所有predicate
-- class：所有'%rdf-syntax-ns#type%'的predicate指向的object
 
 ---
 
@@ -68,7 +67,6 @@ marp: true
 ---
 - 混合方法排序
     - Quality(PageRank、DING、DRank) + Relevance(TF-IDF、BM25、FSDM)
-    *作为自主设计的创新方法
 
 - 多filed与单field
     - 全部field
@@ -85,7 +83,7 @@ marp: true
 ---
 ### Evaluation Metrics
 
-- nDCG@k (k=5,10,15,20,50*)
+- nDCG@k (k=5,10,15,20*)
 - Precision@k
 - Recall@k
 - F值 or MAP

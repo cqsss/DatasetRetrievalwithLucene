@@ -77,7 +77,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=DPR'}">
               <span data-feather="file-text"></span>
               DPR
             </a>
@@ -135,19 +135,23 @@
       </div>
 
 
-      <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-        <input type="radio" class="btn-check" name="rating" id="rating0" autocomplete="off">
-        <label class="btn btn-outline-primary" for="rating0" title="off topic">0</label>
-
-        <input type="radio" class="btn-check" name="rating" id="rating1" autocomplete="off">
-        <label class="btn btn-outline-primary" for="rating1" title="poor">1</label>
-
-        <input type="radio" class="btn-check" name="rating" id="rating2" autocomplete="off">
-        <label class="btn btn-outline-primary" for="rating2" title="good">2</label>
-
-        <input type="radio" class="btn-check" name="rating" id="rating3" autocomplete="off">
-        <label class="btn btn-outline-primary" for="rating3" title="excellent">3</label>
-      </div>
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </main>
   </div>
 </div>

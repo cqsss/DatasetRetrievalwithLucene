@@ -63,7 +63,8 @@ public class ExperimentTest {
             QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
             readQueries(GlobalVariances.testQueriesPath);
             for (String qi : queryList) {
-                Query query = queryParser.parse(qi);
+                String tmp =qi.replaceAll("\\p{P}"," ");
+                Query query = queryParser.parse(tmp);
                 int queryLength = query.toString().split(" ").length / fields.length;
                 TopDocs docsSearch = indexSearcher.search(query, 500);
                 ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
@@ -197,6 +198,9 @@ public class ExperimentTest {
                 List<Pair<Integer, Double>> BM25ScoreList = RelevanceRanking.BM25RankingList(q);
                 List<Pair<Integer, Double>> FSDMScoreList = RelevanceRanking.FSDMRankingList(q);
                 List<Pair<Integer, Double>> DPRScoreList = RelevanceRanking.DPRRankingList(q);
+                if (TFIDFScoreList.size() < 100 || BM25ScoreList.size() < 100 ||FSDMScoreList.size() < 100) {
+                    continue;
+                }
                 Set<Integer> scoreSet = new HashSet<>();
                 List<Integer> tmpList = new ArrayList<>();
                 for (int i = 0; i < GlobalVariances.queryPoolSize.length; i++) {

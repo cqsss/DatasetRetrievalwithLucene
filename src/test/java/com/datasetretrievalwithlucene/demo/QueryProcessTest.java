@@ -75,10 +75,12 @@ public class QueryProcessTest {
     }
     @Test
     public void testQueryHits() {
+        int[] total = new int[100];
         readQueries(GlobalVariances.testQueriesPath);
         //readQueries(GlobalVariances.title_notesTestQueriesPath);
         for (String qi : queries) {
-            for (double k = 0.0; k <= 2.0; k += 0.1){
+            for (int i=0; i<=20; i++) {
+                double k = i*0.1;
                 String[] fields = GlobalVariances.queryFields;
                 Analyzer analyzer = new EnglishAnalyzer();
                 QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
@@ -102,11 +104,15 @@ public class QueryProcessTest {
                         //System.out.println(e);
                     }
                     System.out.printf("%d\t", cnt);
+                    if (cnt > 20)
+                        total[i] ++;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            System.out.printf("\n");
+            System.out.print("\n");
         }
+        for (int i=0; i<=20; i++)
+            System.out.printf("%d\t", total[i]);
     }
 }

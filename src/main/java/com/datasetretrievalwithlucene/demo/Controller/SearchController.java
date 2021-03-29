@@ -3,6 +3,7 @@ package com.datasetretrievalwithlucene.demo.Controller;
 import com.datasetretrievalwithlucene.demo.Bean.Dataset;
 import com.datasetretrievalwithlucene.demo.Service.DatasetService;
 import com.datasetretrievalwithlucene.demo.Service.UserService;
+import com.datasetretrievalwithlucene.demo.util.GlobalVariances;
 import com.datasetretrievalwithlucene.demo.util.RelevanceRanking;
 import javafx.util.Pair;
 import org.springframework.stereotype.Controller;
@@ -31,42 +32,56 @@ public class SearchController {
 
     @RequestMapping(value = "/dosearch", method = RequestMethod.POST)
     public String dosearch(@RequestParam("query") String query) {
-        return "redirect:/result?q=" + query + "&method=BM25";
+        return "redirect:/result?q=" + query + "&method=BM25" + "&page=1";
     }
 
     @GetMapping(value = "/result")
     public String BM25result(@RequestParam("q") String query,
                              @RequestParam("method") String method,
+                             @RequestParam("page") int page,
                              Model model) {
 
         List<Dataset> datasetList = new ArrayList<>();
         switch (method) {
             case "BM25":
                 List<Pair<Integer, Double>> BM25ScoreList = RelevanceRanking.BM25RankingList(query);
-                for (Pair<Integer, Double> i : BM25ScoreList) {
+                /*for (Pair<Integer, Double> i : BM25ScoreList) {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
+                }*/
+                for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < page*GlobalVariances.numOfDatasetsPerPage; i++) {
+                    datasetList.add(datasetService.getByDatasetId(BM25ScoreList.get(i).getKey()));
                 }
                 break;
             case "TFIDF":
                 List<Pair<Integer, Double>> TFIDFScoreList = RelevanceRanking.TFIDFRankingList(query);
-                for (Pair<Integer, Double> i : TFIDFScoreList) {
+                /*for (Pair<Integer, Double> i : TFIDFScoreList) {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
+                }*/
+                for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < page*GlobalVariances.numOfDatasetsPerPage; i++) {
+                    datasetList.add(datasetService.getByDatasetId(TFIDFScoreList.get(i).getKey()));
                 }
                 break;
             case "FSDM":
                 List<Pair<Integer, Double>> FSDMScoreList = RelevanceRanking.FSDMRankingList(query);
-                for (Pair<Integer, Double> i : FSDMScoreList) {
+                /*for (Pair<Integer, Double> i : FSDMScoreList) {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
+                }*/
+                for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < page*GlobalVariances.numOfDatasetsPerPage; i++) {
+                    datasetList.add(datasetService.getByDatasetId(FSDMScoreList.get(i).getKey()));
                 }
                 break;
             case "DPR":
                 List<Pair<Integer, Double>> DPRScoreList = RelevanceRanking.DPRRankingList(query);
-                for (Pair<Integer, Double> i : DPRScoreList) {
+                /*for (Pair<Integer, Double> i : DPRScoreList) {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
+                }*/
+                for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < page*GlobalVariances.numOfDatasetsPerPage; i++) {
+                    datasetList.add(datasetService.getByDatasetId(DPRScoreList.get(i).getKey()));
                 }
         }
         model.addAttribute("datasets", datasetList);
         model.addAttribute("query", query);
+        model.addAttribute("page", page);
         return "resultlist";
     }
 

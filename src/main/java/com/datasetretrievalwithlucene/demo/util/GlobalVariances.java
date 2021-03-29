@@ -29,6 +29,7 @@ public class GlobalVariances {
     public static JSONObject boostWeights = null;
     public static JSONObject getBoostWeights() { if(null == boostWeights) boostWeights = Statistics.readJson("src/main/resources/json/ParseMatch_boost.json"); return boostWeights; }
 
+    //实验参数
     public static Integer[] queryPoolSize = {5, 10, 20, 50, 100};
     public static String testQueriesPath = "src/main/resources/in/TestQueries.in";
     public static String poolingQueriesPath = "src/main/resources/in/PoolingQueries.in";
@@ -45,4 +46,7 @@ public class GlobalVariances {
     public static String python_interpreter = "E:\\Anaconda\\envs\\DPR\\python.exe";
     public static String dense_retriever = "F:\\DPR\\dense_retriever.py";
     public static String query_tsv = "F:\\DPR\\dpr\\downloads\\data\\local_test\\metadata_query.tsv";
+
+    //前端参数
+    public static int numOfDatasetsPerPage = 10;
 }
