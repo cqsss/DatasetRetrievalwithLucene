@@ -24,6 +24,9 @@ public class SearchController {
         this.datasetService = datasetService;
     }
 
+    private String current_query = "";
+    private String current_method = "";
+
 
     @RequestMapping("/search")
     public String starter() {
@@ -36,12 +39,22 @@ public class SearchController {
     }
 
     @GetMapping(value = "/result")
-    public String BM25result(@RequestParam("q") String query,
+    public String searchResult(@RequestParam("q") String query,
                              @RequestParam("method") String method,
                              @RequestParam("page") int page,
                              Model model) {
 
         List<Dataset> datasetList = new ArrayList<>();
+        Dataset tmpDataset;
+        long datasetID;
+        if (current_query.isEmpty() || !current_query.equals(query)) {
+            current_query = query;
+        }
+
+        if (current_method.isEmpty() || !current_method.equals(method)) {
+            current_method = method;
+        }
+
         switch (method) {
             case "BM25":
                 List<Pair<Integer, Double>> BM25ScoreList = RelevanceRanking.BM25RankingList(query);
@@ -49,7 +62,11 @@ public class SearchController {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
                 }*/
                 for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < page*GlobalVariances.numOfDatasetsPerPage; i++) {
-                    datasetList.add(datasetService.getByDatasetId(BM25ScoreList.get(i).getKey()));
+                    tmpDataset = datasetService.getByDatasetId(BM25ScoreList.get(i).getKey());
+                    datasetID = tmpDataset.getDataset_id();
+                    if (datasetID > 311)
+                        tmpDataset.setDataset_id(datasetID - 221261);
+                    datasetList.add(tmpDataset);
                 }
                 break;
             case "TFIDF":
@@ -58,7 +75,11 @@ public class SearchController {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
                 }*/
                 for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < page*GlobalVariances.numOfDatasetsPerPage; i++) {
-                    datasetList.add(datasetService.getByDatasetId(TFIDFScoreList.get(i).getKey()));
+                    tmpDataset = datasetService.getByDatasetId(TFIDFScoreList.get(i).getKey());
+                    datasetID = tmpDataset.getDataset_id();
+                    if (datasetID > 311)
+                        tmpDataset.setDataset_id(datasetID - 221261);
+                    datasetList.add(tmpDataset);
                 }
                 break;
             case "FSDM":
@@ -67,7 +88,11 @@ public class SearchController {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
                 }*/
                 for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < page*GlobalVariances.numOfDatasetsPerPage; i++) {
-                    datasetList.add(datasetService.getByDatasetId(FSDMScoreList.get(i).getKey()));
+                    tmpDataset = datasetService.getByDatasetId(FSDMScoreList.get(i).getKey());
+                    datasetID = tmpDataset.getDataset_id();
+                    if (datasetID > 311)
+                        tmpDataset.setDataset_id(datasetID - 221261);
+                    datasetList.add(tmpDataset);
                 }
                 break;
             case "DPR":
@@ -76,12 +101,22 @@ public class SearchController {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
                 }*/
                 for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < page*GlobalVariances.numOfDatasetsPerPage; i++) {
-                    datasetList.add(datasetService.getByDatasetId(DPRScoreList.get(i).getKey()));
+                    tmpDataset = datasetService.getByDatasetId(DPRScoreList.get(i).getKey());
+                    datasetID = tmpDataset.getDataset_id();
+                    if (datasetID > 311)
+                        tmpDataset.setDataset_id(datasetID - 221261);
+                    datasetList.add(tmpDataset);
                 }
         }
+        int previousPage = Math.max(1, page - 1);
+        int nextPage = Math.min(100, page + 1);
+
         model.addAttribute("datasets", datasetList);
         model.addAttribute("query", query);
+        model.addAttribute("method", method);
         model.addAttribute("page", page);
+        model.addAttribute("previouspage", previousPage);
+        model.addAttribute("nextpage", nextPage);
         return "resultlist";
     }
 

@@ -47,7 +47,7 @@ public class RelevanceRanking {
             wU = new HashMap<>();
             fieldTermFreq = new HashMap<>();
             double base = 0.0;
-            for (Map.Entry jsonObject : GlobalVariances.getBoostWeights().entrySet()) {
+            for (Map.Entry jsonObject : GlobalVariances.getFSDMBoostWeights().entrySet()) {
                 String field = jsonObject.getKey().toString();
                 Double w = Double.parseDouble(jsonObject.getValue().toString());
                 base += w;
@@ -55,7 +55,7 @@ public class RelevanceRanking {
                     fieldTermFreq.put(new Pair<>(field, token), indexReader.totalTermFreq(new Term(field, new BytesRef(token))));
                 }
             }
-            for (Map.Entry jsonObject : GlobalVariances.getBoostWeights().entrySet()) {
+            for (Map.Entry jsonObject : GlobalVariances.getFSDMBoostWeights().entrySet()) {
                 String field = jsonObject.getKey().toString();
                 Double w = Double.parseDouble(jsonObject.getValue().toString()) / base;
                 wT.put(field, w);
@@ -72,7 +72,7 @@ public class RelevanceRanking {
             fieldContent = new HashMap<>();
             fieldDocLength = new HashMap<>();
 
-            for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
+            for (Object jsonObject : GlobalVariances.getFSDMBoostWeights().keySet()) {
                 String field = jsonObject.toString();
                 Document document = indexReader.document(doc_id);
                 fieldContent.put(field, Statistics.getTokens(document.get(field)));
@@ -133,7 +133,7 @@ public class RelevanceRanking {
         try {
             for (String qi : queries) {
                 double tmp = 0.0;
-                for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
+                for (Object jsonObject : GlobalVariances.getFSDMBoostWeights().keySet()) {
                     String field = jsonObject.toString();
                     if (wT.get(field) == 0.0) continue;
                     double miu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
@@ -161,7 +161,7 @@ public class RelevanceRanking {
                 double tmp = 0.0;
                 String qi1 = queries.get(i);
                 String qi2 = queries.get(i + 1);
-                for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
+                for (Object jsonObject : GlobalVariances.getFSDMBoostWeights().keySet()) {
                     String field = jsonObject.toString();
                     if (wO.get(field) == 0.0) continue;
                     double miu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
@@ -191,7 +191,7 @@ public class RelevanceRanking {
                 double tmp = 0.0;
                 String qi1 = queries.get(i);
                 String qi2 = queries.get(i + 1);
-                for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
+                for (Object jsonObject : GlobalVariances.getFSDMBoostWeights().keySet()) {
                     String field = jsonObject.toString();
                     if (wU.get(field) == 0.0) continue;
                     double miu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
@@ -215,9 +215,9 @@ public class RelevanceRanking {
     }
 
     public static Double FSDM(Integer doc_id, List<String> tokens) {
-        Double lambdaT = 1.0 / 3.0;
-        Double lambdaO = 1.0 / 3.0;
-        Double lambdaU = 1.0 / 3.0;
+        Double lambdaT = 0.8;
+        Double lambdaO = 0.1;
+        Double lambdaU = 0.1;
         getCollectionStatistics(tokens);
         getDocumentStatistics(doc_id);
         return lambdaT * getFSDM_T(doc_id, tokens) +
@@ -226,7 +226,6 @@ public class RelevanceRanking {
     }
 
     public static Double BM25(Integer doc_id, String field, List<String> tokens) {
-        init();
         double score = 0.0;
         double k1 = 1.2;
         double b = 0.75;
@@ -331,6 +330,7 @@ public class RelevanceRanking {
         List<Pair<Integer, Double>> BM25scoreList = new ArrayList<>();
         try {
             String[] fields = GlobalVariances.queryFields;
+            double[] weights = GlobalVariances.BM25BoostWeights;
             Analyzer analyzer = new EnglishAnalyzer();
             QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
             Query parsedQuery = queryParser.parse(query);
@@ -345,8 +345,8 @@ public class RelevanceRanking {
 //                    System.out.println("dataset_id: " + document.get("dataset_id") + ", score: " + si.score);
 //                    Explanation e = indexSearcher.explain(parsedQuery, si.doc);
 //                    System.out.println("Explanation： \n" + e);
-                for (String field : fields) {
-                    score += BM25(docID, field, queryTokens);
+                for (int i = 0; i < fields.length; i++) {
+                    score += BM25(docID, fields[i], queryTokens) * weights[i];
                 }
                 BM25scoreList.add(new Pair<>(datasetID, score));
             }
@@ -363,6 +363,7 @@ public class RelevanceRanking {
         List<Pair<Integer, Double>> TFIDFscoreList = new ArrayList<>();
         try {
             String[] fields = GlobalVariances.queryFields;
+            double[] weights = GlobalVariances.TFIDFBoostWeights;
             Analyzer analyzer = new EnglishAnalyzer();
             QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
             Query parsedQuery = queryParser.parse(query);
@@ -377,8 +378,8 @@ public class RelevanceRanking {
 //                    System.out.println("dataset_id: " + document.get("dataset_id") + ", score: " + si.score);
 //                    Explanation e = indexSearcher.explain(parsedQuery, si.doc);
 //                    System.out.println("Explanation： \n" + e);
-                for (String field : fields) {
-                    score += TFIDF(docID, field, queryTokens);
+                for (int i = 0; i < fields.length; i++) {
+                    score += TFIDF(docID, fields[i], queryTokens) * weights[i];
                 }
                 TFIDFscoreList.add(new Pair<>(datasetID, score));
             }
@@ -427,10 +428,14 @@ public class RelevanceRanking {
             File result_file = new File(GlobalVariances.out_file_path);
             BufferedReader bufferedReader = new BufferedReader(new FileReader(result_file));
             String line;
+            int datasetID;
+            double score;
             while ((line = bufferedReader.readLine()) != null) {
                 //System.out.println(line);
                 String[] split_line = line.split("\t");
-                DPRRankingList.add(new Pair<>(Integer.parseInt(split_line[0]), Double.parseDouble(split_line[1])));
+                datasetID = Integer.parseInt(split_line[0]);
+                score = Double.parseDouble(split_line[1]);
+                DPRRankingList.add(new Pair<>(datasetID, score));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -454,6 +459,8 @@ public class RelevanceRanking {
                 Integer docID = si.doc;
                 Document document = indexReader.document(docID);
                 Integer datasetID = Integer.parseInt(document.get("dataset_id"));
+                if (datasetID > 311)
+                    datasetID -= 221261;
                 Double score = 0.0;
 //                    System.out.println("dataset_id: " + document.get("dataset_id") + ", score: " + si.score);
 //                    Explanation e = indexSearcher.explain(parsedQuery, si.doc);

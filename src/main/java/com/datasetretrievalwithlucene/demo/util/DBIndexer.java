@@ -23,6 +23,7 @@ public class DBIndexer {
     private final Map<Integer, String> propertyText = new HashMap<>();
     private final Map<Integer, String> classText = new HashMap<>();
     private final Set<Integer> classSet = new HashSet<>();
+    private final List<Integer> effectiveDatasetIdList = new ArrayList<>();
     private IndexFactory indexF;
 
     /**
@@ -171,6 +172,16 @@ public class DBIndexer {
     }
 
     /**
+     * 筛选含图谱的数据集
+     */
+    private void getEffectiveDatasetIdList() {
+        List<Map<String, Object>> queryList = jdbcTemplate.queryForList("SELECT DISTINCT(dataset_id) FROM triple");
+        for (Map<String, Object> qi : queryList) {
+            effectiveDatasetIdList.add(Integer.parseInt(qi.get("dataset_id").toString()));
+        }
+    }
+
+    /**
      * 生成文档并提交
      */
     private void generateDocument() {
@@ -183,56 +194,59 @@ public class DBIndexer {
         fieldType.setStoreTermVectorPayloads(true);
         fieldType.setStoreTermVectors(true);
         fieldType.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
-        List<Map<String, Object>> queryList = jdbcTemplate.queryForList("SELECT * FROM metadata");
-        for (Map<String, Object> qi : queryList) {
-            Document document = new Document();
-            all++;
-            // local ID
-            Integer local_id = Integer.parseInt(qi.get("dataset_id").toString());
-            document.add(new Field("dataset_id", local_id.toString(), fieldType));
+        getEffectiveDatasetIdList();
+        for (int i : effectiveDatasetIdList) {
+            List<Map<String, Object>> queryList = jdbcTemplate.queryForList(String.format("SELECT * FROM metadata WHERE dataset_id=%d", i));
+            for (Map<String, Object> qi : queryList) {
+                Document document = new Document();
+                all++;
+                // local ID
+                Integer local_id = Integer.parseInt(qi.get("dataset_id").toString());
+                document.add(new Field("dataset_id", local_id.toString(), fieldType));
 
-            // Dataset ID
-            String id = qi.get("id").toString();
-            document.add(new Field("id", id, fieldType));
+                // Dataset ID
+                String id = qi.get("id").toString();
+                document.add(new Field("id", id, fieldType));
 
-            // title & notes
-            String title = qi.get("title").toString();
-            String notes = qi.get("notes").toString();
-            document.add(new Field("title_notes", title + ";" + notes, fieldType));
+                // title & notes
+                String title = qi.get("title").toString();
+                String notes = qi.get("notes").toString();
+                document.add(new Field("title_notes", title + ";" + notes, fieldType));
 
-            // Content
-            String content = getTextFromLocalID(local_id);
-            document.add(new Field("content", content, fieldType));
+                // Content
+                String content = getTextFromLocalID(local_id);
+                document.add(new Field("content", content, fieldType));
 
-            // property
-            String property = getPropertyFromLocalID(local_id);
-            document.add(new Field("property", property, fieldType));
+                // property
+                String property = getPropertyFromLocalID(local_id);
+                document.add(new Field("property", property, fieldType));
 
-            // class
-            String _class = getClassFromLocalID(local_id);
-            document.add(new Field("class", _class, fieldType));
+                // class
+                String _class = getClassFromLocalID(local_id);
+                document.add(new Field("class", _class, fieldType));
 
-            // property & class
-            document.add(new Field("class_property", _class + ";" + property, fieldType));
+                // property & class
+                document.add(new Field("class_property", _class + ";" + property, fieldType));
 
-            // Normal Fields
-            for (Map.Entry<String, Object> entry : qi.entrySet()) {
-                String name = entry.getKey();
-                if (name.equals("dataset_id") || name.equals("id"))
-                    continue;
-                String value = "";
-                if (entry.getValue() != null)
-                    value = entry.getValue().toString();
-                document.add(new Field(name, value, fieldType));
+                // Normal Fields
+                for (Map.Entry<String, Object> entry : qi.entrySet()) {
+                    String name = entry.getKey();
+                    if (name.equals("dataset_id") || name.equals("id"))
+                        continue;
+                    String value = "";
+                    if (entry.getValue() != null)
+                        value = entry.getValue().toString();
+                    document.add(new Field(name, value, fieldType));
+                }
+
+                // commit document
+                indexF.commitDocument(document);
+                if (all % 1000 == 0)
+                    logger.info("Completed generating document: " + all);
+                int datasetCountLimit = 1000000;
+                if (all > datasetCountLimit) break;
+
             }
-
-            // commit document
-            indexF.commitDocument(document);
-            if (all % 10000 == 0)
-                logger.info("Completed generating document: " + all);
-            int datasetCountLimit = 1000000;
-            if (all > datasetCountLimit) break;
-
         }
         logger.info("Completed GenerateDocument All: " + all);
     }

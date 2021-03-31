@@ -15,7 +15,7 @@ import java.util.Map;
 public class JSONTest {
     @Test
     public void testJSON(){
-        for (Map.Entry jsonObject : GlobalVariances.getBoostWeights().entrySet()) {
+        for (Map.Entry jsonObject : GlobalVariances.getFSDMBoostWeights().entrySet()) {
             System.out.println("key: " + jsonObject.getKey());
             System.out.println("value: " + jsonObject.getValue());
         }

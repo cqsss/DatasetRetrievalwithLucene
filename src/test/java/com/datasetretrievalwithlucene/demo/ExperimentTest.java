@@ -219,7 +219,7 @@ public class ExperimentTest {
             logger.info("Completed all pooling. Total queries: " + poolingMap.size());
             for (int i = 0; i <= 20; i ++) {
                 double k = i * 0.1;
-                File query_file = new File("src/main/resources/out/poolsize_" + String.format("%.1f", k) + ".out");
+                File query_file = new File("src/main/resources/out/poolsize_new_" + String.format("%.1f", k) + ".out");
                 if (!query_file.exists()) {
                     query_file.createNewFile();
                 }

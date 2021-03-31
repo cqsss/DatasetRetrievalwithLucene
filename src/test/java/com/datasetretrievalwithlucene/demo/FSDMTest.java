@@ -52,7 +52,7 @@ public class FSDMTest {
             wU = new HashMap<>();
             fieldTermFreq = new HashMap<>();
             Double base = 0.0;
-            for (Map.Entry jsonObject : GlobalVariances.getBoostWeights().entrySet()) {
+            for (Map.Entry jsonObject : GlobalVariances.getFSDMBoostWeights().entrySet()) {
                 String field = jsonObject.getKey().toString();
                 Double w = Double.parseDouble(jsonObject.getValue().toString());
                 base += w;
@@ -60,7 +60,7 @@ public class FSDMTest {
                     fieldTermFreq.put(new Pair<>(field, token), indexReader.totalTermFreq(new Term(field, new BytesRef(token))));
                 }
             }
-            for (Map.Entry jsonObject : GlobalVariances.getBoostWeights().entrySet()) {
+            for (Map.Entry jsonObject : GlobalVariances.getFSDMBoostWeights().entrySet()) {
                 String field = jsonObject.getKey().toString();
                 Double w = Double.parseDouble(jsonObject.getValue().toString()) / base;
                 wT.put(field, w);
@@ -76,7 +76,7 @@ public class FSDMTest {
             fieldContent = new HashMap<>();
             fieldDocLength = new HashMap<>();
 
-            for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
+            for (Object jsonObject : GlobalVariances.getFSDMBoostWeights().keySet()) {
                 String field = jsonObject.toString();
                 Document document = indexReader.document(doc_id);
                 fieldContent.put(field, Statistics.getTokens(document.get(field)));
@@ -136,7 +136,7 @@ public class FSDMTest {
         try {
             for (String qi : queries) {
                 Double tmp = 0.0;
-                for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
+                for (Object jsonObject : GlobalVariances.getFSDMBoostWeights().keySet()) {
                     String field = jsonObject.toString();
                     if(wT.get(field) == 0.0) continue;
                     Double miu = (double) indexReader.getSumTotalTermFreq(field) / ((double) indexReader.getDocCount(field));
@@ -163,7 +163,7 @@ public class FSDMTest {
                 Double tmp = 0.0;
                 String qi1 = queries.get(i);
                 String qi2 = queries.get(i + 1);
-                for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
+                for (Object jsonObject : GlobalVariances.getFSDMBoostWeights().keySet()) {
                     String field = jsonObject.toString();
                     if(wO.get(field) == 0.0) continue;
                     Double miu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);
@@ -192,7 +192,7 @@ public class FSDMTest {
                 Double tmp = 0.0;
                 String qi1 = queries.get(i);
                 String qi2 = queries.get(i + 1);
-                for (Object jsonObject : GlobalVariances.getBoostWeights().keySet()) {
+                for (Object jsonObject : GlobalVariances.getFSDMBoostWeights().keySet()) {
                     String field = jsonObject.toString();
                     if(wU.get(field) == 0.0) continue;
                     Double miu = (double) indexReader.getSumTotalTermFreq(field) / (double) indexReader.getDocCount(field);

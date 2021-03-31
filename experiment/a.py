@@ -78,7 +78,7 @@ while True:
     lis = req(text.strip('\n'))
     for s in lis:
         fout.write(text.strip('\n')+"\t"+s+"\n")
-    print("No. %d %s finished" %(cnt,text.strip('n')))
+    print("No. %d %s finished" %(cnt,text.strip('\n')))
     time.sleep(3)
 fin.close()
 fout.close()

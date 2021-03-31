@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.80.0">
-    <title>Dashboard Template · Bootstrap v5.0</title>
+    <title th:text="${query+'_Dataset Search'}"></title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/dashboard/">
 
@@ -42,7 +42,10 @@
   <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+  <form class="d-flex w-50" th:action="@{/dosearch}" method="post">
+    <input class="form-control form-control-dark" type="text" placeholder="Search" aria-label="Search" name="query">
+    <button class="btn btn-primary" type="submit">Search</button>
+  </form>
   <ul class="navbar-nav px-3">
     <li class="nav-item text-nowrap">
       <a class="nav-link" href="#">Sign out</a>
@@ -59,25 +62,25 @@
         </h6>
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=TFIDF'}">
+            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=TFIDF'+'&page='+${page}}">
               <span data-feather="file-text"></span>
               TF-IDF
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=BM25'}">
+            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=BM25'+'&page='+${page}}">
               <span data-feather="file-text"></span>
               BM25
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=FSDM'}">
+            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=FSDM'+'&page='+${page}}">
               <span data-feather="file-text"></span>
               FSDM
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=DPR'}">
+            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=DPR'+'&page='+${page}}">
               <span data-feather="file-text"></span>
               DPR
             </a>
@@ -138,7 +141,7 @@
       <nav aria-label="Page navigation example">
         <ul class="pagination">
           <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous">
+            <a class="page-link" th:href="@{'/result?q='+${query}+'&method='+${method}+'&page='+${previouspage}}" aria-label="Previous">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
@@ -146,7 +149,7 @@
           <li class="page-item"><a class="page-link" href="#">2</a></li>
           <li class="page-item"><a class="page-link" href="#">3</a></li>
           <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
+            <a class="page-link" th:href="@{'/result?q='+${query}+'&method='+${method}+'&page='+${nextpage}}" aria-label="Next">
               <span aria-hidden="true">&raquo;</span>
             </a>
           </li>
