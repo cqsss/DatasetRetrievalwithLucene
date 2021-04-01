@@ -76,10 +76,10 @@ public class QueryProcessTest {
     @Test
     public void testQueryHits() {
         int[] total = new int[100];
-        readQueries(GlobalVariances.testQueriesPath);
-        //readQueries(GlobalVariances.title_notesTestQueriesPath);
+        //readQueries(GlobalVariances.testQueriesPath);
+        readQueries(GlobalVariances.DevelopmentSetQueriesPath);
         for (String qi : queries) {
-            for (int i=0; i<=20; i++) {
+            for (int i=0; i<=10; i++) {
                 double k = i*0.1;
                 String[] fields = GlobalVariances.queryFields;
                 Analyzer analyzer = new EnglishAnalyzer();
@@ -112,7 +112,7 @@ public class QueryProcessTest {
             }
             System.out.print("\n");
         }
-        for (int i=0; i<=20; i++)
+        for (int i=0; i<=10; i++)
             System.out.printf("%d\t", total[i]);
     }
 }

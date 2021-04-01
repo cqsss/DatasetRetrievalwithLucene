@@ -17,4 +17,7 @@ public interface QueryDataMapper {
 
     @Select("select max(query_data_id) from query_data")
     int getMaxId();
+
+    @Select("select query_data_id from query_data where query_id=#{query_id} and dataset_id=#{dataset_id}")
+    int getQueryDataIdByQueryIdAndDatasetId(@Param("query_id") int query_id, @Param("dataset_id") int dataset_id);
 }

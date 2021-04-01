@@ -2,6 +2,7 @@ package com.datasetretrievalwithlucene.demo.Service;
 
 import com.datasetretrievalwithlucene.demo.Bean.QueryData;
 import com.datasetretrievalwithlucene.demo.Mapper.QueryDataMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,5 +25,9 @@ public class QueryDataService {
 
     public int getMaxId() {
         return queryDataMapper.getMaxId();
+    }
+
+    public int getQueryDataIdByQueryIdAndDatasetId(int query_id, int dataset_id) {
+        return queryDataMapper.getQueryDataIdByQueryIdAndDatasetId(query_id, dataset_id);
     }
 }

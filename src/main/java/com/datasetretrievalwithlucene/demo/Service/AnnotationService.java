@@ -41,4 +41,8 @@ public class AnnotationService {
     public List<Integer> getRating(int query_id, int dataset_id) {
         return annotationMapper.getRating(query_id, dataset_id);
     }
+
+    public void updateReasonById(int annotation_id, String reason) {
+        annotationMapper.updateReasonById(annotation_id, reason);
+    }
 }

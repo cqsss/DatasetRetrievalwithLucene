@@ -117,6 +117,7 @@ public class SearchController {
         model.addAttribute("page", page);
         model.addAttribute("previouspage", previousPage);
         model.addAttribute("nextpage", nextPage);
+        model.addAttribute("detailURL", GlobalVariances.detailPageURL);
         return "resultlist";
     }
 

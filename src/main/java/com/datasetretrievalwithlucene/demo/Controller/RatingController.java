@@ -2,6 +2,7 @@ package com.datasetretrievalwithlucene.demo.Controller;
 
 import com.datasetretrievalwithlucene.demo.Bean.*;
 import com.datasetretrievalwithlucene.demo.Service.*;
+import com.datasetretrievalwithlucene.demo.util.GlobalVariances;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -75,10 +76,12 @@ public class RatingController {
         int previous_id = Math.max(query_data_id - 1, 1);
         int next_id = Math.min(query_data_id + 1, max_id);
         int score = -1;
+        String reason = "";
         Annotation annotation;
         if (annotationService.searchAnnotation(user_id, query_id, dataset_id)) {
             annotation = annotationService.getAnnotation(user_id, query_id, dataset_id);
             score = annotation.getRating();
+            reason = annotation.getReason();
         }
         userService.updateLastIdByUserId(user_id, query_data_id);
 
@@ -90,6 +93,8 @@ public class RatingController {
         model.addAttribute("dataset", dataset);
         model.addAttribute("username", username);
         model.addAttribute("score", score);
+        model.addAttribute("reason", reason);
+        model.addAttribute("detailURL", GlobalVariances.detailPageURL);
         return "dashboard";
     }
 
@@ -118,10 +123,36 @@ public class RatingController {
             annotation.setQuery_id(query_id);
             annotation.setDataset_id(dataset_id);
             annotation.setRating(score);
+            annotation.setReason("");
             annotation.setAnnotation_time(annotation_time);
             if (score > 0)
                 annotationService.insertAnnotation(annotation);
         }
+    }
+
+    @RequestMapping(value = "/commitreason", method = RequestMethod.POST)
+    public String commitReason(@RequestParam("qid") int query_id,
+                       @RequestParam("dsid") int dataset_id,
+                       @RequestParam("username") String username, @RequestParam("reason") String reason) {
+        if (reason == null)
+            reason = "";
+        int user_id = userService.getIdByUsername(username);
+        Annotation annotation;
+        if (annotationService.searchAnnotation(user_id, query_id, dataset_id)) {
+            annotation = annotationService.getAnnotation(user_id, query_id, dataset_id);
+            int annotation_id = annotation.getAnnotation_id();
+            annotationService.updateReasonById(annotation_id, reason);
+        } else {
+            annotation = new Annotation();
+            annotation.setUser_id(user_id);
+            annotation.setQuery_id(query_id);
+            annotation.setDataset_id(dataset_id);
+            annotation.setReason(reason);
+            annotationService.insertAnnotation(annotation);
+        }
+        System.out.println(reason);
+        int qdid = queryDataService.getQueryDataIdByQueryIdAndDatasetId(query_id, dataset_id);
+        return "redirect:/dashboard?qdid=" + qdid + "&username=" + username;
     }
 
     @GetMapping(value = "/logout/{username}")

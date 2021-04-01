@@ -18,7 +18,7 @@ public interface AnnotationMapper {
     @Select("select * from annotation where user_id=#{user_id} and query_id=#{query_id} and dataset_id=#{dataset_id}")
     Annotation getAnnotation(@Param("user_id") int user_id, @Param("query_id") int query_id, @Param("dataset_id") int dataset_id);
 
-    @Insert("insert into annotation(user_id,query_id,dataset_id,rating,annotation_time) values(#{user_id},#{query_id},#{dataset_id},#{rating},#{annotation_time})")
+    @Insert("insert into annotation(user_id,query_id,dataset_id,rating,annotation_time,reason) values(#{user_id},#{query_id},#{dataset_id},#{rating},#{annotation_time},#{reason})")
     void insertAnnotation(Annotation annotation);
 
     @Update("update annotation set rating=#{rating}, annotation_time=#{annotation_time} where annotation_id=#{annotation_id}")
@@ -26,4 +26,7 @@ public interface AnnotationMapper {
 
     @Select("select rating from annotation where query_id=#{query_id} and dataset_id=#{dataset_id}")
     List<Integer> getRating(@Param("query_id") int query_id, @Param("dataset_id") int dataset_id);
+
+    @Update("update annotation set reason=#{reason} where annotation_id=#{annotation_id}")
+    void updateReasonById(@Param("annotation_id") int annotation_id, @Param("reason") String reason);
 }

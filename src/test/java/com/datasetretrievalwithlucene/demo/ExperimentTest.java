@@ -61,7 +61,6 @@ public class ExperimentTest {
             String[] fields = GlobalVariances.queryFields;
             Analyzer analyzer = new EnglishAnalyzer();
             QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
-            readQueries(GlobalVariances.testQueriesPath);
             for (String qi : queryList) {
                 String tmp =qi.replaceAll("\\p{P}"," ");
                 Query query = queryParser.parse(tmp);
@@ -86,13 +85,14 @@ public class ExperimentTest {
         init();
         try {
             readQueries(GlobalVariances.testQueriesPath);
-            for (double k = 0.0; k <= 2.0; k += 0.1) {
+            for (double k = 0.0; k <= 1.0; k += 0.1) {
                 int cnt = 0;
                 for  (String qi : queryList){
                     String[] fields = GlobalVariances.queryFields;
                     Analyzer analyzer = new EnglishAnalyzer();
                     QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
-                    Query query = queryParser.parse(qi);
+                    String tmp =qi.replaceAll("\\p{P}"," ");
+                    Query query = queryParser.parse(tmp);
                     int queryLength = query.toString().split(" ").length / fields.length;
                     TopDocs docsSearch = indexSearcher.search(query, 5);
                     ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
@@ -217,7 +217,7 @@ public class ExperimentTest {
                 System.out.print("\n");
             }
             logger.info("Completed all pooling. Total queries: " + poolingMap.size());
-            for (int i = 0; i <= 20; i ++) {
+            for (int i = 0; i <= 10; i ++) {
                 double k = i * 0.1;
                 File query_file = new File("src/main/resources/out/poolsize_new_" + String.format("%.1f", k) + ".out");
                 if (!query_file.exists()) {
@@ -227,6 +227,8 @@ public class ExperimentTest {
                 BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
                 getPoolingQueries(k);
                 for (String q : poolingQueryList) {
+                    if (!poolingMap.containsKey(q))
+                        continue;
                     List<Integer> tmpList = poolingMap.get(q);
                     bufferedWriter.write(q + ";");
                     for (int j : tmpList) {

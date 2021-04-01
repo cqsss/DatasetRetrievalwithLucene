@@ -7,6 +7,7 @@ public class Annotation {
     private int dataset_id;
     private int rating;
     private String annotation_time;
+    private String reason;
 
     public int getAnnotation_id() {
         return annotation_id;
@@ -54,5 +55,13 @@ public class Annotation {
 
     public void setAnnotation_time(String annotation_time) {
         this.annotation_time = annotation_time;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 }
