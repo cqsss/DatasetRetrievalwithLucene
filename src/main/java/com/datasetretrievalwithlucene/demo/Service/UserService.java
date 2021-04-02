@@ -37,4 +37,8 @@ public class UserService {
     public void updateLastIdByUserId(int user_id, int last_annotation_id) {
         userMapper.updateLastIdByUserId(user_id, last_annotation_id);
     }
+
+    public int getUserCount() {
+        return userMapper.getUserCount();
+    }
 }

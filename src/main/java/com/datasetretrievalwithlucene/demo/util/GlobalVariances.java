@@ -40,6 +40,7 @@ public class GlobalVariances {
     public static String GoogleQueriesPath = "src/main/resources/in/GoogleRelatedQueries.in";
     public static String DevelopmentSetQueriesPath = "src/main/resources/in/DevelopmentSetQueries.in";
     public static String[] queryFields = {"title", "notes", "class", "property"};
+    public static int annotatorPerPair = 3;
 
     // DPR
     public static String model_file = "model_file=F:\\DPR\\dpr\\downloads\\checkpoint\\retriever\\single-adv-hn\\nq\\bert-base-encoder.cp";

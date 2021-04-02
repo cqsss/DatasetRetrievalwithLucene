@@ -15,4 +15,6 @@ public interface QueryMapper {
     @Select("select * from query where query_id=#{query_id}")
     Query getQueryById(@Param("query_id") int query_id);
 
+    @Select("select count(*) from query")
+    int getQueryCount();
 }

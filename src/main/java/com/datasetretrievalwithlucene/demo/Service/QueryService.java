@@ -21,4 +21,8 @@ public class QueryService {
     public Query getQueryById(int query_id) {
         return queryMapper.getQueryById(query_id);
     }
+
+    public int getQueryCount() {
+        return queryMapper.getQueryCount();
+    }
 }

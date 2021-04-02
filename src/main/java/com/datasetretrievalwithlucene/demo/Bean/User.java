@@ -1,17 +1,17 @@
 package com.datasetretrievalwithlucene.demo.Bean;
 
 public class User {
-    private int userid;
+    private int user_id;
     private String username;
     private String password;
     private int last_annotation_id;
 
-    public int getUserid() {
-        return userid;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public void setUserid(int userid) {
-        this.userid = userid;
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
     public String getUsername() {
@@ -37,4 +37,6 @@ public class User {
     public void setLast_annotation_id(int last_annotation_id) {
         this.last_annotation_id = last_annotation_id;
     }
+
+
 }

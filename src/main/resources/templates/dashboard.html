@@ -51,78 +51,7 @@
 
 <div class="container-fluid">
   <div class="row">
-    <nav id="sidebarMenu" class="col-md-3 col-lg-1 d-md-block bg-light sidebar collapse">
-      <!--<div class="position-sticky pt-3">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">
-              <span data-feather="home"></span>
-              Dashboard
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file"></span>
-              Orders
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="shopping-cart"></span>
-              Products
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="users"></span>
-              Customers
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="bar-chart-2"></span>
-              Reports
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="layers"></span>
-              Integrations
-            </a>
-          </li>
-        </ul>
-
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-          <span>Ranking methods</span>
-        </h6>
-        <ul class="nav flex-column mb-2">
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              TF-IDF
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              BM25
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              FSDM
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              DPR
-            </a>
-          </li>
-        </ul>
-      </div>-->
-    </nav>
+    <nav id="sidebarMenu" class="col-md-3 col-lg-1 d-md-block bg-light sidebar collapse"></nav>
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
@@ -168,16 +97,16 @@
           </form>
 
           <div>
-            <p th:text="${qdid}+'/'+${max_id}"></p>
+            <p th:text="${current}+'/'+${total}"></p>
           </div>
           <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group me-2">
-              <a class="btn btn-sm btn-outline-secondary" th:href="@{'/dashboard?qdid='+${previous_id}+'&username='+${username}}">上一个</a>
-              <a class="btn btn-sm btn-outline-secondary" th:href="@{'/dashboard?qdid='+${next_id}+'&username='+${username}}">下一个</a>
+              <a class="btn btn-sm btn-outline-secondary" th:href="@{'/dashboard?qdid='+${previous_id}+'&userid='+${userid}}">上一个</a>
+              <a class="btn btn-sm btn-outline-secondary" th:href="@{'/dashboard?qdid='+${next_id}+'&userid='+${userid}}">下一个</a>
             </div>
           </div>
         </div>
-        <form class="d-flex w-50" th:action="@{'/commitreason?qid='+${query.query_id}+'&dsid='+${dataset.dataset_id}+'&username='+${username}}" method="post">
+        <form class="d-flex w-50" th:action="@{'/commitreason?qid='+${query.query_id}+'&dsid='+${dataset.dataset_id}+'&userid='+${userid}}" method="post">
           <input class="form-control form-control-dark" type="text" th:value="${reason}" placeholder="评分理由" aria-label="Reason" name="reason">
           <button class="btn btn-primary" type="submit">提交</button>
         </form>
@@ -202,7 +131,7 @@
     $("input[name=rating]").click(function(){
       var rating = $(this).val();
       $.ajax({
-        url:'/rating?qid='+'[[${query.query_id}]]'+'&dsid='+'[[${dataset.dataset_id}]]'+'&username='+'[[${username}]]',
+        url:'/rating?qid='+'[[${query.query_id}]]'+'&dsid='+'[[${dataset.dataset_id}]]'+'&userid='+'[[${userid}]]',
         data: {rating},
         type: 'POST',
         success:function(data){

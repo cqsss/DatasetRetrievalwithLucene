@@ -22,4 +22,7 @@ public interface UserMapper {
 
     @Update("update user set last_annotation_id=#{last_annotation_id} where user_id=#{user_id}")
     void updateLastIdByUserId(@Param("user_id") int user_id, @Param("last_annotation_id") int last_annotation_id);
+
+    @Select("select count(*) from user")
+    int getUserCount();
 }

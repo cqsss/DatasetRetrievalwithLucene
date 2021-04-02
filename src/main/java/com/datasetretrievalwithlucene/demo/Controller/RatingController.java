@@ -11,6 +11,7 @@ import org.thymeleaf.util.StringUtils;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -20,6 +21,9 @@ public class RatingController {
     private final AnnotationService annotationService;
     private final DatasetService datasetService;
     private final QueryService queryService;
+    private int userNumber;
+    private int queryNumber;
+    private int queryDataNumber;
 
     public RatingController(UserService userService, QueryDataService queryDataService, AnnotationService annotationService, DatasetService datasetService, QueryService queryService) {
         this.userService = userService;
@@ -27,6 +31,9 @@ public class RatingController {
         this.annotationService = annotationService;
         this.datasetService = datasetService;
         this.queryService = queryService;
+        userNumber = userService.getUserCount();
+        queryNumber = queryService.getQueryCount();
+        queryDataNumber = queryDataService.getQueryDataCount();
     }
 
     @RequestMapping("/login")
@@ -38,7 +45,7 @@ public class RatingController {
     public String login(@RequestParam("username") String username,
                         @RequestParam("password") String password,
                         Map<String, Object> map, HttpSession httpSession, Model model) {
-        User user = new User();
+        User user;
         if (userService.searchUser(username)) {
             user = userService.getByUsername(username);
         } else {
@@ -47,8 +54,14 @@ public class RatingController {
         }
         if (!StringUtils.isEmpty(username) && password.equals(user.getPassword())) {
             httpSession.setAttribute("loginUser", username);
-            int qdid = user.getLast_annotation_id();
-            return "redirect:/dashboard?qdid=" + qdid + "&username=" + username;
+            int qdid;
+            if (user.getLast_annotation_id() == 0) {
+                int first_query_id = (user.getUser_id() - 1) * (queryNumber / userNumber) + 1;
+                qdid = queryDataService.getMinQueryDataIdByQueryId(first_query_id);
+            }
+            else
+                qdid = user.getLast_annotation_id();
+            return "redirect:/dashboard?qdid=" + qdid + "&userid=" + user.getUser_id();
         } else {
             map.put("msg", "用户不存在或用户密码错误");
             return "signin";//为了防止表单重复提交，可以重定向
@@ -58,23 +71,56 @@ public class RatingController {
 
     @GetMapping("/dashboard")
     public String dashboard(@RequestParam("qdid") int query_data_id,
-                            @RequestParam("username") String username,
+                            @RequestParam("userid") int user_id,
                             Model model) {
+
+//        System.out.println(queryDataNumber);
+//        System.out.println(queryNumber);
+//        System.out.println(userNumber);
         QueryData queryData = queryDataService.getQueryDataById(query_data_id);
         int query_id = queryData.getQuery_id();
         Query query = queryService.getQueryById(query_id);
         int dataset_id = queryData.getDataset_id();
         Dataset dataset = datasetService.getByDatasetId(dataset_id);
-        int user_id = userService.getIdByUsername(username);
-        int max_id = queryDataService.getMaxId();
-        if (query_data_id > max_id) {
-            model.addAttribute("msg", "最后一个");
+        int first_query_id = (user_id - 1) * (queryNumber / userNumber) + 1;
+        int last_query_id = (user_id - 1 + GlobalVariances.annotatorPerPair) * (queryNumber / userNumber);
+        if (last_query_id > queryNumber) {
+            last_query_id -= queryNumber;
         }
-        if (query_data_id < 1) {
-            model.addAttribute("msg", "第一个");
+//        System.out.println("first_query_id: " + first_query_id);
+//        System.out.println("last_query_id: " + last_query_id);
+
+        int first_query_data_id = queryDataService.getMinQueryDataIdByQueryId(first_query_id);
+        int last_query_data_id = queryDataService.getMaxQueryDataIdByQueryId(last_query_id);
+//        System.out.println("first_query_data_id: " + first_query_data_id);
+//        System.out.println("last_query_data_id: " + last_query_data_id);
+
+
+        int current_number = (query_data_id + queryDataNumber - first_query_data_id) % queryDataNumber + 1;
+        int total_number = 0;
+        for (int i = 0; i < GlobalVariances.annotatorPerPair * (queryNumber / userNumber) ; i++) {
+            int tmp = i + first_query_id;
+            if (i > queryNumber) tmp -= queryNumber;
+            List<Integer> tmpList = queryDataService.getQueryDataIdByQueryId(tmp);
+            total_number += tmpList.size();
         }
-        int previous_id = Math.max(query_data_id - 1, 1);
-        int next_id = Math.min(query_data_id + 1, max_id);
+
+        int previous_id;
+        if (query_data_id == first_query_data_id) {
+            previous_id = query_data_id;
+        } else if (query_data_id == 1) {
+            previous_id = queryDataNumber;
+        } else {
+            previous_id = query_data_id - 1;
+        }
+        int next_id;
+        if (query_data_id == last_query_data_id) {
+            next_id = query_data_id;
+        } else if (query_data_id == queryDataNumber){
+            next_id = 1;
+        } else {
+            next_id = query_data_id + 1;
+        }
         int score = -1;
         String reason = "";
         Annotation annotation;
@@ -88,10 +134,11 @@ public class RatingController {
         model.addAttribute("qdid", query_data_id);
         model.addAttribute("previous_id", previous_id);
         model.addAttribute("next_id", next_id);
-        model.addAttribute("max_id", max_id);
+        model.addAttribute("total", total_number);
+        model.addAttribute("current", current_number);
         model.addAttribute("query", query);
         model.addAttribute("dataset", dataset);
-        model.addAttribute("username", username);
+        model.addAttribute("userid", user_id);
         model.addAttribute("score", score);
         model.addAttribute("reason", reason);
         model.addAttribute("detailURL", GlobalVariances.detailPageURL);
@@ -102,12 +149,11 @@ public class RatingController {
     @ResponseBody
     public void rating(@RequestParam("qid") int query_id,
                        @RequestParam("dsid") int dataset_id,
-                       @RequestParam("username") String username, @RequestBody String rating) {
+                       @RequestParam("userid") int user_id, @RequestBody String rating) {
         String scoreString = rating.substring(rating.length() - 1);
         int score = -1;
         if (scoreString != "")
             score = Integer.parseInt(scoreString);
-        int user_id = userService.getIdByUsername(username);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime dateTime = LocalDateTime.now();
         String annotation_time = dateTime.format(formatter);
@@ -133,10 +179,9 @@ public class RatingController {
     @RequestMapping(value = "/commitreason", method = RequestMethod.POST)
     public String commitReason(@RequestParam("qid") int query_id,
                        @RequestParam("dsid") int dataset_id,
-                       @RequestParam("username") String username, @RequestParam("reason") String reason) {
+                       @RequestParam("userid") int user_id, @RequestParam("reason") String reason) {
         if (reason == null)
             reason = "";
-        int user_id = userService.getIdByUsername(username);
         Annotation annotation;
         if (annotationService.searchAnnotation(user_id, query_id, dataset_id)) {
             annotation = annotationService.getAnnotation(user_id, query_id, dataset_id);
@@ -152,7 +197,7 @@ public class RatingController {
         }
         System.out.println(reason);
         int qdid = queryDataService.getQueryDataIdByQueryIdAndDatasetId(query_id, dataset_id);
-        return "redirect:/dashboard?qdid=" + qdid + "&username=" + username;
+        return "redirect:/dashboard?qdid=" + qdid + "&userid=" + user_id;
     }
 
     @GetMapping(value = "/logout/{username}")

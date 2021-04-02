@@ -30,4 +30,24 @@ public class QueryDataService {
     public int getQueryDataIdByQueryIdAndDatasetId(int query_id, int dataset_id) {
         return queryDataMapper.getQueryDataIdByQueryIdAndDatasetId(query_id, dataset_id);
     }
+
+    public List<Integer> getQueryDataIdByQueryId(int query_id) {
+        return queryDataMapper.getQueryDataIdByQueryId(query_id);
+    }
+
+    public int getMinQueryDataIdByQueryId(int query_id) {
+        return queryDataMapper.getMinQueryDataIdByQueryId(query_id);
+    }
+
+    public int getMaxQueryDataIdByQueryId(int query_id) {
+        return queryDataMapper.getMaxQueryDataIdByQueryId(query_id);
+    }
+
+    public void insertQueryData(QueryData queryData) {
+        queryDataMapper.insertQueryData(queryData);
+    }
+
+    public int getQueryDataCount() {
+        return queryDataMapper.getQueryDataCount();
+    }
 }
