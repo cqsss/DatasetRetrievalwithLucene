@@ -124,7 +124,7 @@
           <dd class="col-sm-9" th:text="${dataset.dataset_id}"></dd>
 
           <dt class="col-sm-2">title</dt>
-          <dd class="col-sm-9" th:text="${dataset.title}"></dd>
+          <dd class="col-sm-9"><a th:text="${dataset.title}" th:href="@{'detail?dsid='+${dataset.dataset_id}}"></a></dd>
 
           <dt class="col-sm-2">notes</dt>
           <dd class="col-sm-9" th:text="${dataset.notes}"></dd>

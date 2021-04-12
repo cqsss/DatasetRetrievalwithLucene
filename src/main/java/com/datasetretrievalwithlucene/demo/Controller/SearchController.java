@@ -66,6 +66,7 @@ public class SearchController {
                     datasetID = tmpDataset.getDataset_id();
                     if (datasetID > 311)
                         tmpDataset.setDataset_id(datasetID - 221261);
+                    tmpDataset.setNotes(tmpDataset.getNotes().replaceAll("\\&[a-zA-Z]{1,10};", "").replaceAll("<[^>]*>", "").replaceAll("[(/>)<]", ""));
                     datasetList.add(tmpDataset);
                 }
                 break;
@@ -79,6 +80,7 @@ public class SearchController {
                     datasetID = tmpDataset.getDataset_id();
                     if (datasetID > 311)
                         tmpDataset.setDataset_id(datasetID - 221261);
+                    tmpDataset.setNotes(tmpDataset.getNotes().replaceAll("\\&[a-zA-Z]{1,10};", "").replaceAll("<[^>]*>", "").replaceAll("[(/>)<]", ""));
                     datasetList.add(tmpDataset);
                 }
                 break;
@@ -92,6 +94,7 @@ public class SearchController {
                     datasetID = tmpDataset.getDataset_id();
                     if (datasetID > 311)
                         tmpDataset.setDataset_id(datasetID - 221261);
+                    tmpDataset.setNotes(tmpDataset.getNotes().replaceAll("\\&[a-zA-Z]{1,10};", "").replaceAll("<[^>]*>", "").replaceAll("[(/>)<]", ""));
                     datasetList.add(tmpDataset);
                 }
                 break;
@@ -105,6 +108,7 @@ public class SearchController {
                     datasetID = tmpDataset.getDataset_id();
                     if (datasetID > 311)
                         tmpDataset.setDataset_id(datasetID - 221261);
+                    tmpDataset.setNotes(tmpDataset.getNotes().replaceAll("\\&[a-zA-Z]{1,10};", "").replaceAll("<[^>]*>", "").replaceAll("[(/>)<]", ""));
                     datasetList.add(tmpDataset);
                 }
         }
@@ -128,6 +132,15 @@ public class SearchController {
                 RelevanceRanking.RankingList(query, 1).toString() +
                 RelevanceRanking.RankingList(query, 2).toString();
     }*/
+
+    @GetMapping(value = "/detail")
+    public String getDetail(@RequestParam("dsid") int dataset_id, Model model) {
+        Dataset dataset = datasetService.getByDatasetId(dataset_id);
+        int score = 0;
+        model.addAttribute("dataset", dataset);
+        model.addAttribute("score", score);
+        return "detaildashboard";
+    }
 
     @RequestMapping(value = "/test")
     @ResponseBody

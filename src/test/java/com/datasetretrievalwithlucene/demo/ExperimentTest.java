@@ -1,6 +1,5 @@
 package com.datasetretrievalwithlucene.demo;
 
-import com.datasetretrievalwithlucene.demo.Bean.DatasetScore;
 import com.datasetretrievalwithlucene.demo.util.GlobalVariances;
 import com.datasetretrievalwithlucene.demo.util.RelevanceRanking;
 import com.datasetretrievalwithlucene.demo.util.Statistics;
@@ -19,12 +18,9 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.swing.*;
 import java.io.*;
 import java.nio.file.Paths;
-import java.text.DecimalFormat;
 import java.util.*;
 
 @SpringBootTest

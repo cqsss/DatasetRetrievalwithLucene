@@ -100,7 +100,8 @@ public class RatingController {
         int total_number = 0;
         for (int i = 0; i < GlobalVariances.annotatorPerPair * (queryNumber / userNumber) ; i++) {
             int tmp = i + first_query_id;
-            if (i > queryNumber) tmp -= queryNumber;
+            if (tmp > queryNumber) tmp -= queryNumber;
+//            System.out.println(tmp);
             List<Integer> tmpList = queryDataService.getQueryDataIdByQueryId(tmp);
             total_number += tmpList.size();
         }
@@ -142,7 +143,7 @@ public class RatingController {
         model.addAttribute("score", score);
         model.addAttribute("reason", reason);
         model.addAttribute("detailURL", GlobalVariances.detailPageURL);
-        return "dashboard";
+        return "ratingdashboard";
     }
 
     @RequestMapping(value = "/rating", method = RequestMethod.POST)
