@@ -38,7 +38,7 @@
   <body>
     
 <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Company name</a>
+  <a class="navbar-brand col-sm-3 col-md-2 mr-0" th:href="@{'/user/'+${session.loginUser}}">[[${session.loginUser}==null?请登录:${session.loginUser}]]</a>
   <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -60,27 +60,27 @@
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
           <span>Relevance Ranking methods</span>
         </h6>
-        <ul class="nav flex-column">
+        <ul class="nav nav-pills flex-column">
           <li class="nav-item">
-            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=TFIDF'+'&page='+${page}}">
+            <a th:class="${method=='TFIDF'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=TFIDF'+'&page='+${page}}">
               <span data-feather="file-text"></span>
               TF-IDF
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=BM25'+'&page='+${page}}">
+            <a th:class="${method=='BM25'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=BM25'+'&page='+${page}}">
               <span data-feather="file-text"></span>
               BM25
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=FSDM'+'&page='+${page}}">
+            <a th:class="${method=='FSDM'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=FSDM'+'&page='+${page}}">
               <span data-feather="file-text"></span>
               FSDM
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=DPR'+'&page='+${page}}">
+            <a th:class="${method=='DPR'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=DPR'+'&page='+${page}}">
               <span data-feather="file-text"></span>
               DPR
             </a>
@@ -90,21 +90,21 @@
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
           <span>Quality Ranking methods</span>
         </h6>
-        <ul class="nav flex-column mb-2">
+        <ul class="nav nav-pills flex-column mb-2">
           <li class="nav-item">
-            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=DRank'+'&page='+${page}}">
+            <a th:class="${method=='DRank'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=DRank'+'&page='+${page}}">
               <span data-feather="bar-chart-2"></span>
               DRank
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=PageRank'+'&page='+${page}}">
+            <a th:class="${method=='PageRank'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=PageRank'+'&page='+${page}}">
               <span data-feather="bar-chart-2"></span>
               PageRank
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{'/result?q='+${query}+'&method=DING'+'&page='+${page}}">
+            <a th:class="${method=='DING'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=DING'+'&page='+${page}}">
               <span data-feather="bar-chart-2"></span>
               DING
             </a>

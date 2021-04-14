@@ -393,7 +393,7 @@ public class RelevanceRanking {
      */
     public static List<Pair<Integer, Double>> TFIDFRankingList(String query) {
         init();
-        query=query.replaceAll("\\p{P}"," ");
+        query = query.replaceAll("\\p{P}"," ");
         List<Pair<Integer, Double>> TFIDFScoreList = new ArrayList<>();
         try {
             String[] fields = GlobalVariances.queryFields;
@@ -431,7 +431,7 @@ public class RelevanceRanking {
      */
     public static List<Pair<Integer, Double>> FSDMRankingList(String query) {
         init();
-        query=query.replaceAll("\\p{P}"," ");
+        query = query.replaceAll("\\p{P}"," ");
         List<Pair<Integer, Double>> FSDMScoreList = new ArrayList<>();
         try {
             String[] fields = GlobalVariances.queryFields;
@@ -465,7 +465,7 @@ public class RelevanceRanking {
      * @return
      */
     public static List<Pair<Integer, Double>> DPRRankingList(String query) {
-        query=query.replaceAll("\\p{P}"," ");
+        query = query.replaceAll("\\p{P}"," ");
         DPR(query);
         List<Pair<Integer, Double>> DPRScoreList = new ArrayList<>();
         try {

@@ -21,10 +21,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.*;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class QualityRanking {
     private static final Logger logger = LoggerFactory.getLogger(QualityRanking.class);
@@ -49,6 +46,7 @@ public class QualityRanking {
     private static Directory directory;
     private static IndexReader indexReader;
     private static IndexSearcher indexSearcher;
+    private static Set<Integer> resultSet = new HashSet<>();
 
     private static void init() {
         try {
@@ -73,6 +71,42 @@ public class QualityRanking {
                 bufferedWriter.write("\n");
             }
             bufferedWriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static List<Double> readResult (String method) {
+        String str;
+        List<Double> res = new ArrayList<>();
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(GlobalVariances.qualityRankingResultPath + method + ".out"));
+            while ((str = bufferedReader.readLine()) != null) {
+                res.add(Double.parseDouble(str));
+            }
+            bufferedReader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    private static void getHits(String query) {
+        try {
+            String[] fields = GlobalVariances.queryFields;
+            Analyzer analyzer = new EnglishAnalyzer();
+            QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
+            Query parsedQuery = queryParser.parse(query);
+            TopDocs docsSearch = indexSearcher.search(parsedQuery, GlobalVariances.HitSize);
+            ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
+            for (ScoreDoc si : scoreDocs) {
+                int docID = si.doc;
+                Document document = indexReader.document(docID);
+                int datasetID = Integer.parseInt(document.get("dataset_id"));
+                if (datasetID <= 311) {
+                    resultSet.add(datasetID);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -337,30 +371,14 @@ public class QualityRanking {
 
     public static List<Pair<Integer, Double>> DRankRankingList(String query) {
         init();
-        query=query.replaceAll("\\p{P}"," ");
-        List<Pair<Integer, Double>> DRankScoreList = new ArrayList<>();
+        query = query.replaceAll("\\p{P}"," ");
+        List<Double> DRankScoreList;
         List<Pair<Integer, Double>> res = new ArrayList<>();
+        getHits(query);
         try {
-            String str;
-            int t = 1;
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(GlobalVariances.qualityRankingResultPath + "DRank.out"));
-            while ((str = bufferedReader.readLine()) != null) {
-                DRankScoreList.add(new Pair<Integer, Double>(t, Double.parseDouble(str)));
-            }
-            bufferedReader.close();
-            String[] fields = GlobalVariances.queryFields;
-            Analyzer analyzer = new EnglishAnalyzer();
-            QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
-            Query parsedQuery = queryParser.parse(query);
-            TopDocs docsSearch = indexSearcher.search(parsedQuery, GlobalVariances.HitSize);
-            ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
-            for (ScoreDoc si : scoreDocs) {
-                int docID = si.doc;
-                Document document = indexReader.document(docID);
-                int datasetID = Integer.parseInt(document.get("dataset_id"));
-                if (datasetID <= 311 && !res.contains(DRankScoreList.get(datasetID - 1))) {
-                    res.add(DRankScoreList.get(datasetID - 1));
-                }
+            DRankScoreList = readResult("DRank");
+            for (int i : resultSet) {
+                res.add(new Pair<>(i, DRankScoreList.get(i - 1)));
             }
             res.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
         } catch (Exception e) {
@@ -371,30 +389,14 @@ public class QualityRanking {
 
     public static List<Pair<Integer, Double>> PageRankRankingList(String query) {
         init();
-        query=query.replaceAll("\\p{P}"," ");
-        List<Pair<Integer, Double>> PageRankScoreList = new ArrayList<>();
+        query = query.replaceAll("\\p{P}"," ");
+        List<Double> PageRankScoreList;
         List<Pair<Integer, Double>> res = new ArrayList<>();
+        getHits(query);
         try {
-            String str;
-            int t = 1;
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(GlobalVariances.qualityRankingResultPath + "PageRank.out"));
-            while ((str = bufferedReader.readLine()) != null) {
-                PageRankScoreList.add(new Pair<Integer, Double>(t, Double.parseDouble(str)));
-            }
-            bufferedReader.close();
-            String[] fields = GlobalVariances.queryFields;
-            Analyzer analyzer = new EnglishAnalyzer();
-            QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
-            Query parsedQuery = queryParser.parse(query);
-            TopDocs docsSearch = indexSearcher.search(parsedQuery, GlobalVariances.HitSize);
-            ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
-            for (ScoreDoc si : scoreDocs) {
-                int docID = si.doc;
-                Document document = indexReader.document(docID);
-                int datasetID = Integer.parseInt(document.get("dataset_id"));
-                if (datasetID <= 311 && !res.contains(PageRankScoreList.get(datasetID - 1))) {
-                    res.add(PageRankScoreList.get(datasetID - 1));
-                }
+            PageRankScoreList = readResult("PageRank");
+            for (int i : resultSet) {
+                res.add(new Pair<>(i, PageRankScoreList.get(i - 1)));
             }
             res.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
         } catch (Exception e) {
@@ -405,30 +407,14 @@ public class QualityRanking {
 
     public static List<Pair<Integer, Double>> DINGRankingList(String query) {
         init();
-        query=query.replaceAll("\\p{P}"," ");
-        List<Pair<Integer, Double>> DINGScoreList = new ArrayList<>();
+        query = query.replaceAll("\\p{P}"," ");
+        List<Double> DINGScoreList;
         List<Pair<Integer, Double>> res = new ArrayList<>();
+        getHits(query);
         try {
-            String str;
-            int t = 1;
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(GlobalVariances.qualityRankingResultPath + "DING.out"));
-            while ((str = bufferedReader.readLine()) != null) {
-                DINGScoreList.add(new Pair<Integer, Double>(t, Double.parseDouble(str)));
-            }
-            bufferedReader.close();
-            String[] fields = GlobalVariances.queryFields;
-            Analyzer analyzer = new EnglishAnalyzer();
-            QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
-            Query parsedQuery = queryParser.parse(query);
-            TopDocs docsSearch = indexSearcher.search(parsedQuery, GlobalVariances.HitSize);
-            ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
-            for (ScoreDoc si : scoreDocs) {
-                int docID = si.doc;
-                Document document = indexReader.document(docID);
-                int datasetID = Integer.parseInt(document.get("dataset_id"));
-                if (datasetID <= 311 && !res.contains(DINGScoreList.get(datasetID - 1))) {
-                    res.add(DINGScoreList.get(datasetID - 1));
-                }
+            DINGScoreList = readResult("DING");
+            for (int i : resultSet) {
+                res.add(new Pair<>(i, DINGScoreList.get(i - 1)));
             }
             res.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
         } catch (Exception e) {
