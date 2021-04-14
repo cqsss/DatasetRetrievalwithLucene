@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface OuterLinkMapper {
-    @Select("select * from outerlink3")
+    @Select("select * from sample_outerlink")
     List<OuterLink> getAll();
 }

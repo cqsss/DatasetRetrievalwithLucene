@@ -30,7 +30,7 @@ public class RelevanceRanking {
     private static Map<String, List<String>> fieldContent;
     private static Map<String, Long> fieldDocLength;
 
-    public static void init() {
+    private static void init() {
         try {
             directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
             indexReader = DirectoryReader.open(directory);
@@ -40,7 +40,7 @@ public class RelevanceRanking {
         }
     }
 
-    public static void getCollectionStatistics(List<String> tokens) {
+    private static void getCollectionStatistics(List<String> tokens) {
         try {
             wT = new HashMap<>();
             wO = new HashMap<>();
@@ -67,7 +67,7 @@ public class RelevanceRanking {
         }
     }
 
-    public static void getDocumentStatistics(Integer doc_id) {
+    private static void getDocumentStatistics(Integer doc_id) {
         try {
             fieldContent = new HashMap<>();
             fieldDocLength = new HashMap<>();
@@ -85,7 +85,7 @@ public class RelevanceRanking {
         }
     }
 
-    public static Double getTF_T(Integer doc_id, String field, String qi) {
+    private static Double getTF_T(Integer doc_id, String field, String qi) {
         double res = 0.0;
         try {
             Terms terms = indexReader.getTermVector(doc_id, field);
@@ -102,7 +102,7 @@ public class RelevanceRanking {
         return res;
     }
 
-    public static Double getTF_O(String field, String qi1, String qi2) {
+    private static Double getTF_O(String field, String qi1, String qi2) {
         double res = 0.0;
         List<String> content = fieldContent.get(field);
         for (int i = 0; i + 1 < content.size(); i++) {
@@ -113,7 +113,7 @@ public class RelevanceRanking {
         return res;
     }
 
-    public static Double getTF_U(String field, String qi1, String qi2) {
+    private static Double getTF_U(String field, String qi1, String qi2) {
         double res = 0.0;
         List<String> content = fieldContent.get(field);
         for (Integer i = 0; i + GlobalVariances.FSDMUWindowSize <= content.size(); i++) {
@@ -128,7 +128,7 @@ public class RelevanceRanking {
         return res;
     }
 
-    public static Double getFSDM_T(Integer doc_id, List<String> queries) {
+    private static Double getFSDM_T(Integer doc_id, List<String> queries) {
         double res = 0.0;
         try {
             for (String qi : queries) {
@@ -154,7 +154,7 @@ public class RelevanceRanking {
         return res;
     }
 
-    public static Double getFSDM_O(List<String> queries) {
+    private static Double getFSDM_O(List<String> queries) {
         double res = 0.0;
         try {
             for (int i = 0; i + 1 < queries.size(); i++) {
@@ -184,7 +184,7 @@ public class RelevanceRanking {
         return res;
     }
 
-    public static Double getFSDM_U(List<String> queries) {
+    private static Double getFSDM_U(List<String> queries) {
         double res = 0.0;
         try {
             for (int i = 0; i + 1 < queries.size(); i++) {
@@ -214,6 +214,12 @@ public class RelevanceRanking {
         return res;
     }
 
+    /**
+     * 计算FSDM分数
+     * @param doc_id
+     * @param tokens
+     * @return
+     */
     public static Double FSDM(Integer doc_id, List<String> tokens) {
         Double lambdaT = 0.8;
         Double lambdaO = 0.1;
@@ -225,6 +231,13 @@ public class RelevanceRanking {
                 lambdaU * getFSDM_U(tokens);
     }
 
+    /**
+     * 计算BM25分数
+     * @param doc_id
+     * @param field
+     * @param tokens
+     * @return
+     */
     public static Double BM25(Integer doc_id, String field, List<String> tokens) {
         double score = 0.0;
         double k1 = 1.2;
@@ -257,6 +270,13 @@ public class RelevanceRanking {
         return score;
     }
 
+    /**
+     * 计算TFIDF分数
+     * @param doc_id
+     * @param field
+     * @param tokens
+     * @return
+     */
     public static Double TFIDF(Integer doc_id, String field, List<String> tokens) {
         double score = 0.0;
         try {
@@ -287,6 +307,10 @@ public class RelevanceRanking {
         return score;
     }
 
+    /**
+     * 调用DPR脚本
+     * @param query
+     */
     public static void DPR(String query) {
         Process proc = null;
         try {
@@ -324,10 +348,15 @@ public class RelevanceRanking {
         }
     }
 
+    /**
+     * 得到根据BM25分数排序后的列表
+     * @param query
+     * @return
+     */
     public static List<Pair<Integer, Double>> BM25RankingList(String query) {
         init();
         query=query.replaceAll("\\p{P}"," ");
-        List<Pair<Integer, Double>> BM25scoreList = new ArrayList<>();
+        List<Pair<Integer, Double>> BM25ScoreList = new ArrayList<>();
         try {
             String[] fields = GlobalVariances.queryFields;
             double[] weights = GlobalVariances.BM25BoostWeights;
@@ -348,19 +377,24 @@ public class RelevanceRanking {
                 for (int i = 0; i < fields.length; i++) {
                     score += BM25(docID, fields[i], queryTokens) * weights[i];
                 }
-                BM25scoreList.add(new Pair<>(datasetID, score));
+                BM25ScoreList.add(new Pair<>(datasetID, score));
             }
-            BM25scoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+            BM25ScoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return BM25scoreList;
+        return BM25ScoreList;
     }
 
+    /**
+     * 得到根据TFIDF分数排序后的列表
+     * @param query
+     * @return
+     */
     public static List<Pair<Integer, Double>> TFIDFRankingList(String query) {
         init();
         query=query.replaceAll("\\p{P}"," ");
-        List<Pair<Integer, Double>> TFIDFscoreList = new ArrayList<>();
+        List<Pair<Integer, Double>> TFIDFScoreList = new ArrayList<>();
         try {
             String[] fields = GlobalVariances.queryFields;
             double[] weights = GlobalVariances.TFIDFBoostWeights;
@@ -381,19 +415,24 @@ public class RelevanceRanking {
                 for (int i = 0; i < fields.length; i++) {
                     score += TFIDF(docID, fields[i], queryTokens) * weights[i];
                 }
-                TFIDFscoreList.add(new Pair<>(datasetID, score));
+                TFIDFScoreList.add(new Pair<>(datasetID, score));
             }
-            TFIDFscoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+            TFIDFScoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return TFIDFscoreList;
+        return TFIDFScoreList;
     }
 
+    /**
+     * 得到根据FSDM分数排序后的列表
+     * @param query
+     * @return
+     */
     public static List<Pair<Integer, Double>> FSDMRankingList(String query) {
         init();
         query=query.replaceAll("\\p{P}"," ");
-        List<Pair<Integer, Double>> FSDMscoreList = new ArrayList<>();
+        List<Pair<Integer, Double>> FSDMScoreList = new ArrayList<>();
         try {
             String[] fields = GlobalVariances.queryFields;
             Analyzer analyzer = new EnglishAnalyzer();
@@ -411,19 +450,24 @@ public class RelevanceRanking {
 //                    Explanation e = indexSearcher.explain(parsedQuery, si.doc);
 //                    System.out.println("Explanation： \n" + e);
                 score = RelevanceRanking.FSDM(docID, queryTokens);
-                FSDMscoreList.add(new Pair<>(datasetID, score));
+                FSDMScoreList.add(new Pair<>(datasetID, score));
             }
-            FSDMscoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+            FSDMScoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return FSDMscoreList;
+        return FSDMScoreList;
     }
 
+    /**
+     * 得到根据DPR分数排序后的列表
+     * @param query
+     * @return
+     */
     public static List<Pair<Integer, Double>> DPRRankingList(String query) {
         query=query.replaceAll("\\p{P}"," ");
         DPR(query);
-        List<Pair<Integer, Double>> DPRRankingList = new ArrayList<>();
+        List<Pair<Integer, Double>> DPRScoreList = new ArrayList<>();
         try {
             File result_file = new File(GlobalVariances.out_file_path);
             BufferedReader bufferedReader = new BufferedReader(new FileReader(result_file));
@@ -435,19 +479,19 @@ public class RelevanceRanking {
                 String[] split_line = line.split("\t");
                 datasetID = Integer.parseInt(split_line[0]);
                 score = Double.parseDouble(split_line[1]);
-                DPRRankingList.add(new Pair<>(datasetID, score));
+                DPRScoreList.add(new Pair<>(datasetID, score));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return DPRRankingList;
+        return DPRScoreList;
     }
 
     public static List<Pair<Integer, Double>> RankingList(String query, Integer algorithm_sel) {
         init();
-        List<Pair<Integer, Double>> BM25scoreList = new ArrayList<>();
-        List<Pair<Integer, Double>> TFIDFscoreList = new ArrayList<>();
-        List<Pair<Integer, Double>> FSDMscoreList = new ArrayList<>();
+        List<Pair<Integer, Double>> BM25ScoreList = new ArrayList<>();
+        List<Pair<Integer, Double>> TFIDFScoreList = new ArrayList<>();
+        List<Pair<Integer, Double>> FSDMScoreList = new ArrayList<>();
         try {
             String[] fields = GlobalVariances.queryFields;
             Analyzer analyzer = new EnglishAnalyzer();
@@ -468,29 +512,29 @@ public class RelevanceRanking {
                 for (String field : fields) {
                     score += BM25(docID, field, Statistics.getTokens(query));
                 }
-                BM25scoreList.add(new Pair<>(datasetID, score));
+                BM25ScoreList.add(new Pair<>(datasetID, score));
                 score = 0.0;
                 for (String field : fields) {
                     score += RelevanceRanking.TFIDF(docID, field, Statistics.getTokens(query));
                 }
-                TFIDFscoreList.add(new Pair<>(datasetID, score));
+                TFIDFScoreList.add(new Pair<>(datasetID, score));
                 score = RelevanceRanking.FSDM(docID, Statistics.getTokens(query));
-                FSDMscoreList.add(new Pair<>(datasetID, score));
+                FSDMScoreList.add(new Pair<>(datasetID, score));
             }
-            BM25scoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
-            TFIDFscoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
-            FSDMscoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+            BM25ScoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+            TFIDFScoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+            FSDMScoreList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         switch (algorithm_sel) {
             case 0:
-                return BM25scoreList;
+                return BM25ScoreList;
             case 1:
-                return TFIDFscoreList;
+                return TFIDFScoreList;
             case 2:
-                return FSDMscoreList;
+                return FSDMScoreList;
             default:
                 throw new IllegalStateException("Unexpected value: " + algorithm_sel);
         }

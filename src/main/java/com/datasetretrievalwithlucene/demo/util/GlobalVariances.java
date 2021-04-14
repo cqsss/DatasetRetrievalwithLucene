@@ -39,6 +39,8 @@ public class GlobalVariances {
     public static String poolingQueriesPath = "src/main/resources/in/PoolingQueries.in";
     public static String GoogleQueriesPath = "src/main/resources/in/GoogleRelatedQueries.in";
     public static String DevelopmentSetQueriesPath = "src/main/resources/in/DevelopmentSetQueries.in";
+    public static String poolSizePath = "src/main/resources/out/poolsize_new_";
+    public static String qualityRankingResultPath = "src/main/resources/out/result_";
     public static String[] queryFields = {"title", "notes", "class", "property"};
     public static int annotatorPerPair = 3;
 

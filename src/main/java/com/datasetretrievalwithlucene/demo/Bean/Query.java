@@ -1,8 +1,8 @@
 package com.datasetretrievalwithlucene.demo.Bean;
 
 public class Query {
-    int query_id;
-    String query;
+    private int query_id;
+    private String query;
     String topic_source;
 
     public int getQuery_id() {
