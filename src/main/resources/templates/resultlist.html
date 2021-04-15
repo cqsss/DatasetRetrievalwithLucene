@@ -62,25 +62,25 @@
         </h6>
         <ul class="nav nav-pills flex-column">
           <li class="nav-item">
-            <a th:class="${method=='TFIDF'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=TFIDF'+'&page='+${page}}">
+            <a th:class="${method=='TFIDF'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=TFIDF'+'&page=1'}">
               <span data-feather="file-text"></span>
               TF-IDF
             </a>
           </li>
           <li class="nav-item">
-            <a th:class="${method=='BM25'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=BM25'+'&page='+${page}}">
+            <a th:class="${method=='BM25'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=BM25'+'&page=1'}">
               <span data-feather="file-text"></span>
               BM25
             </a>
           </li>
           <li class="nav-item">
-            <a th:class="${method=='FSDM'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=FSDM'+'&page='+${page}}">
+            <a th:class="${method=='FSDM'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=FSDM'+'&page=1'}">
               <span data-feather="file-text"></span>
               FSDM
             </a>
           </li>
           <li class="nav-item">
-            <a th:class="${method=='DPR'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=DPR'+'&page='+${page}}">
+            <a th:class="${method=='DPR'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=DPR'+'&page=1'}">
               <span data-feather="file-text"></span>
               DPR
             </a>
@@ -92,19 +92,19 @@
         </h6>
         <ul class="nav nav-pills flex-column mb-2">
           <li class="nav-item">
-            <a th:class="${method=='DRank'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=DRank'+'&page='+${page}}">
+            <a th:class="${method=='DRank'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=DRank'+'&page=1'}">
               <span data-feather="bar-chart-2"></span>
               DRank
             </a>
           </li>
           <li class="nav-item">
-            <a th:class="${method=='PageRank'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=PageRank'+'&page='+${page}}">
+            <a th:class="${method=='PageRank'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=PageRank'+'&page=1'}">
               <span data-feather="bar-chart-2"></span>
               PageRank
             </a>
           </li>
           <li class="nav-item">
-            <a th:class="${method=='DING'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=DING'+'&page='+${page}}">
+            <a th:class="${method=='DING'?'nav-link active':'nav-link'}" th:href="@{'/result?q='+${query}+'&method=DING'+'&page=1'}">
               <span data-feather="bar-chart-2"></span>
               DING
             </a>
@@ -115,7 +115,7 @@
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
+        <p th:text="'为您找到相关结果约'+${totalHits}+'个'"></p>
       </div>
 
       <div class="border-bottom" th:each="dataset:${datasets}">
@@ -139,16 +139,62 @@
 
       <nav aria-label="Page navigation example">
         <ul class="pagination">
-          <li class="page-item">
-            <a class="page-link" th:href="@{'/result?q='+${query}+'&method='+${method}+'&page='+${previouspage}}" aria-label="Previous">
+          <li th:class="${page==1?'page-item disabled':'page-item'}">
+            <a class="page-link" th:href="@{'/result?q='+${query}+'&method='+${method}+'&page='+${previousPage}}" aria-label="Previous">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item">
-            <a class="page-link" th:href="@{'/result?q='+${query}+'&method='+${method}+'&page='+${nextpage}}" aria-label="Next">
+          <li th:class="${page==1}?'page-item active':'page-item'" th:if="${totalPages}>=1">
+            <a class="page-link"
+               th:href="@{'/result?q='+${query}+'&method='+${method}+'&page='+${pages.get(1)}}"
+               th:text="${pages.get(1)}"></a>
+          </li>
+          <li th:class="${page==2}?'page-item active':'page-item'" th:if="${totalPages}>=2">
+            <a class="page-link"
+               th:href="@{'/result?q='+${query}+'&method='+${method}+'&page='+${pages.get(2)}}"
+               th:text="${pages.get(2)}"></a>
+          </li>
+          <li th:class="${page==3}?'page-item active':'page-item'" th:if="${totalPages}>=3">
+            <a class="page-link"
+               th:href="@{'/result?q='+${query}+'&method='+${method}+'&page='+${pages.get(3)}}"
+               th:text="${pages.get(3)}"></a>
+          </li>
+          <li th:class="${page==4}?'page-item active':'page-item'" th:if="${totalPages}>=4">
+            <a class="page-link"
+               th:href="@{'/result?q='+${query}+'&method='+${method}+'&page='+${pages.get(4)}}"
+               th:text="${pages.get(4)}"></a>
+          </li>
+          <li th:class="${page==5}?'page-item active':'page-item'" th:if="${totalPages}>=5">
+            <a class="page-link"
+               th:href="@{'/result?q='+${query}+'&method='+${method}+'&page='+${pages.get(5)}}"
+               th:text="${pages.get(5)}"></a>
+          </li>
+          <li th:class="${page}>=6 and ${page}<=${totalPages}-4?'page-item active':'page-item'" th:if="${totalPages}>=6">
+            <a class="page-link"
+               th:href="@{'/result?q='+${query}+'&method='+${method}+'&page='+${pages.get(6)}}"
+               th:text="${pages.get(6)}"></a>
+          <li th:class="${page}==${totalPages}-3?'page-item active':'page-item'" th:if="${totalPages}>=7">
+          <a class="page-link"
+             th:href="@{'/result?q='+${query}+'&method='+${method}+'&page='+${pages.get(7)}}"
+             th:text="${pages.get(7)}"></a>
+          </li>
+          <li th:class="${page}==${totalPages}-2?'page-item active':'page-item'" th:if="${totalPages}>=8">
+            <a class="page-link"
+               th:href="@{'/result?q='+${query}+'&method='+${method}+'&page='+${pages.get(8)}}"
+               th:text="${pages.get(8)}"></a>
+          </li>
+          <li th:class="${page}==${totalPages}-1?'page-item active':'page-item'" th:if="${totalPages}>=9">
+            <a class="page-link"
+               th:href="@{'/result?q='+${query}+'&method='+${method}+'&page='+${pages.get(9)}}"
+               th:text="${pages.get(9)}"></a>
+          </li>
+          <li th:class="${page==totalPages}?'page-item active':'page-item'" th:if="${totalPages}>=10">
+            <a class="page-link"
+               th:href="@{'/result?q='+${query}+'&method='+${method}+'&page='+${pages.get(10)}}"
+               th:text="${pages.get(10)}"></a>
+          </li>
+          <li th:class="${page==totalPages}?'page-item disabled':'page-item'">
+            <a class="page-link" th:href="@{'/result?q='+${query}+'&method='+${method}+'&page='+${nextPage}}" aria-label="Next">
               <span aria-hidden="true">&raquo;</span>
             </a>
           </li>

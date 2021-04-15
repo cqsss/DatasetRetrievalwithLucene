@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class SearchController {
@@ -56,16 +58,18 @@ public class SearchController {
             current_method = method;
         }
 
-        int previousPage = Math.max(1, page - 1);
-        int nextPage = Math.min(100, page + 1);
+
+        int totalHits = 0;
 
         switch (method) {
             case "BM25":
                 List<Pair<Integer, Double>> BM25ScoreList = RelevanceRanking.BM25RankingList(query);
+                totalHits = BM25ScoreList.size();
                 /*for (Pair<Integer, Double> i : BM25ScoreList) {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
                 }*/
-                for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < Math.min(BM25ScoreList.size(), page*GlobalVariances.numOfDatasetsPerPage); i++) {
+
+                for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < Math.min(totalHits, page*GlobalVariances.numOfDatasetsPerPage); i++) {
                     tmpDataset = datasetService.getByDatasetId(BM25ScoreList.get(i).getKey());
                     datasetID = tmpDataset.getDataset_id();
                     if (datasetID > 311)
@@ -76,10 +80,11 @@ public class SearchController {
                 break;
             case "TFIDF":
                 List<Pair<Integer, Double>> TFIDFScoreList = RelevanceRanking.TFIDFRankingList(query);
+                totalHits = TFIDFScoreList.size();
                 /*for (Pair<Integer, Double> i : TFIDFScoreList) {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
                 }*/
-                for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < Math.min(TFIDFScoreList.size(), page*GlobalVariances.numOfDatasetsPerPage); i++) {
+                for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < Math.min(totalHits, page*GlobalVariances.numOfDatasetsPerPage); i++) {
                     tmpDataset = datasetService.getByDatasetId(TFIDFScoreList.get(i).getKey());
                     datasetID = tmpDataset.getDataset_id();
                     if (datasetID > 311)
@@ -90,6 +95,7 @@ public class SearchController {
                 break;
             case "FSDM":
                 List<Pair<Integer, Double>> FSDMScoreList = RelevanceRanking.FSDMRankingList(query);
+                totalHits = FSDMScoreList.size();
                 /*for (Pair<Integer, Double> i : FSDMScoreList) {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
                 }*/
@@ -104,10 +110,11 @@ public class SearchController {
                 break;
             case "DPR":
                 List<Pair<Integer, Double>> DPRScoreList = RelevanceRanking.DPRRankingList(query);
+                totalHits = DPRScoreList.size();
                 /*for (Pair<Integer, Double> i : DPRScoreList) {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
                 }*/
-                for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < Math.min(DPRScoreList.size(), page*GlobalVariances.numOfDatasetsPerPage); i++) {
+                for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < Math.min(totalHits, page*GlobalVariances.numOfDatasetsPerPage); i++) {
                     tmpDataset = datasetService.getByDatasetId(DPRScoreList.get(i).getKey());
                     datasetID = tmpDataset.getDataset_id();
                     if (datasetID > 311)
@@ -118,10 +125,11 @@ public class SearchController {
                 break;
             case "DRank":
                 List<Pair<Integer, Double>> DRankScoreList = QualityRanking.DRankRankingList(query);
+                totalHits = DRankScoreList.size();
                 /*for (Pair<Integer, Double> i : DRankScoreList) {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
                 }*/
-                for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < Math.min(DRankScoreList.size(), page*GlobalVariances.numOfDatasetsPerPage); i++) {
+                for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < Math.min(totalHits, page*GlobalVariances.numOfDatasetsPerPage); i++) {
                     tmpDataset = datasetService.getByDatasetId(DRankScoreList.get(i).getKey());
                     datasetID = tmpDataset.getDataset_id();
                     if (datasetID > 311)
@@ -132,10 +140,11 @@ public class SearchController {
                 break;
             case "PageRank":
                 List<Pair<Integer, Double>> PageRankScoreList = QualityRanking.PageRankRankingList(query);
+                totalHits = PageRankScoreList.size();
                 /*for (Pair<Integer, Double> i : PageRankScoreList) {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
                 }*/
-                for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < Math.min(PageRankScoreList.size(), page*GlobalVariances.numOfDatasetsPerPage); i++) {
+                for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < Math.min(totalHits, page*GlobalVariances.numOfDatasetsPerPage); i++) {
                     tmpDataset = datasetService.getByDatasetId(PageRankScoreList.get(i).getKey());
                     datasetID = tmpDataset.getDataset_id();
                     if (datasetID > 311)
@@ -146,10 +155,11 @@ public class SearchController {
                 break;
             case "DING":
                 List<Pair<Integer, Double>> DINGScoreList = QualityRanking.DINGRankingList(query);
+                totalHits = DINGScoreList.size();
                 /*for (Pair<Integer, Double> i : DINGScoreList) {
                     datasetList.add(datasetService.getByDatasetId(i.getKey()));
                 }*/
-                for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < Math.min(DINGScoreList.size(), page*GlobalVariances.numOfDatasetsPerPage); i++) {
+                for (int i = (page-1)* GlobalVariances.numOfDatasetsPerPage; i < Math.min(totalHits, page*GlobalVariances.numOfDatasetsPerPage); i++) {
                     tmpDataset = datasetService.getByDatasetId(DINGScoreList.get(i).getKey());
                     datasetID = tmpDataset.getDataset_id();
                     if (datasetID > 311)
@@ -160,13 +170,31 @@ public class SearchController {
                 break;
         }
 
+        int totalPages = totalHits / GlobalVariances.numOfDatasetsPerPage;
+        if (totalHits % GlobalVariances.numOfDatasetsPerPage != 0)
+            totalPages ++;
+        int previousPage = Math.max(1, page - 1);
+        int nextPage = Math.min(totalPages, page + 1);
+        Map<Integer, Integer> pages = new HashMap<>();
+        for (int i = 0; i < 10 ; i ++) {
+            if (page <= 5) {
+                pages.put(i + 1, i + 1);
+            } else if (page >= totalPages - 4) {
+                pages.put(i + 1, totalPages + i - 9);
+            } else {
+                pages.put(i + 1, page + i - 5);
+            }
+        }
 
         model.addAttribute("datasets", datasetList);
         model.addAttribute("query", query);
         model.addAttribute("method", method);
         model.addAttribute("page", page);
-        model.addAttribute("previouspage", previousPage);
-        model.addAttribute("nextpage", nextPage);
+        model.addAttribute("pages", pages);
+        model.addAttribute("previousPage", previousPage);
+        model.addAttribute("nextPage", nextPage);
+        model.addAttribute("totalHits", totalHits);
+        model.addAttribute("totalPages", totalPages);
         model.addAttribute("detailURL", GlobalVariances.detailPageURL);
         return "resultlist";
     }
