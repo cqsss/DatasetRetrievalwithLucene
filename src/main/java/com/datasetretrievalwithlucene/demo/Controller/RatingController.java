@@ -56,12 +56,13 @@ public class RatingController {
             httpSession.setAttribute("loginUser", username);
             int qdid;
             if (user.getLast_annotation_id() == 0) {
-                int first_query_id = (user.getUser_id() - 1) * (queryNumber / userNumber) + 1;
-                qdid = queryDataService.getMinQueryDataIdByQueryId(first_query_id);
+//                int first_query_id = (user.getUser_id() - 1) * (queryNumber / userNumber) + 1;
+//                qdid = queryDataService.getMinQueryDataIdByQueryId(first_query_id);
+                qdid = 1;
             }
             else
                 qdid = user.getLast_annotation_id();
-            return "redirect:/dashboard?qdid=" + qdid + "&userid=" + user.getUser_id();
+            return "redirect:/dashboardtmp?qdid=" + qdid + "&userid=" + user.getUser_id();
         } else {
             map.put("msg", "用户不存在或用户密码错误");
             return "signin";//为了防止表单重复提交，可以重定向
@@ -145,6 +146,41 @@ public class RatingController {
         model.addAttribute("detailURL", GlobalVariances.detailPageURL);
         return "ratingdashboard";
     }
+    @GetMapping("/dashboardtmp")
+    public String dashboardTmp(@RequestParam("qdid") int query_data_id,
+                            @RequestParam("userid") int user_id,
+                            Model model) {
+        QueryData queryData = queryDataService.getQueryDataById(query_data_id);
+        int query_id = queryData.getQuery_id();
+        Query query = queryService.getQueryById(query_id);
+        int dataset_id = queryData.getDataset_id();
+        Dataset dataset = datasetService.getByDatasetId(dataset_id);
+        int previous_id;
+        int next_id;
+        previous_id = Math.max(1, query_data_id - 1);
+        next_id = Math.min(queryDataNumber, query_data_id + 1);
+        int score = -1;
+        String reason = "";
+        Annotation annotation;
+        if (annotationService.searchAnnotation(user_id, query_id, dataset_id)) {
+            annotation = annotationService.getAnnotation(user_id, query_id, dataset_id);
+            score = annotation.getRating();
+            reason = annotation.getReason();
+        }
+        userService.updateLastIdByUserId(user_id, query_data_id);
+
+        model.addAttribute("qdid", query_data_id);
+        model.addAttribute("previous_id", previous_id);
+        model.addAttribute("next_id", next_id);
+        model.addAttribute("query", query);
+        model.addAttribute("total", queryDataNumber);
+        model.addAttribute("dataset", dataset);
+        model.addAttribute("userid", user_id);
+        model.addAttribute("score", score);
+        model.addAttribute("reason", reason);
+        model.addAttribute("detailURL", GlobalVariances.detailPageURL);
+        return "ratingdashboardtmp";
+    }
 
     @RequestMapping(value = "/rating", method = RequestMethod.POST)
     @ResponseBody
@@ -153,7 +189,7 @@ public class RatingController {
                        @RequestParam("userid") int user_id, @RequestBody String rating) {
         String scoreString = rating.substring(rating.length() - 1);
         int score = -1;
-        if (scoreString != "")
+        if (!scoreString.equals(""))
             score = Integer.parseInt(scoreString);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime dateTime = LocalDateTime.now();

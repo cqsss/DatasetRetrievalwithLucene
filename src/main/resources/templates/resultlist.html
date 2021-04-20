@@ -121,17 +121,17 @@
       <div class="border-bottom" th:each="dataset:${datasets}">
         <dl class="row">
           <dt class="col-sm-2">dataset_id</dt>
-          <dd class="col-sm-9" th:text="${dataset.dataset_id}"></dd>
+          <dd class="col-sm-9" th:text="${dataset.getDataset_id()}"></dd>
 
           <dt class="col-sm-2">title</dt>
-          <dd class="col-sm-9"><a th:text="${dataset.title}" th:href="@{'detail?dsid='+${dataset.dataset_id}}"></a></dd>
+          <dd class="col-sm-9"><a th:text="${dataset.getTitle()}" th:href="@{'detail?dsid='+${dataset.getDataset_id()}}"></a></dd>
 
           <dt class="col-sm-2">notes</dt>
-          <dd class="col-sm-9" th:text="${dataset.notes}"></dd>
+          <dd class="col-sm-9" th:text="${dataset.getNotes()}"></dd>
 
           <dt class="col-sm-2">detail</dt>
           <dd class="col-sm-9">
-            <a class="btn btn-sm btn-primary" th:href="@{${detailURL}+${dataset.dataset_id}}" target="_blank">详细信息</a>
+            <a class="btn btn-sm btn-primary" th:href="@{${detailURL}+${dataset.getUrl()}}" target="_blank">详细信息</a>
           </dd>
         </dl>
       </div>

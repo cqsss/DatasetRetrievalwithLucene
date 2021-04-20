@@ -25,4 +25,8 @@ public class QueryService {
     public int getQueryCount() {
         return queryMapper.getQueryCount();
     }
+
+    public void insertQuery(Query query) {
+        queryMapper.insertQueryData(query);
+    }
 }

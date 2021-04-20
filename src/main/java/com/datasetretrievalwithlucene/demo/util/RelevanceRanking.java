@@ -333,12 +333,12 @@ public class RelevanceRanking {
             bufferedWriter.close();
             proc = Runtime.getRuntime().exec(argv);
             //System.err.println("proc:"+proc);
-            /*BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 //System.out.println(line);
             }
-            bufferedReader.close();*/
+            bufferedReader.close();
             proc.waitFor();
             proc.destroy();
             //System.out.println("end");

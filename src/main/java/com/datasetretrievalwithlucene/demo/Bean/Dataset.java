@@ -29,15 +29,15 @@ public class Dataset {
     private long org_is_organization;
     private String org_state;
     private String org_imageUrl;
-    private String org_revisionId;
+    private String org_revision_id;
     private String org_type;
     private String org_id;
-    private String org_approval_tatus;
-    private long isprivate;
+    private String org_approval_status;
+    private long is_private;
     private long num_tags;
     private long num_resources;
     private long isopen;
-    private String dataSource;
+    private String data_source;
     private long dataset_id;
     public Dataset() {
     }
@@ -250,12 +250,12 @@ public class Dataset {
         this.org_imageUrl = org_imageUrl;
     }
 
-    public String getOrg_revisionId() {
-        return org_revisionId;
+    public String getOrg_revision_id() {
+        return org_revision_id;
     }
 
-    public void setOrg_revisionId(String org_revisionId) {
-        this.org_revisionId = org_revisionId;
+    public void setOrg_revision_id(String org_revision_id) {
+        this.org_revision_id = org_revision_id;
     }
 
     public String getOrg_type() {
@@ -274,20 +274,20 @@ public class Dataset {
         this.org_id = org_id;
     }
 
-    public String getOrg_approval_tatus() {
-        return org_approval_tatus;
+    public String getOrg_approval_status() {
+        return org_approval_status;
     }
 
-    public void setOrg_approval_tatus(String org_approval_tatus) {
-        this.org_approval_tatus = org_approval_tatus;
+    public void setOrg_approval_status(String org_approval_status) {
+        this.org_approval_status = org_approval_status;
     }
 
-    public long getIsprivate() {
-        return isprivate;
+    public long getIs_private() {
+        return is_private;
     }
 
-    public void setIsprivate(long isprivate) {
-        this.isprivate = isprivate;
+    public void setIs_private(long is_private) {
+        this.is_private = is_private;
     }
 
     public long getNum_tags() {
@@ -314,12 +314,12 @@ public class Dataset {
         this.isopen = isopen;
     }
 
-    public String getDataSource() {
-        return dataSource;
+    public String getData_source() {
+        return data_source;
     }
 
-    public void setDataSource(String dataSource) {
-        this.dataSource = dataSource;
+    public void setData_source(String data_source) {
+        this.data_source = data_source;
     }
 
     public long getDataset_id() {

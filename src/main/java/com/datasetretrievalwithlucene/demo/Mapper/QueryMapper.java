@@ -1,6 +1,8 @@
 package com.datasetretrievalwithlucene.demo.Mapper;
 
 import com.datasetretrievalwithlucene.demo.Bean.Query;
+import com.datasetretrievalwithlucene.demo.Bean.QueryData;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
@@ -17,4 +19,7 @@ public interface QueryMapper {
 
     @Select("select count(*) from query")
     int getQueryCount();
+
+    @Insert("insert into query(query_text) values(#{query_text})")
+    void insertQueryData(Query query);
 }

@@ -2,8 +2,7 @@ package com.datasetretrievalwithlucene.demo.Bean;
 
 public class Query {
     private int query_id;
-    private String query;
-    String topic_source;
+    private String query_text;
 
     public int getQuery_id() {
         return query_id;
@@ -13,19 +12,11 @@ public class Query {
         this.query_id = query_id;
     }
 
-    public String getQuery() {
-        return query;
+    public String getQuery_text() {
+        return query_text;
     }
 
-    public void setQuery(String query) {
-        this.query = query;
-    }
-
-    public String getTopic_source() {
-        return topic_source;
-    }
-
-    public void setTopic_source(String topic_source) {
-        this.topic_source = topic_source;
+    public void setQuery_text(String query_text) {
+        this.query_text = query_text;
     }
 }

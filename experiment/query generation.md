@@ -13,7 +13,7 @@ marp: true
 
 ### 预实验感受2
 - 建议在用户指南中写明要求需要仔细查看的模块，不然可能有些模块用户看不懂可能就直接跳过了。
-- 仅看content写summary的难度较大，勉强能够提取若干词语写keywork query。
+- 仅看content写summary的难度较大，勉强能够提取若干词语写keyword query。
 - 在给出title的情况下，title能提供主要信息，很难做到写的summary不包含title中的关键词。
 - 平均编写10个数据集的summary和query用时约为1.5-2小时。
 
