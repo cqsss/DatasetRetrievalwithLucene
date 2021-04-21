@@ -41,4 +41,8 @@ public class UserService {
     public int getUserCount() {
         return userMapper.getUserCount();
     }
+
+    public void insertUser (User user) {
+        userMapper.insertUser(user);
+    }
 }

@@ -73,7 +73,7 @@ public class SearchController {
                     tmpDataset = datasetService.getByDatasetId(BM25ScoreList.get(i).getKey());
                     datasetID = tmpDataset.getDataset_id();
                     if (datasetID > 311)
-                        tmpDataset.setDataset_id(datasetID - 221261);
+                        tmpDataset.setDataset_id(datasetID - GlobalVariances.datasetIDGap);
                     tmpDataset.setNotes(tmpDataset.getNotes().replaceAll("\\&[a-zA-Z]{1,10};", "").replaceAll("<[^>]*>", "").replaceAll("[(/>)<]", ""));
                     datasetList.add(tmpDataset);
                 }
@@ -88,7 +88,7 @@ public class SearchController {
                     tmpDataset = datasetService.getByDatasetId(TFIDFScoreList.get(i).getKey());
                     datasetID = tmpDataset.getDataset_id();
                     if (datasetID > 311)
-                        tmpDataset.setDataset_id(datasetID - 221261);
+                        tmpDataset.setDataset_id(datasetID - GlobalVariances.datasetIDGap);
                     tmpDataset.setNotes(tmpDataset.getNotes().replaceAll("\\&[a-zA-Z]{1,10};", "").replaceAll("<[^>]*>", "").replaceAll("[(/>)<]", ""));
                     datasetList.add(tmpDataset);
                 }
@@ -103,7 +103,7 @@ public class SearchController {
                     tmpDataset = datasetService.getByDatasetId(FSDMScoreList.get(i).getKey());
                     datasetID = tmpDataset.getDataset_id();
                     if (datasetID > 311)
-                        tmpDataset.setDataset_id(datasetID - 221261);
+                        tmpDataset.setDataset_id(datasetID - GlobalVariances.datasetIDGap);
                     tmpDataset.setNotes(tmpDataset.getNotes().replaceAll("\\&[a-zA-Z]{1,10};", "").replaceAll("<[^>]*>", "").replaceAll("[(/>)<]", ""));
                     datasetList.add(tmpDataset);
                 }
@@ -118,7 +118,7 @@ public class SearchController {
                     tmpDataset = datasetService.getByDatasetId(DPRScoreList.get(i).getKey());
                     datasetID = tmpDataset.getDataset_id();
                     if (datasetID > 311)
-                        tmpDataset.setDataset_id(datasetID - 221261);
+                        tmpDataset.setDataset_id(datasetID - GlobalVariances.datasetIDGap);
                     tmpDataset.setNotes(tmpDataset.getNotes().replaceAll("\\&[a-zA-Z]{1,10};", "").replaceAll("<[^>]*>", "").replaceAll("[(/>)<]", ""));
                     datasetList.add(tmpDataset);
                 }
@@ -133,7 +133,7 @@ public class SearchController {
                     tmpDataset = datasetService.getByDatasetId(DRankScoreList.get(i).getKey());
                     datasetID = tmpDataset.getDataset_id();
                     if (datasetID > 311)
-                        tmpDataset.setDataset_id(datasetID - 221261);
+                        tmpDataset.setDataset_id(datasetID - GlobalVariances.datasetIDGap);
                     tmpDataset.setNotes(tmpDataset.getNotes().replaceAll("\\&[a-zA-Z]{1,10};", "").replaceAll("<[^>]*>", "").replaceAll("[(/>)<]", ""));
                     datasetList.add(tmpDataset);
                 }
@@ -148,7 +148,7 @@ public class SearchController {
                     tmpDataset = datasetService.getByDatasetId(PageRankScoreList.get(i).getKey());
                     datasetID = tmpDataset.getDataset_id();
                     if (datasetID > 311)
-                        tmpDataset.setDataset_id(datasetID - 221261);
+                        tmpDataset.setDataset_id(datasetID - GlobalVariances.datasetIDGap);
                     tmpDataset.setNotes(tmpDataset.getNotes().replaceAll("\\&[a-zA-Z]{1,10};", "").replaceAll("<[^>]*>", "").replaceAll("[(/>)<]", ""));
                     datasetList.add(tmpDataset);
                 }
@@ -163,7 +163,7 @@ public class SearchController {
                     tmpDataset = datasetService.getByDatasetId(DINGScoreList.get(i).getKey());
                     datasetID = tmpDataset.getDataset_id();
                     if (datasetID > 311)
-                        tmpDataset.setDataset_id(datasetID - 221261);
+                        tmpDataset.setDataset_id(datasetID - GlobalVariances.datasetIDGap);
                     tmpDataset.setNotes(tmpDataset.getNotes().replaceAll("\\&[a-zA-Z]{1,10};", "").replaceAll("<[^>]*>", "").replaceAll("[(/>)<]", ""));
                     datasetList.add(tmpDataset);
                 }
@@ -209,7 +209,14 @@ public class SearchController {
 
     @GetMapping(value = "/detail")
     public String getDetail(@RequestParam("dsid") int dataset_id, Model model) {
-        Dataset dataset = datasetService.getByDatasetId(dataset_id);
+        Dataset dataset;
+        if (dataset_id > 311) {
+            dataset = datasetService.getByDatasetId(dataset_id + GlobalVariances.datasetIDGap);
+            dataset.setDataset_id(dataset_id - GlobalVariances.datasetIDGap);
+        } else {
+            dataset = datasetService.getByDatasetId(dataset_id);
+        }
+        dataset.setNotes(dataset.getNotes().replaceAll("\\&[a-zA-Z]{1,10};", "").replaceAll("<[^>]*>", "").replaceAll("[(/>)<]", ""));
         int score = 0;
         model.addAttribute("dataset", dataset);
         model.addAttribute("score", score);

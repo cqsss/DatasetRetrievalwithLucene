@@ -35,19 +35,18 @@
     <!-- Custom styles for this template -->
     <link href="/css/signin.css" rel="stylesheet">
 </head>
+
 <body class="text-center align-items-baseline">
-
-<main class="container">
-    <form class="mt-lg-5" th:action="@{/dosearch}" method="post">
-        <img class="mt-5 mb-4" src="/img/logo.jpg" alt="" width="100" height="100">
-        <div class="d-flex justify-content-center">
-            <input class="form-control w-50" type="search" placeholder="Search" aria-label="Search" name="query">
-            <button class="w-30 btn btn-lg btn-primary" type="submit">Search</button>
-        </div>
-        <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
-        <p class="text-lg-center"></p>
-    </form>
-</main>
-
+    <main class="container">
+        <form class="mt-lg-5" th:action="@{/dosearch}" method="post">
+            <img class="mt-5 mb-4" src="/img/logo.jpg" alt="" width="100" height="100">
+            <div class="d-flex justify-content-center">
+                <input class="form-control w-50" type="search" placeholder="Search" aria-label="Search" name="query">
+                <button class="w-30 btn btn-lg btn-primary" type="submit">Search</button>
+            </div>
+            <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
+            <p class="text-lg-center"></p>
+        </form>
+    </main>
 </body>
 </html>

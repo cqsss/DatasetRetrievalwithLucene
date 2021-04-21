@@ -37,16 +37,17 @@
   <body class="text-center">
     
     <main class="form-signin">
-      <form method="post" th:action="@{/signin}">
+      <form method="get" th:action="@{/doregister}">
         <img class="mb-4" src="/img/logo.jpg" alt="" width="80" height="80">
-        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+        <h1 class="h3 mb-3 fw-normal">Please register</h1>
         <p style="color: red" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
         <label for="inputUsername" class="visually-hidden">Username</label>
         <input type="username" id="inputUsername" class="form-control" placeholder="Username" name="username" required autofocus>
         <label for="inputPassword" class="visually-hidden">Password</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="password" required>
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-        <a class="text-decoration-none" th:href="@{/register}">没有账号？点击此处去注册</a>
+        <label for="inputConfirmPassword" class="visually-hidden">Confirm Password</label>
+        <input type="password" id="inputConfirmPassword" class="form-control" placeholder="Confirm Password" name="confirmPassword" required>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
         <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
       </form>
     </main>

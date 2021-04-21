@@ -1,6 +1,7 @@
 package com.datasetretrievalwithlucene.demo.Mapper;
 
 import com.datasetretrievalwithlucene.demo.Bean.User;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -25,4 +26,7 @@ public interface UserMapper {
 
     @Select("select count(*) from user")
     int getUserCount();
+
+    @Insert("insert into user(username,password) values(#{username},#{password})")
+    void insertUser(User user);
 }

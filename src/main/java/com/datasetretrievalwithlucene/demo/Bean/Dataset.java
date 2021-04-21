@@ -38,7 +38,9 @@ public class Dataset {
     private long num_resources;
     private long isopen;
     private String data_source;
+    private long num_triples;
     private long dataset_id;
+
     public Dataset() {
     }
 
@@ -320,6 +322,14 @@ public class Dataset {
 
     public void setData_source(String data_source) {
         this.data_source = data_source;
+    }
+
+    public long getNum_triples() {
+        return num_triples;
+    }
+
+    public void setNum_triples(long num_triples) {
+        this.num_triples = num_triples;
     }
 
     public long getDataset_id() {

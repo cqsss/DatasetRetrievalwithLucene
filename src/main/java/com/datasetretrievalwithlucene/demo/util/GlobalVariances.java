@@ -57,5 +57,6 @@ public class GlobalVariances {
 
     // 前端参数
     public static int numOfDatasetsPerPage = 10;
+    public static int datasetIDGap = 221261;
     public static String detailPageURL = "http://114.212.83.17:8080/search?keyword=";
 }
