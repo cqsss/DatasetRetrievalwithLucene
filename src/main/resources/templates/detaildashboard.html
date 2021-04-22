@@ -86,7 +86,7 @@
           <dd class="col-sm-9 border-bottom" th:text="${dataset.getAuthor()}"></dd>
 
           <dt class="col-sm-2">DataSource</dt>
-          <dd class="col-sm-9 border-bottom">
+          <dd class="col-sm-9">
             <span th:if="${dataset.getData_source()} == 'OLD_DATAHUB'" class="badge bg-primary">DATAHUB</span>
             <span th:if="${dataset.getData_source()} == 'datagov'" class="badge bg-success">DATAGOV</span>
           </dd>
@@ -95,11 +95,6 @@
           <dd class="col-sm-9">
             <a th:if="${dataset.getUrl()} != ''" class="btn btn-sm btn-primary" th:href="@{${dataset.getUrl()}}" target="_blank">访问官方网站</a>
             <a th:if="${dataset.getUrl()} == ''" class="btn btn-sm btn-secondary disabled" aria-disabled="true" target="_blank">暂无官网地址</a>
-          </dd>
-
-          <dt class="col-sm-2">Content</dt>
-          <dd class="col-sm-9">
-            <a class="btn btn-sm btn-primary" th:href="@{${detailURL}+${dataset.dataset_id}}" target="_blank">详细信息</a>
           </dd>
 
         </dl>

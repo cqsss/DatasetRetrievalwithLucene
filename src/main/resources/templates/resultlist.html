@@ -129,9 +129,10 @@
           <dt class="col-sm-2">notes</dt>
           <dd class="col-sm-9" th:text="${dataset.getNotes()}"></dd>
 
-          <dt class="col-sm-2">detail</dt>
+          <dt class="col-sm-2">DataSource</dt>
           <dd class="col-sm-9">
-            <a class="btn btn-sm btn-primary" th:href="@{${detailURL}+${dataset.getUrl()}}" target="_blank">详细信息</a>
+            <span th:if="${dataset.getData_source()} == 'OLD_DATAHUB'" class="badge bg-primary">DATAHUB</span>
+            <span th:if="${dataset.getData_source()} == 'datagov'" class="badge bg-success">DATAGOV</span>
           </dd>
         </dl>
       </div>
