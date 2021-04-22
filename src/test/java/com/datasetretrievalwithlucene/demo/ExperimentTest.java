@@ -71,7 +71,7 @@ public class ExperimentTest {
                     if (averageScore >= k) cnt++;
                     //System.out.println(e);
                 }
-                if(cnt>20)
+                if(cnt >= 20)
                     poolingQueryList.add(qi);
             }
         } catch (Exception e) {
@@ -192,16 +192,17 @@ public class ExperimentTest {
             readQueries(GlobalVariances.testQueriesPath);
             Map<String, List<Integer>> poolingMap = new HashMap<>();
             for (String q : queryList) {
+                System.out.printf("%s\t",q);
                 List<Pair<Integer, Double>> TFIDFScoreList = RelevanceRanking.TFIDFRankingList(q);
                 List<Pair<Integer, Double>> BM25ScoreList = RelevanceRanking.BM25RankingList(q);
                 List<Pair<Integer, Double>> FSDMScoreList = RelevanceRanking.FSDMRankingList(q);
                 List<Pair<Integer, Double>> DPRScoreList = RelevanceRanking.DPRRankingList(q);
-                if (TFIDFScoreList.size() < 100 || BM25ScoreList.size() < 100 ||FSDMScoreList.size() < 100) {
+                if (TFIDFScoreList.size() < 20 || BM25ScoreList.size() < 20 ||FSDMScoreList.size() < 20) {
                     continue;
                 }
                 Set<Integer> scoreSet = new HashSet<>();
                 List<Integer> tmpList = new ArrayList<>();
-                for (int i = 0; i < GlobalVariances.queryPoolSize.length; i++) {
+                for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < GlobalVariances.queryPoolSize[i]; j++) {
                         scoreSet.add(TFIDFScoreList.get(j).getKey());
                         scoreSet.add(BM25ScoreList.get(j).getKey());
@@ -209,11 +210,12 @@ public class ExperimentTest {
                         scoreSet.add(DPRScoreList.get(j).getKey());
                     }
                     tmpList.add(scoreSet.size());
-                    System.out.printf("%d ",scoreSet.size());
+                    System.out.printf("%d\t",scoreSet.size());
                 }
                 poolingMap.put(q, tmpList);
                 System.out.print("\n");
             }
+
             logger.info("Completed all pooling. Total queries: " + poolingMap.size());
             for (int i = 0; i <= 10; i ++) {
                 double k = i * 0.1;

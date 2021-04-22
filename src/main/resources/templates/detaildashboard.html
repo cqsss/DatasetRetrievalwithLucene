@@ -86,7 +86,10 @@
           <dd class="col-sm-9 border-bottom" th:text="${dataset.getAuthor()}"></dd>
 
           <dt class="col-sm-2">DataSource</dt>
-          <dd class="col-sm-9 border-bottom" th:text="${dataset.getData_source()}"></dd>
+          <dd class="col-sm-9 border-bottom">
+            <span th:if="${dataset.getData_source()} == 'OLD_DATAHUB'" class="badge bg-primary">DATAHUB</span>
+            <span th:if="${dataset.getData_source()} == 'datagov'" class="badge bg-success">DATAGOV</span>
+          </dd>
 
           <dt class="col-sm-2">URL</dt>
           <dd class="col-sm-9">

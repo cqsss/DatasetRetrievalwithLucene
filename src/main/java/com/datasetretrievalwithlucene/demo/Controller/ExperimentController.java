@@ -76,7 +76,7 @@ public class ExperimentController {
                     if (averageScore >= k) cnt++;
                     //System.out.println(e);
                 }
-                if(cnt>20)
+                if(cnt >= 20)
                     poolingQueryList.add(qi);
             }
         } catch (Exception e) {
@@ -101,7 +101,7 @@ public class ExperimentController {
     public void pooling() {
         try {
             List<Query> queryList = queryService.getAll();
-            int poolingK = GlobalVariances.queryPoolSize[1];
+            int poolingK = GlobalVariances.queryPoolSize[2];
             for (Query q : queryList) {
                 List<Pair<Integer, Double>> TFIDFScoreList = RelevanceRanking.TFIDFRankingList(q.getQuery_text());
                 List<Pair<Integer, Double>> BM25ScoreList = RelevanceRanking.BM25RankingList(q.getQuery_text());

@@ -212,7 +212,7 @@ public class SearchController {
         Dataset dataset;
         if (dataset_id > 311) {
             dataset = datasetService.getByDatasetId(dataset_id + GlobalVariances.datasetIDGap);
-            dataset.setDataset_id(dataset_id - GlobalVariances.datasetIDGap);
+            dataset.setDataset_id(dataset_id);
         } else {
             dataset = datasetService.getByDatasetId(dataset_id);
         }
