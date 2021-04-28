@@ -21,9 +21,9 @@ public class RatingController {
     private final AnnotationService annotationService;
     private final DatasetService datasetService;
     private final QueryService queryService;
-    private int userNumber;
-    private int queryNumber;
-    private int queryDataNumber;
+    private final int userNumber;
+    private final int queryNumber;
+    private final int queryDataNumber;
 
     public RatingController(UserService userService, QueryDataService queryDataService, AnnotationService annotationService, DatasetService datasetService, QueryService queryService) {
         this.userService = userService;
@@ -198,7 +198,7 @@ public class RatingController {
         if (annotationService.searchAnnotation(user_id, query_id, dataset_id)) {
             annotation = annotationService.getAnnotation(user_id, query_id, dataset_id);
             int annotation_id = annotation.getAnnotation_id();
-            if (score > 0)
+            if (score >= 0)
                 annotationService.updateRatingById(annotation_id, score, annotation_time);
         } else {
             annotation = new Annotation();
@@ -208,7 +208,7 @@ public class RatingController {
             annotation.setRating(score);
             annotation.setReason("");
             annotation.setAnnotation_time(annotation_time);
-            if (score > 0)
+            if (score >= 0)
                 annotationService.insertAnnotation(annotation);
         }
     }

@@ -60,22 +60,30 @@
 
       <div>
         <dl class="row">
-          <dt class="col-sm-2">query</dt>
-          <dd class="col-sm-9" th:text="${query.query}"></dd>
+          <dt class="col-sm-2">Query</dt>
+          <dd class="col-sm-9" th:text="${query.getQuery_text()}"></dd>
 
-          <dt class="col-sm-2">dataset_id</dt>
-          <dd class="col-sm-9" th:text="${dataset.dataset_id}"></dd>
+          <dt class="col-sm-2">Dataset_id</dt>
+          <dd class="col-sm-9" th:text="${dataset.getDataset_id()}"></dd>
 
-          <dt class="col-sm-2">title</dt>
-          <dd class="col-sm-9" th:text="${dataset.title}"></dd>
+          <dt class="col-sm-2">Title</dt>
+          <dd class="col-sm-9" th:text="${dataset.getTitle()}"></dd>
 
-          <dt class="col-sm-2">description</dt>
-          <dd class="col-sm-9" th:text="${dataset.notes}"></dd>
+          <dt class="col-sm-2">Description</dt>
+          <dd class="col-sm-9" th:text="${dataset.getNotes()}"></dd>
 
-          <dt class="col-sm-2">detail</dt>
-          <dd class="col-sm-9">
-            <a class="btn btn-sm btn-primary" th:href="@{${detailURL}+${dataset.dataset_id}}" target="_blank">详细信息</a>
-          </dd>
+          <dt class="col-sm-2">Num_triples</dt>
+          <dd class="col-sm-9" th:text="${dataset.getNum_triples()}"></dd>
+
+          <dt class="col-sm-2">Metadata_created</dt>
+          <dd class="col-sm-9" th:text="${dataset.getMetadata_created()}"></dd>
+
+          <dt class="col-sm-2">Metadata_modified</dt>
+          <dd class="col-sm-9" th:text="${dataset.getMetadata_modified()}"></dd>
+
+          <dt class="col-sm-2">Author</dt>
+          <dd class="col-sm-9" th:text="${dataset.getAuthor()}"></dd>
+
         </dl>
       </div>
 
@@ -101,12 +109,12 @@
           </div>
           <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group me-2">
-              <a class="btn btn-sm btn-outline-secondary" th:href="@{'/dashboard?qdid='+${previous_id}+'&userid='+${userid}}">上一个</a>
-              <a class="btn btn-sm btn-outline-secondary" th:href="@{'/dashboard?qdid='+${next_id}+'&userid='+${userid}}">下一个</a>
+              <a class="btn btn-sm btn-outline-secondary" th:href="@{'/dashboardtmp?qdid='+${previous_id}+'&userid='+${userid}}">上一个</a>
+              <a class="btn btn-sm btn-outline-secondary" th:href="@{'/dashboardtmp?qdid='+${next_id}+'&userid='+${userid}}">下一个</a>
             </div>
           </div>
         </div>
-        <form class="d-flex w-50" th:action="@{'/commitreason?qid='+${query.query_id}+'&dsid='+${dataset.dataset_id}+'&userid='+${userid}}" method="post">
+        <form class="d-flex w-50" th:action="@{'/commitreason?qid='+${query.getQuery_id()}+'&dsid='+${dataset.getDataset_id()}+'&userid='+${userid}}" method="post">
           <input class="form-control form-control-dark" type="text" th:value="${reason}" placeholder="评分理由" aria-label="Reason" name="reason">
           <button class="btn btn-primary" type="submit">提交</button>
         </form>
@@ -131,10 +139,11 @@
     $("input[name=rating]").click(function(){
       var rating = $(this).val();
       $.ajax({
-        url:'/rating?qid='+'[[${query.query_id}]]'+'&dsid='+'[[${dataset.dataset_id}]]'+'&userid='+'[[${userid}]]',
+        url:'/rating?qid='+'[[${query.getQuery_id()}]]'+'&dsid='+'[[${dataset.getDataset_id()}]]'+'&userid='+'[[${userid}]]',
         data: {rating},
         type: 'POST',
         success:function(data){
+
         },
       })
     });

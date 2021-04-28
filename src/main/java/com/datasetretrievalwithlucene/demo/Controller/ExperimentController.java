@@ -20,22 +20,29 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.*;
 
+@RestController
 public class ExperimentController {
-    @Autowired
-    private QueryService queryService;
-    @Autowired
-    private QueryDataService queryDataService;
+    private final QueryService queryService;
+    private final QueryDataService queryDataService;
 
     private IndexReader indexReader;
     private IndexSearcher indexSearcher;
     private List<String> queryList;
     private List<String> poolingQueryList;
     private Directory directory;
+
+    public ExperimentController(QueryService queryService, QueryDataService queryDataService) {
+        this.queryService = queryService;
+        this.queryDataService = queryDataService;
+    }
+
     public void init() {
         try {
             directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
@@ -84,6 +91,7 @@ public class ExperimentController {
         }
     }
     @RequestMapping("/queryfilter")
+    @ResponseBody
     public void queryFilter() {
         double k = 0.4;
         try {
@@ -98,7 +106,7 @@ public class ExperimentController {
         }
     }
     @RequestMapping("/pooling")
-    public void pooling() {
+    public String pooling() {
         try {
             List<Query> queryList = queryService.getAll();
             int poolingK = GlobalVariances.queryPoolSize[2];
@@ -118,7 +126,7 @@ public class ExperimentController {
                     scoreSet.add(DPRScoreList.get(i).getKey());
                 }
                 for (int i : scoreSet) {
-                    System.out.println(q+"\t"+i);
+                    System.out.println(q.getQuery_text()+"\t"+q.getQuery_id()+"\t"+i);
                     QueryData queryData = new QueryData();
                     queryData.setQuery_id(q.getQuery_id());
                     queryData.setDataset_id(i);
@@ -128,5 +136,6 @@ public class ExperimentController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return "pooling success";
     }
 }

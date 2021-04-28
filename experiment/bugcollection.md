@@ -1,4 +1,3 @@
-
 - Bug
 `ImportError: DLL load failed while importing _swigfaiss: 找不到指定的模块。`
 - Solution
