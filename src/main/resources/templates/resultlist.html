@@ -38,7 +38,7 @@
   <body>
     
 <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-sm-3 col-md-2 mr-0" th:href="@{'/user/'+${session.loginUser}}">[[${session.loginUser}==null?请登录:${session.loginUser}]]</a>
+  <a class="navbar-brand col-sm-3 col-md-2 mr-0" th:href="${session.loginUser}==null?'/login':'#'">[[${session.loginUser}==null?请登录:${session.loginUser}]]</a>
   <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -48,7 +48,7 @@
   </form>
   <ul class="navbar-nav px-3">
     <li class="nav-item text-nowrap">
-      <a class="nav-link" href="#">Sign out</a>
+      <a class="nav-link" th:href="@{'/logout'}">Sign out</a>
     </li>
   </ul>
 </header>

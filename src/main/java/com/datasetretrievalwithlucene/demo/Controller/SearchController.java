@@ -1,7 +1,12 @@
 package com.datasetretrievalwithlucene.demo.Controller;
 
+import com.datasetretrievalwithlucene.demo.Bean.Comment;
 import com.datasetretrievalwithlucene.demo.Bean.Dataset;
+import com.datasetretrievalwithlucene.demo.Bean.Score;
+import com.datasetretrievalwithlucene.demo.Bean.User;
+import com.datasetretrievalwithlucene.demo.Service.CommentService;
 import com.datasetretrievalwithlucene.demo.Service.DatasetService;
+import com.datasetretrievalwithlucene.demo.Service.ScoreService;
 import com.datasetretrievalwithlucene.demo.Service.UserService;
 import com.datasetretrievalwithlucene.demo.util.GlobalVariances;
 import com.datasetretrievalwithlucene.demo.util.QualityRanking;
@@ -10,8 +15,12 @@ import javafx.util.Pair;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
 
+import javax.servlet.http.HttpSession;
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,10 +30,14 @@ import java.util.Map;
 public class SearchController {
     private final UserService userService;
     private final DatasetService datasetService;
+    private final CommentService commentService;
+    private final ScoreService scoreService;
 
-    public SearchController(UserService userService, DatasetService datasetService) {
+    public SearchController(UserService userService, DatasetService datasetService, CommentService commentService, ScoreService scoreService) {
         this.userService = userService;
         this.datasetService = datasetService;
+        this.commentService = commentService;
+        this.scoreService = scoreService;
     }
 
     private String current_query = "";
@@ -33,7 +46,7 @@ public class SearchController {
 
     @RequestMapping("/search")
     public String starter() {
-        return "search";
+        return "search_new";
     }
 
     @RequestMapping(value = "/dosearch", method = RequestMethod.POST)
@@ -217,11 +230,104 @@ public class SearchController {
             dataset = datasetService.getByDatasetId(dataset_id);
         }
         dataset.setNotes(dataset.getNotes().replaceAll("\\&[a-zA-Z]{1,10};", "").replaceAll("<[^>]*>", "").replaceAll("[(/>)<]", ""));
-        int score = 0;
+        double score = -1;
+        List<Integer> scoreList = scoreService.getScoreListByDatasetId(dataset_id + GlobalVariances.datasetIDGap);
+        int len = scoreList.size();
+        double sum = 0;
+        if (len != 0) {
+            for (int i : scoreList)
+                sum += i;
+            score = sum / len;
+        }
+        List<Comment> commentList = commentService.getCommentsByDatasetId(dataset_id + GlobalVariances.datasetIDGap);
         model.addAttribute("dataset", dataset);
         model.addAttribute("score", score);
+        model.addAttribute("comments", commentList);
         model.addAttribute("detailURL", GlobalVariances.detailPageURL);
         return "detaildashboard";
+    }
+
+    @RequestMapping(value = "/commitcomment", method = RequestMethod.POST)
+    public String commitReason(@RequestParam("dsid") int dataset_id,
+                               @RequestParam("userid") int user_id,
+                               @RequestParam("comment") String comment_text) {
+        int comment_dataset_id = dataset_id;
+        if (comment_text == null)
+            comment_text = "";
+        if (dataset_id > 311) {
+            comment_dataset_id = dataset_id + GlobalVariances.datasetIDGap;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.now();
+        String comment_time = dateTime.format(formatter);
+        Comment comment = new Comment();
+        comment.setDataset_id(comment_dataset_id);
+        comment.setUser_id(user_id);
+        comment.setText(comment_text);
+        comment.setComment_time(comment_time);
+        commentService.insertComment(comment);
+        return "redirect:/detail?dsid=" + dataset_id;
+    }
+
+    @RequestMapping("/login")
+    public String login() {
+        return "signin";
+    }
+
+    @RequestMapping(value = "/signin", method = RequestMethod.POST)
+    public String login(@RequestParam("username") String username,
+                        @RequestParam("password") String password,
+                        Map<String, Object> map, HttpSession httpSession) {
+        User user;
+        if (userService.searchUser(username)) {
+            user = userService.getByUsername(username);
+        } else {
+            map.put("msg", "用户不存在或密码错误");
+            return "signin";//为了防止表单重复提交，可以重定向
+        }
+        if (!StringUtils.isEmpty(username) && password.equals(user.getPassword())) {
+            int user_id = userService.getIdByUsername(username);
+            httpSession.setAttribute("loginUser", username);
+            httpSession.setAttribute("userID", user_id);
+            return "redirect:/search";
+        } else {
+            map.put("msg", "用户不存在或用户密码错误");
+            return "signin";//为了防止表单重复提交，可以重定向
+        }
+
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout(HttpSession httpSession) {
+        httpSession.invalidate();
+        return "redirect:/search";
+    }
+
+    @RequestMapping(value = "/score", method = RequestMethod.POST)
+    @ResponseBody
+    public void rating(@RequestParam("dsid") int dataset_id,
+                       @RequestParam("userid") int user_id, @RequestBody String rating) {
+        String scoreString = rating.substring(rating.length() - 1);
+        if (dataset_id > 311) {
+            dataset_id = dataset_id + GlobalVariances.datasetIDGap;
+        }
+        int scoreNum = 0;
+        if (!scoreString.equals(""))
+            scoreNum = Integer.parseInt(scoreString);
+        Score score;
+        if (scoreService.searchScore(user_id, dataset_id)) {
+            score = scoreService.getScore(user_id, dataset_id);
+            int score_id = score.getScore_id();
+            if (scoreNum > 0)
+                scoreService.updateScoreById(score_id, scoreNum);
+        } else {
+            score = new Score();
+            score.setDataset_id(dataset_id);
+            score.setUser_id(user_id);
+            score.setScore_num(scoreNum);
+            if (scoreNum > 0)
+                scoreService.insertScore(score);
+        }
     }
 
     @RequestMapping(value = "/test")

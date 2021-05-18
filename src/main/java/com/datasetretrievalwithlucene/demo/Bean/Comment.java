@@ -4,8 +4,8 @@ public class Comment {
     private int comment_id;
     private int dataset_id;
     private int user_id;
-    String text;
-    String comment_time;
+    private String text;
+    private String comment_time;
 
     public int getComment_id() {
         return comment_id;

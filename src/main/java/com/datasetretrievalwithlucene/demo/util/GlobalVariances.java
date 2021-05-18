@@ -1,7 +1,6 @@
 package com.datasetretrievalwithlucene.demo.util;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONPObject;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 
@@ -45,15 +44,15 @@ public class GlobalVariances {
     public static int annotatorPerPair = 3;
 
     // DPR
-    public static String model_file = "model_file=F:\\DPR\\dpr\\downloads\\checkpoint\\retriever\\single-adv-hn\\nq\\bert-base-encoder.cp";
+    public static String model_file = "model_file=D:\\DPR\\dpr\\downloads\\checkpoint\\retriever\\single-adv-hn\\nq\\bert-base-encoder.cp";
     public static String qa_dataset = "qa_dataset=local_datasets_with_triple";
     public static String ctx_datatsets = "ctx_datatsets=[datasets_with_triple]";
-    public static String encoded_ctx_files = "encoded_ctx_files=[F:\\DPR\\dpr\\downloads\\data\\local_test\\datasets_with_triple_out_0]";
-    public static String out_file = "out_file=F:\\DPR\\dpr\\downloads\\data\\local_test\\datasets_with_triple_result";
-    public static String out_file_path = "F:\\DPR\\dpr\\downloads\\data\\local_test\\datasets_with_triple_result";
-    public static String python_interpreter = "E:\\Anaconda\\envs\\DPR\\python.exe";
-    public static String dense_retriever = "F:\\DPR\\dense_retriever.py";
-    public static String query_tsv = "F:\\DPR\\dpr\\downloads\\data\\local_test\\datasets_with_triple_query.tsv";
+    public static String encoded_ctx_files = "encoded_ctx_files=[D:\\DPR\\dpr\\downloads\\data\\local_test\\datasets_with_triple_out_0]";
+    public static String out_file = "out_file=D:\\DPR\\dpr\\downloads\\data\\local_test\\datasets_with_triple_result";
+    public static String out_file_path = "D:\\DPR\\dpr\\downloads\\data\\local_test\\datasets_with_triple_result";
+    public static String python_interpreter = "D:\\anaconda3\\envs\\DPR\\python.exe";
+    public static String dense_retriever = "D:\\DPR\\dense_retriever.py";
+    public static String query_tsv = "D:\\DPR\\dpr\\downloads\\data\\local_test\\datasets_with_triple_query.tsv";
 
     // 前端参数
     public static int numOfDatasetsPerPage = 10;

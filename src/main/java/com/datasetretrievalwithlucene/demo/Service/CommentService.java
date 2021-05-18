@@ -17,4 +17,12 @@ public class CommentService {
     public List<Comment> getAll() {
         return commentMapper.getAll();
     }
+
+    public void insertComment(Comment comment) {
+        commentMapper.insertComment(comment);
+    }
+
+    public List<Comment> getCommentsByDatasetId(int dataset_id) {
+        return commentMapper.getCommentsByDatasetId(dataset_id);
+    }
 }

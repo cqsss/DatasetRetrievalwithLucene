@@ -36,12 +36,12 @@ public class RatingController {
         queryDataNumber = queryDataService.getQueryDataCount();
     }
 
-    @RequestMapping("/login")
+    @RequestMapping("/loginrating")
     public String login() {
-        return "signin";
+        return "signinrating";
     }
 
-    @RequestMapping(value = "/signin", method = RequestMethod.POST)
+    @RequestMapping(value = "/signinrating", method = RequestMethod.POST)
     public String login(@RequestParam("username") String username,
                         @RequestParam("password") String password,
                         Map<String, Object> map, HttpSession httpSession, Model model) {
@@ -50,7 +50,7 @@ public class RatingController {
             user = userService.getByUsername(username);
         } else {
             map.put("msg", "用户不存在或密码错误");
-            return "signin";//为了防止表单重复提交，可以重定向
+            return "signinrating";//为了防止表单重复提交，可以重定向
         }
         if (!StringUtils.isEmpty(username) && password.equals(user.getPassword())) {
             httpSession.setAttribute("loginUser", username);
@@ -65,7 +65,7 @@ public class RatingController {
             return "redirect:/dashboardtmp?qdid=" + qdid + "&userid=" + user.getUser_id();
         } else {
             map.put("msg", "用户不存在或用户密码错误");
-            return "signin";//为了防止表单重复提交，可以重定向
+            return "signinrating";//为了防止表单重复提交，可以重定向
         }
 
     }
