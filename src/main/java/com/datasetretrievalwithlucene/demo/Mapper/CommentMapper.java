@@ -12,7 +12,7 @@ public interface CommentMapper {
     @Select("select * from comment")
     List<Comment> getAll();
 
-    @Insert("insert into comment(comment_id,dataset_id,user_id,text,comment_time) values(#{comment_id},#{dataset_id},#{user_id},#{text},#{comment_time})")
+    @Insert("insert into comment(comment_id,dataset_id,user_id,user_name,text,comment_time) values(#{comment_id},#{dataset_id},#{user_id},#{user_name},#{text},#{comment_time})")
     void insertComment(Comment comment);
 
     @Select("select * from comment where dataset_id=#{dataset_id}")

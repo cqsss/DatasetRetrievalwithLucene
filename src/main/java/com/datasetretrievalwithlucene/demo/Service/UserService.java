@@ -34,6 +34,10 @@ public class UserService {
         return userMapper.getIdByUsername(username);
     }
 
+    public String getUsernameById(int user_id) {
+        return userMapper.getUsernameById(user_id);
+    }
+
     public void updateLastIdByUserId(int user_id, int last_annotation_id) {
         userMapper.updateLastIdByUserId(user_id, last_annotation_id);
     }
@@ -42,7 +46,7 @@ public class UserService {
         return userMapper.getUserCount();
     }
 
-    public void insertUser (User user) {
+    public void insertUser(User user) {
         userMapper.insertUser(user);
     }
 }

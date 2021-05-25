@@ -21,6 +21,9 @@ public interface UserMapper {
     @Select("select user_id from user where username=#{username}")
     int getIdByUsername(@Param("username") String username);
 
+    @Select("select username from user where user_id=#{user_id}")
+    String getUsernameById(@Param("user_id") int user_id);
+
     @Update("update user set last_annotation_id=#{last_annotation_id} where user_id=#{user_id}")
     void updateLastIdByUserId(@Param("user_id") int user_id, @Param("last_annotation_id") int last_annotation_id);
 

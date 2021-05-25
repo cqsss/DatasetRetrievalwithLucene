@@ -64,26 +64,26 @@
 
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
         <h3 th:text="${score} > 0 ? '评分：' + ${score} + '/5.0分' : '评分：暂无评分'"></h3>
-        <form name="rating">
+        <form th:if="${session.loginUser}!=null" name="rating">
           <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
             <input type="radio" class="btn-check" name="rating" id="rating1" value="1" autocomplete="off"
-                   th:checked="${score==1}">
+                   th:checked="${userScoreNum==1}">
             <label class="btn btn-outline-primary" for="rating1" title="1分">1</label>
 
             <input type="radio" class="btn-check" name="rating" id="rating2" value="2" autocomplete="off"
-                   th:checked="${score==2}">
+                   th:checked="${userScoreNum==2}">
             <label class="btn btn-outline-primary" for="rating2" title="2分">2</label>
 
             <input type="radio" class="btn-check" name="rating" id="rating3" value="3" autocomplete="off"
-                   th:checked="${score==3}">
+                   th:checked="${userScoreNum==3}">
             <label class="btn btn-outline-primary" for="rating3" title="3分">3</label>
 
             <input type="radio" class="btn-check" name="rating" id="rating4" value="4" autocomplete="off"
-                   th:checked="${score==4}">
+                   th:checked="${userScoreNum==4}">
             <label class="btn btn-outline-primary" for="rating4" title="4分">4</label>
 
             <input type="radio" class="btn-check" name="rating" id="rating5" value="5" autocomplete="off"
-                   th:checked="${score==5}">
+                   th:checked="${userScoreNum==5}">
             <label class="btn btn-outline-primary" for="rating5" title="5分">5</label>
           </div>
         </form>
@@ -91,34 +91,42 @@
       </div>
       <div>
         <dl class="row">
-          <dt class="col-sm-2">dataset_id</dt>
-          <dd class="col-sm-9 border-bottom" th:text="${dataset.getDataset_id()}"></dd>
-
-          <dt class="col-sm-2">Title</dt>
+          <dt class="col-sm-2">标题</dt>
           <dd class="col-sm-9 border-bottom" th:text="${dataset.getTitle()}"></dd>
 
-          <dt class="col-sm-2">Description</dt>
+          <dt class="col-sm-2">描述</dt>
           <dd class="col-sm-9 border-bottom" th:text="${dataset.getNotes()}"></dd>
 
-          <dt class="col-sm-2">Num_triples</dt>
+          <dt class="col-sm-2">版本号</dt>
+          <dd class="col-sm-9">
+            <span th:if="${dataset.getVersion()} == ''" class="badge bg-secondary">暂无版本信息</span>
+            <span th:if="${dataset.getVersion()} != ''" class="badge bg-info text-dark"
+                  th:text="${dataset.getVersion()}"></span>
+          </dd>
+
+          <dt class="col-sm-2">三元组数量</dt>
           <dd class="col-sm-9 border-bottom" th:text="${dataset.getNum_triples()}"></dd>
 
-          <dt class="col-sm-2">Metadata_created</dt>
+          <dt class="col-sm-2">创建时间</dt>
           <dd class="col-sm-9 border-bottom" th:text="${dataset.getMetadata_created()}"></dd>
 
-          <dt class="col-sm-2">Metadata_modified</dt>
+          <dt class="col-sm-2">修改时间</dt>
           <dd class="col-sm-9 border-bottom" th:text="${dataset.getMetadata_modified()}"></dd>
 
-          <dt class="col-sm-2">Author</dt>
-          <dd class="col-sm-9 border-bottom" th:text="${dataset.getAuthor()}"></dd>
+          <dt class="col-sm-2">作者</dt>
+          <dd class="col-sm-9 border-bottom" th:text="${dataset.getAuthor()=='' ? '未知' : dataset.getAuthor()}"></dd>
 
-          <dt class="col-sm-2">DataSource</dt>
+          <dt class="col-sm-2">作者邮箱</dt>
+          <dd class="col-sm-9 border-bottom"
+              th:text="${dataset.getAuthor_email()=='' ? '未知' : dataset.getAuthor()}"></dd>
+
+          <dt class="col-sm-2">数据集来源</dt>
           <dd class="col-sm-9">
             <span th:if="${dataset.getData_source()} == 'OLD_DATAHUB'" class="badge bg-primary">DATAHUB</span>
             <span th:if="${dataset.getData_source()} == 'datagov'" class="badge bg-success">DATAGOV</span>
           </dd>
 
-          <dt class="col-sm-2">URL</dt>
+          <dt class="col-sm-2">官方网站</dt>
           <dd class="col-sm-9">
             <a th:if="${dataset.getUrl()} != ''" class="btn btn-sm btn-primary" th:href="@{${dataset.getUrl()}}"
                target="_blank">访问官方网站</a>
@@ -128,26 +136,21 @@
 
         </dl>
       </div>
-      <form class="d-flex w-50" th:action="@{'/commitcomment?dsid='+${dataset.dataset_id}+'&userid='+${session.userID}}"
+      <form class="d-flex w-50" th:action="@{'/commitcomment?dsid='+${dataset.dataset_id}}"
             method="post">
-        <input class="form-control form-control-dark" type="text" placeholder="评论" aria-label="Comment" name="comment">
+        <input class="form-control form-control-dark" type="text" placeholder="评论" aria-label="评论" name="comment">
         <button class="btn btn-primary" type="submit">提交</button>
       </form>
 
       <div class="mt-4 ms-4">
-        <h2 class="mt-4">Comments</h2>
-        <div class="border-bottom" th:each="comment:${comments}">
-          <dl class="row">
-            <dt class="col-sm-2">user_id</dt>
-            <dd class="col-sm-9" th:text="${comment.getUser_id()}"></dd>
-
-            <dt class="col-sm-2">comment_time</dt>
-            <dd class="col-sm-9" th:text="${comment.getComment_time()}"></dd>
-
-            <dt class="col-sm-2">text</dt>
-            <dd class="col-sm-9" th:text="${comment.getText()}"></dd>
-          </dl>
-        </div>
+        <h2 class="mt-4">评论</h2>
+        <ul class="list-group" th:each="comment:${comments}">
+          <li class="list-group-item">
+            <p class="h5 col-sm-9 fw-bold" th:text="${comment.getUser_name()}"></p>
+            <p class="col-sm-9" th:text="${comment.getText()}"></p>
+            <figcaption class="blockquote-footer col-sm-9" th:text="${comment.getComment_time()}"></figcaption>
+          </li>
+        </ul>
       </div>
     </main>
   </div>
@@ -163,7 +166,7 @@
     $("input[name=rating]").click(function(){
       var rating = $(this).val();
       $.ajax({
-        url: '/score?&dsid=' + '[[${dataset.getDataset_id()}]]' + '&userid=' + '[[${session.userID}]]',
+        url: '/score?&dsid=' + '[[${dataset.getDataset_id()}]]',
         data: {rating},
         type: 'POST',
         success: function (data) {

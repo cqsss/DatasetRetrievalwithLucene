@@ -357,10 +357,10 @@ public class RelevanceRanking {
         query=query.replaceAll("\\p{P}"," ");
         List<Pair<Integer, Double>> BM25ScoreList = new ArrayList<>();
         try {
-            String[] fields = GlobalVariances.queryFields;
+            String[] fields = GlobalVariances.BM25Fields;
             double[] weights = GlobalVariances.BM25BoostWeights;
             Analyzer analyzer = new EnglishAnalyzer();
-            QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
+            QueryParser queryParser = new MultiFieldQueryParser(GlobalVariances.queryFields, analyzer);
             Query parsedQuery = queryParser.parse(query);
             TopDocs docsSearch = indexSearcher.search(parsedQuery, GlobalVariances.HitSize);
             ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
@@ -395,10 +395,10 @@ public class RelevanceRanking {
         query = query.replaceAll("\\p{P}"," ");
         List<Pair<Integer, Double>> TFIDFScoreList = new ArrayList<>();
         try {
-            String[] fields = GlobalVariances.queryFields;
+            String[] fields = GlobalVariances.TFIDFFields;
             double[] weights = GlobalVariances.TFIDFBoostWeights;
             Analyzer analyzer = new EnglishAnalyzer();
-            QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
+            QueryParser queryParser = new MultiFieldQueryParser(GlobalVariances.queryFields, analyzer);
             Query parsedQuery = queryParser.parse(query);
             TopDocs docsSearch = indexSearcher.search(parsedQuery, GlobalVariances.HitSize);
             ScoreDoc[] scoreDocs = docsSearch.scoreDocs;
@@ -433,9 +433,8 @@ public class RelevanceRanking {
         query = query.replaceAll("\\p{P}"," ");
         List<Pair<Integer, Double>> FSDMScoreList = new ArrayList<>();
         try {
-            String[] fields = GlobalVariances.queryFields;
             Analyzer analyzer = new EnglishAnalyzer();
-            QueryParser queryParser = new MultiFieldQueryParser(fields, analyzer);
+            QueryParser queryParser = new MultiFieldQueryParser(GlobalVariances.queryFields, analyzer);
             Query parsedQuery = queryParser.parse(query);
             TopDocs docsSearch = indexSearcher.search(parsedQuery, GlobalVariances.HitSize);
             ScoreDoc[] scoreDocs = docsSearch.scoreDocs;

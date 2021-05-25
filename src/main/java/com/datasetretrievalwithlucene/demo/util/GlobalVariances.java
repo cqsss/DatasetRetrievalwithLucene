@@ -29,11 +29,14 @@ public class GlobalVariances {
     public static JSONObject FSDMBoostWeights = null;
     public static JSONObject getFSDMBoostWeights() { if(null == FSDMBoostWeights) FSDMBoostWeights = Statistics.readJson("src/main/resources/json/FSDMBoostWeights.json"); return FSDMBoostWeights; }
     public static double[] BM25BoostWeights = {1.0, 0.8, 0.5, 0.4};
+    public static String[] BM25Fields = {"title", "notes", "class", "property"};
     public static double[] TFIDFBoostWeights = {1.0, 0.8, 0.5, 0.4};
+    public static String[] TFIDFFields = {"title", "notes", "class", "property"};
 
 
     // 实验参数
     public static Integer[] queryPoolSize = {5, 10, 20, 50, 100};
+    public static Integer[] metricsK = {5, 10, 15, 20};
     public static String testQueriesPath = "src/main/resources/in/TestQueries.in";
     public static String poolingQueriesPath = "src/main/resources/in/PoolingQueries.in";
     public static String GoogleQueriesPath = "src/main/resources/in/GoogleRelatedQueries.in";
@@ -41,6 +44,9 @@ public class GlobalVariances {
     public static String poolSizePath = "src/main/resources/out/poolsize_new_";
     public static String qualityRankingResultPath = "src/main/resources/out/result_";
     public static String[] queryFields = {"title", "notes", "class", "property"};
+    public static String[] methodList = {"BM25_T", "BM25_N", "BM25_C", "BM25_P", "BM25_TN", "BM25_CP", "BM25_ALL",
+            "TFIDF_T", "TFIDF_N", "TFIDF_C", "TFIDF_P", "TFIDF_TN", "TFIDF_CP", "TFIDF_ALL",
+            "FSDM_T", "FSDM_N", "FSDM_C", "FSDM_P", "FSDM_TN", "FSDM_CP", "FSDM_ALL", "DPR"};
     public static int annotatorPerPair = 3;
 
     // DPR

@@ -96,8 +96,20 @@ marp: true
 - **Q3** 传统方法与深度学习方法的比较
 
 ---
-
 ### Evaluation
+- **Baseline**:
+    TF-IDF,BM25,FSDM,DPR
+- 单field对比（除DPR）
+    - 仅title
+    - 仅notes
+    - 仅class
+    - 仅property
+- 多field对比（除DPR）
+    - title+notes
+    - class+property
+    - all
+- 传统方法和深度学习方法对比
+    - DPR
 
 ---
 ### Evaluation Metrics
@@ -105,4 +117,4 @@ marp: true
 - nDCG@k (k=5,10,15,20*)
 - Precision@k
 - Recall@k
-- F值 or MAP
+- MAP@k

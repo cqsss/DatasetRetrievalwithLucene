@@ -221,7 +221,7 @@ public class SearchController {
     }*/
 
     @GetMapping(value = "/detail")
-    public String getDetail(@RequestParam("dsid") int dataset_id, Model model) {
+    public String getDetail(@RequestParam("dsid") int dataset_id, Model model, HttpSession session) {
         Dataset dataset;
         if (dataset_id > 311) {
             dataset = datasetService.getByDatasetId(dataset_id + GlobalVariances.datasetIDGap);
@@ -239,9 +239,16 @@ public class SearchController {
                 sum += i;
             score = sum / len;
         }
+        int userScoreNum = -1;
+        if (session.getAttribute("userID") != null) {
+            Score userScore = scoreService.getScore(Integer.parseInt(session.getAttribute("userID").toString()), dataset_id + GlobalVariances.datasetIDGap);
+            if (userScore != null)
+                userScoreNum = userScore.getScore_num();
+        }
         List<Comment> commentList = commentService.getCommentsByDatasetId(dataset_id + GlobalVariances.datasetIDGap);
         model.addAttribute("dataset", dataset);
         model.addAttribute("score", score);
+        model.addAttribute("userScoreNum", userScoreNum);
         model.addAttribute("comments", commentList);
         model.addAttribute("detailURL", GlobalVariances.detailPageURL);
         return "detaildashboard";
@@ -249,24 +256,30 @@ public class SearchController {
 
     @RequestMapping(value = "/commitcomment", method = RequestMethod.POST)
     public String commitReason(@RequestParam("dsid") int dataset_id,
-                               @RequestParam("userid") int user_id,
-                               @RequestParam("comment") String comment_text) {
-        int comment_dataset_id = dataset_id;
-        if (comment_text == null)
-            comment_text = "";
-        if (dataset_id > 311) {
-            comment_dataset_id = dataset_id + GlobalVariances.datasetIDGap;
+                               @RequestParam("comment") String comment_text,
+                               HttpSession session) {
+        if (session.getAttribute("userID") != null) {
+            int user_id = Integer.parseInt(session.getAttribute("userID").toString());
+            int comment_dataset_id = dataset_id;
+            if (comment_text == null)
+                comment_text = "";
+            if (dataset_id > 311) {
+                comment_dataset_id = dataset_id + GlobalVariances.datasetIDGap;
+            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime dateTime = LocalDateTime.now();
+            String comment_time = dateTime.format(formatter);
+            Comment comment = new Comment();
+            comment.setDataset_id(comment_dataset_id);
+            comment.setUser_id(user_id);
+            comment.setUser_name(userService.getUsernameById(user_id));
+            comment.setText(comment_text);
+            comment.setComment_time(comment_time);
+            commentService.insertComment(comment);
+            return "redirect:/detail?dsid=" + dataset_id;
+        } else {
+            return "redirect:/login";
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime dateTime = LocalDateTime.now();
-        String comment_time = dateTime.format(formatter);
-        Comment comment = new Comment();
-        comment.setDataset_id(comment_dataset_id);
-        comment.setUser_id(user_id);
-        comment.setText(comment_text);
-        comment.setComment_time(comment_time);
-        commentService.insertComment(comment);
-        return "redirect:/detail?dsid=" + dataset_id;
     }
 
     @RequestMapping("/login")
@@ -304,29 +317,35 @@ public class SearchController {
     }
 
     @RequestMapping(value = "/score", method = RequestMethod.POST)
-    @ResponseBody
-    public void rating(@RequestParam("dsid") int dataset_id,
-                       @RequestParam("userid") int user_id, @RequestBody String rating) {
-        String scoreString = rating.substring(rating.length() - 1);
-        if (dataset_id > 311) {
-            dataset_id = dataset_id + GlobalVariances.datasetIDGap;
-        }
-        int scoreNum = 0;
-        if (!scoreString.equals(""))
-            scoreNum = Integer.parseInt(scoreString);
-        Score score;
-        if (scoreService.searchScore(user_id, dataset_id)) {
-            score = scoreService.getScore(user_id, dataset_id);
-            int score_id = score.getScore_id();
-            if (scoreNum > 0)
-                scoreService.updateScoreById(score_id, scoreNum);
+    public String rating(@RequestParam("dsid") int dataset_id,
+                         @RequestBody String rating,
+                         HttpSession session) {
+        if (session.getAttribute("userID") != null) {
+            int user_id = Integer.parseInt(session.getAttribute("userID").toString());
+            String scoreString = rating.substring(rating.length() - 1);
+            if (dataset_id > 311) {
+                dataset_id = dataset_id + GlobalVariances.datasetIDGap;
+            }
+            int scoreNum = 0;
+            if (!scoreString.equals(""))
+                scoreNum = Integer.parseInt(scoreString);
+            Score score;
+            if (scoreService.searchScore(user_id, dataset_id)) {
+                score = scoreService.getScore(user_id, dataset_id);
+                int score_id = score.getScore_id();
+                if (scoreNum > 0)
+                    scoreService.updateScoreById(score_id, scoreNum);
+            } else {
+                score = new Score();
+                score.setDataset_id(dataset_id);
+                score.setUser_id(user_id);
+                score.setScore_num(scoreNum);
+                if (scoreNum > 0)
+                    scoreService.insertScore(score);
+            }
+            return "redirect:/detail?dsid=" + dataset_id;
         } else {
-            score = new Score();
-            score.setDataset_id(dataset_id);
-            score.setUser_id(user_id);
-            score.setScore_num(scoreNum);
-            if (scoreNum > 0)
-                scoreService.insertScore(score);
+            return "redirect:/login";
         }
     }
 

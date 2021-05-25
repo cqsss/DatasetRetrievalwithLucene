@@ -11,13 +11,18 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.*;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.*;
 import java.nio.file.Paths;
@@ -25,12 +30,15 @@ import java.util.*;
 
 @SpringBootTest
 public class ExperimentTest {
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
     private final Logger logger = LoggerFactory.getLogger(ExperimentTest.class);
     private IndexReader indexReader;
     private IndexSearcher indexSearcher;
     private List<String> queryList;
     private List<String> poolingQueryList;
     private Directory directory;
+
     public void init() {
         try {
             directory = MMapDirectory.open(Paths.get(GlobalVariances.index_Dir));
@@ -237,10 +245,162 @@ public class ExperimentTest {
                     bufferedWriter.write("\n");
                 }
                 bufferedWriter.close();
-                logger.info("Completed pooling k=" + String.format("%.1f", k) + " Total queries: " +poolingQueryList.size());
+                logger.info("Completed pooling k=" + String.format("%.1f", k) + " Total queries: " + poolingQueryList.size());
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testBM25Results() {
+        List<Map<String, Object>> res = jdbcTemplate.queryForList("SELECT * FROM query ORDER BY query_id");
+        for (Map<String, Object> qi : res) {
+            int query_id = Integer.parseInt(qi.get("query_id").toString());
+            String query_text = qi.get("query_text").toString();
+            List<Pair<Integer, Double>> BM25ScoreList = RelevanceRanking.BM25RankingList(query_text);
+            String sql = "INSERT INTO results VALUES (?, ?, ?, ?, ?);";
+            for (int i = 0; i < 20; i++) {
+                jdbcTemplate.update(sql, query_id, BM25ScoreList.get(i).getKey(), i + 1, "BM25_ALL", null);
+            }
+            System.out.println("query: " + query_id);
+        }
+    }
+
+    @Test
+    public void testTFIDFResults() {
+        List<Map<String, Object>> res = jdbcTemplate.queryForList("SELECT * FROM query ORDER BY query_id");
+        for (Map<String, Object> qi : res) {
+            int query_id = Integer.parseInt(qi.get("query_id").toString());
+            String query_text = qi.get("query_text").toString();
+            List<Pair<Integer, Double>> TFIDFScoreList = RelevanceRanking.TFIDFRankingList(query_text);
+            String sql = "INSERT INTO results VALUES (?, ?, ?, ?, ?);";
+            for (int i = 0; i < 20; i++) {
+                jdbcTemplate.update(sql, query_id, TFIDFScoreList.get(i).getKey(), i + 1, "TFIDF_ALL", null);
+            }
+            System.out.println("query: " + query_id);
+        }
+    }
+
+    @Test
+    public void testFSDMResults() {
+        List<Map<String, Object>> res = jdbcTemplate.queryForList("SELECT * FROM query ORDER BY query_id");
+        for (Map<String, Object> qi : res) {
+            int query_id = Integer.parseInt(qi.get("query_id").toString());
+            String query_text = qi.get("query_text").toString();
+            List<Pair<Integer, Double>> FSDMScoreList = RelevanceRanking.FSDMRankingList(query_text);
+            String sql = "INSERT INTO results VALUES (?, ?, ?, ?, ?);";
+            for (int i = 0; i < 20; i++) {
+                jdbcTemplate.update(sql, query_id, FSDMScoreList.get(i).getKey(), i + 1, "FSDM_ALL", null);
+            }
+            System.out.println("query: " + query_id);
+        }
+    }
+
+    @Test
+    public void testDPRResults() {
+        List<Map<String, Object>> res = jdbcTemplate.queryForList("SELECT * FROM query ORDER BY query_id");
+        for (Map<String, Object> qi : res) {
+            int query_id = Integer.parseInt(qi.get("query_id").toString());
+            String query_text = qi.get("query_text").toString();
+            List<Pair<Integer, Double>> DPRScoreList = RelevanceRanking.DPRRankingList(query_text);
+            String sql = "INSERT INTO results VALUES (?, ?, ?, ?, ?);";
+            for (int i = 0; i < 20; i++) {
+                jdbcTemplate.update(sql, query_id, DPRScoreList.get(i).getKey(), i + 1, "DPR", null);
+            }
+            System.out.println("query: " + query_id);
+        }
+    }
+
+    public double calculateDCG(List<Integer> ratingList, int k) {
+        double res = 0.0;
+        for (int i = 1; i <= k; i++) {
+            res += (Math.pow(2.0, ratingList.get(i - 1)) - 1.0) / (Math.log(i + 1.0) / Math.log(2.0));
+        }
+        return res;
+    }
+
+    public double calculateNDCG(String method, int k, int query_id) {
+        List<Map<String, Object>> resultList = jdbcTemplate.queryForList("SELECT * FROM results WHERE method='" + method + "' AND query_id=" + query_id + " ORDER BY ranknum");
+        List<Integer> resultRating = new ArrayList<>();
+        List<Integer> idealRating = jdbcTemplate.queryForList("SELECT rating FROM annotation WHERE query_id=" + query_id + " ORDER BY rating DESC", Integer.class);
+        for (Map<String, Object> qi : resultList) {
+            int dataset_id = Integer.parseInt(qi.get("dataset_id").toString());
+            List<Integer> ratingList = jdbcTemplate.queryForList("SELECT rating FROM annotation WHERE query_id=" + query_id + " AND dataset_id=" + dataset_id, Integer.class);
+            if (ratingList.size() == 0)
+                resultRating.add(0);
+            else
+                resultRating.add(ratingList.get(0));
+        }
+        double DCG = calculateDCG(resultRating, k);
+        double iDCG = calculateDCG(idealRating, k);
+        return DCG / iDCG;
+    }
+
+    public double calculateAP(String method, int k, int query_id) {
+        double res = 0.0;
+        List<Map<String, Object>> resultList = jdbcTemplate.queryForList("SELECT * FROM results WHERE method='" + method + "' AND query_id=" + query_id + " ORDER BY ranknum");
+        List<Integer> resultRating = new ArrayList<>();
+        for (Map<String, Object> qi : resultList) {
+            int dataset_id = Integer.parseInt(qi.get("dataset_id").toString());
+            List<Integer> ratingList = jdbcTemplate.queryForList("SELECT rating FROM annotation WHERE query_id=" + query_id + " AND dataset_id=" + dataset_id, Integer.class);
+            if (ratingList.size() == 0)
+                resultRating.add(0);
+            else
+                resultRating.add(ratingList.get(0));
+        }
+        int cnt = 0;
+        for (int i = 1; i <= k; i++) {
+            if (resultRating.get(i - 1) != 0) {
+                cnt++;
+                res += (double) cnt / (double) i;
+            }
+        }
+        res /= (double) k;
+        return res;
+    }
+
+    @Test
+    public void calculateMetrics() {
+        List<Integer> queryList = jdbcTemplate.queryForList("SELECT query_id FROM query ORDER BY query_id", Integer.class);
+        for (String mi : GlobalVariances.methodList) {
+            System.out.println("method: " + mi);
+            for (int qi : queryList) {
+                System.out.println("\tquery_id: " + qi);
+                for (int i : GlobalVariances.metricsK) {
+                    double nDCG = calculateNDCG(mi, i, qi);
+                    String sql = "INSERT INTO ndcg VALUES (?, ?, ?, ?, ?);";
+                    jdbcTemplate.update(sql, mi, qi, i, nDCG, null);
+                    System.out.println("\t\tnDCG@" + i + " :" + nDCG);
+                    double AP = calculateAP(mi, i, qi);
+                    sql = "INSERT INTO ap VALUES (?, ?, ?, ?, ?);";
+                    jdbcTemplate.update(sql, mi, qi, i, AP, null);
+                    System.out.println("\t\tAP@" + i + " :" + AP);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void calculateMeanMetrics() {
+        int queryNumber = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM query", Integer.class);
+        for (String mi : GlobalVariances.methodList) {
+            System.out.println("method: " + mi);
+            for (int i : GlobalVariances.metricsK) {
+                List<Integer> nDCGList = jdbcTemplate.queryForList("SELECT ndcg_score FROM ndcg WHERE method='" + mi + "' AND k=" + i, Integer.class);
+                List<Integer> APList = jdbcTemplate.queryForList("SELECT ap_score FROM ap WHERE method='" + mi + "' AND k=" + i, Integer.class);
+                double mean_nDCG = 0.0;
+                double mean_AP = 0.0;
+                for (int j = 0; j < queryNumber; j++) {
+                    mean_nDCG += nDCGList.get(j);
+                    mean_AP += APList.get(j);
+                }
+                mean_nDCG /= (double) queryNumber;
+                mean_AP /= (double) queryNumber;
+                String sql = "INSERT INTO metric VALUES (?, ?, ?, ?, ?);";
+                jdbcTemplate.update(sql, mi, i, mean_nDCG, mean_AP, null);
+                System.out.println("\tnDCG@" + i + " :" + mean_nDCG + "\tMAP@" + i + " :" + mean_AP);
+            }
         }
     }
 }
