@@ -290,7 +290,7 @@ public class RelevanceRanking {
             for (String token : tokens) {
                 BytesRef bytesRef = new BytesRef(token);
                 double docFreq = (double) indexReader.docFreq(new Term(field, bytesRef));
-                double idf = Math.log((docCount + 1.0) / (docFreq + 1.0)) + 1.0;
+                double idf = Math.log10((docCount + 1.0) / (docFreq + 1.0)) + 1.0;
                 double tf = 0.0;
                 if (terms != null) {
                     TermsEnum termsIterator = terms.iterator();

@@ -339,6 +339,7 @@ public class ExperimentTest {
 
     public double calculateAP(String method, int k, int query_id) {
         double res = 0.0;
+        Integer R = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM annotation WHERE query_id=" + query_id + " AND rating>0", Integer.class);
         List<Map<String, Object>> resultList = jdbcTemplate.queryForList("SELECT * FROM results WHERE method='" + method + "' AND query_id=" + query_id + " ORDER BY ranknum");
         List<Integer> resultRating = new ArrayList<>();
         for (Map<String, Object> qi : resultList) {
@@ -356,7 +357,7 @@ public class ExperimentTest {
                 res += (double) cnt / (double) i;
             }
         }
-        res /= (double) k;
+        res /= (double) R;
         return res;
     }
 
@@ -368,12 +369,12 @@ public class ExperimentTest {
             for (int qi : queryList) {
                 System.out.println("\tquery_id: " + qi);
                 for (int i : GlobalVariances.metricsK) {
-                    double nDCG = calculateNDCG(mi, i, qi);
-                    String sql = "INSERT INTO ndcg VALUES (?, ?, ?, ?, ?);";
-                    jdbcTemplate.update(sql, mi, qi, i, nDCG, null);
-                    System.out.println("\t\tnDCG@" + i + " :" + nDCG);
+//                    double nDCG = calculateNDCG(mi, i, qi);
+//                    String sql = "INSERT INTO ndcg VALUES (?, ?, ?, ?, ?);";
+//                    jdbcTemplate.update(sql, mi, qi, i, nDCG, null);
+//                    System.out.println("\t\tnDCG@" + i + " :" + nDCG);
                     double AP = calculateAP(mi, i, qi);
-                    sql = "INSERT INTO ap VALUES (?, ?, ?, ?, ?);";
+                    String sql = "INSERT INTO ap VALUES (?, ?, ?, ?, ?);";
                     jdbcTemplate.update(sql, mi, qi, i, AP, null);
                     System.out.println("\t\tAP@" + i + " :" + AP);
                 }
@@ -387,8 +388,8 @@ public class ExperimentTest {
         for (String mi : GlobalVariances.methodList) {
             System.out.println("method: " + mi);
             for (int i : GlobalVariances.metricsK) {
-                List<Integer> nDCGList = jdbcTemplate.queryForList("SELECT ndcg_score FROM ndcg WHERE method='" + mi + "' AND k=" + i, Integer.class);
-                List<Integer> APList = jdbcTemplate.queryForList("SELECT ap_score FROM ap WHERE method='" + mi + "' AND k=" + i, Integer.class);
+                List<Double> nDCGList = jdbcTemplate.queryForList("SELECT ndcg_score FROM ndcg WHERE method='" + mi + "' AND k=" + i, Double.class);
+                List<Double> APList = jdbcTemplate.queryForList("SELECT ap_score FROM ap WHERE method='" + mi + "' AND k=" + i, Double.class);
                 double mean_nDCG = 0.0;
                 double mean_AP = 0.0;
                 for (int j = 0; j < queryNumber; j++) {
